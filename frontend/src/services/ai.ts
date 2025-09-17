@@ -49,7 +49,7 @@ class AIService {
       const temperature = options.temperature ?? DEFAULT_TEMPERATURE;
       
       const response = await this.client.messages.create({
-        model: 'claude-3-sonnet-20240229',
+        model: 'claude-3-5-sonnet-20241022',
         max_tokens: maxTokens,
         temperature,
         messages: [{ role: 'user', content: prompt }]
