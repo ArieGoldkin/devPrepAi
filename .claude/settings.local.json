@@ -3,7 +3,18 @@
     "allow": [
       "WebSearch",
       "mcp__shadcn__search_items_in_registries",
-      "mcp__sequential-thinking__sequentialthinking"
+      "mcp__sequential-thinking__sequentialthinking",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint:*)",
+      "Bash(./scripts/check-file-sizes.sh:*)",
+      "Bash(npm run type-check:*)",
+      "Bash(cat:*)",
+      "Bash(timeout 10s npm run dev)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "mcp__playwright__browser_navigate",
+      "mcp__playwright__browser_take_screenshot",
+      "Bash(git add:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

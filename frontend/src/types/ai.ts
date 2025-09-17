@@ -1,0 +1,102 @@
+/**
+ * DevPrep AI - Simple Type Definitions
+ * Clean types for interview prep platform
+ */
+
+// User profile for interview preparation
+export interface IUserProfile {
+  experienceLevel: 'junior' | 'mid' | 'senior';
+  technologies: string[];
+  role: 'frontend' | 'backend' | 'fullstack';
+  interviewType: 'technical' | 'behavioral' | 'system-design';
+}
+
+// Interview question structure
+export interface IQuestion {
+  id: string;
+  title: string;
+  content: string;
+  type: 'behavioral' | 'system-design' | 'coding' | 'conceptual';
+  difficulty: number;
+  category: string;
+  hints: string[];
+  solution: string;
+  timeEstimate: number; // in minutes
+  tags: string[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Request/Response types for AI service
+export interface IGenerateQuestionsRequest {
+  profile: IUserProfile;
+  count: number;
+  difficulty: number;
+  type: IQuestion['type'];
+}
+
+export interface IGenerateQuestionsResponse {
+  questions: IQuestion[];
+  totalGenerated: number;
+}
+
+export interface IEvaluateAnswerRequest {
+  question: IQuestion;
+  answer: string;
+}
+
+export interface IAnswerFeedback {
+  score: number; // 0-100
+  strengths: string[];
+  improvements: string[];
+  suggestions: string[];
+  overallFeedback: string;
+}
+
+export interface IEvaluateAnswerResponse {
+  feedback: IAnswerFeedback;
+  success: boolean;
+}
+
+export interface IExplainConceptRequest {
+  concept: string;
+  userLevel: IUserProfile['experienceLevel'];
+  includeExamples: boolean;
+}
+
+export interface IConceptExplanation {
+  concept: string;
+  explanation: string;
+  examples: string[];
+  keyPoints: string[];
+  relatedConcepts: string[];
+}
+
+export interface IExplainConceptResponse {
+  explanation: IConceptExplanation;
+  success: boolean;
+}
+
+// AI Service types
+export interface IClaudeResponse {
+  content: Array<{
+    type: 'text';
+    text: string;
+  }>;
+  usage: {
+    input_tokens: number;
+    output_tokens: number;
+  };
+}
+
+export interface ICompletionOptions {
+  maxTokens?: number;
+  temperature?: number;
+}
+
+// API response wrapper
+export interface IAPIResponse<T> {
+  data: T;
+  success: boolean;
+  error?: string;
+}

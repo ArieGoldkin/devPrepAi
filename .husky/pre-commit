@@ -1,0 +1,31 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Change to frontend directory
+cd frontend
+
+# Run lint-staged
+npx lint-staged
+
+# Check TypeScript compilation
+npm run type-check
+
+# Check file sizes (max 180 lines)
+echo "Checking file sizes..."
+violations=0
+for file in $(find src -name "*.tsx" -o -name "*.ts" 2>/dev/null || true); do
+  if [ -f "$file" ]; then
+    lines=$(wc -l < "$file" 2>/dev/null || echo "0")
+    if [ "$lines" -gt 180 ]; then
+      echo "❌ $file: $lines lines (max: 180)"
+      violations=$((violations + 1))
+    fi
+  fi
+done
+
+if [ $violations -gt 0 ]; then
+  echo "Found $violations file(s) exceeding 180 lines"
+  exit 1
+fi
+
+echo "✅ All files within size limits"
