@@ -168,7 +168,7 @@ export function PracticeSession({
         onQuestionChange={handleQuestionChange}
       />
 
-      {!feedback && (
+      {!feedback && currentQuestion && (
         <AnswerInput
           value={currentAnswer}
           onChange={setCurrentAnswer}
@@ -176,6 +176,7 @@ export function PracticeSession({
           disabled={isLoading}
           submitButtonText={isLoading ? "Evaluating..." : "Submit Answer"}
           placeholder="Type your answer here. Take your time to think through the problem..."
+          question={currentQuestion}
         />
       )}
 
