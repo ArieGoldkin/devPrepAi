@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "mcp__shadcn__search_items_in_registries",
+      "mcp__sequential-thinking__sequentialthinking"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "memory",
+    "sequential-thinking",
+    "context7",
+    "playwright",
+    "browsermcp",
+    "shadcn"
+  ]
+}
