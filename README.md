@@ -4,13 +4,26 @@ AI-powered interview preparation platform built with Next.js 15 and Claude AI.
 
 ## 🚀 Quick Start
 
-```bash
-cd frontend
-npm install
-npm run dev
-```
+1. **Set up environment variables:**
+   ```bash
+   # Run setup script to link environment variables
+   ./setup.sh
+   ```
 
-Visit http://localhost:3000
+2. **Install and run:**
+   ```bash
+   cd frontend
+   npm install
+   npm run dev
+   ```
+
+3. **Visit http://localhost:3000**
+
+## 🔐 Environment Variables
+
+- **Single `.env` file at root**: Contains all API keys and configurations
+- **Frontend uses symlink**: `frontend/.env` → `../.env` (created by setup.sh)
+- **Security**: API keys are server-side only, never exposed to browser
 
 ## 📁 Project Structure
 

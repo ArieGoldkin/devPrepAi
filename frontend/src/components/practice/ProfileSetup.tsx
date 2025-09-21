@@ -1,0 +1,1 @@
+export { ProfileWizard as ProfileSetup } from './ProfileWizard'

@@ -1,10 +1,10 @@
 import type * as React from 'react'
 import { useState } from 'react'
 
-import type { IQuestion } from '../types/ai'
+import type { IQuestion } from '../../types/ai'
+import { Button } from '../ui/button'
 
 import { QuestionCard } from './QuestionCard'
-import { Button } from './ui/button'
 
 
 interface IQuestionListProps {

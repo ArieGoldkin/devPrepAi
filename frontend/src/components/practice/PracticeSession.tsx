@@ -2,13 +2,14 @@ import type * as React from 'react'
 import { useState } from 'react'
 
 
-import { aiService } from '../services/ai'
-import type { IAnswerFeedback, IQuestion, IUserProfile } from '../types/ai'
+import { aiService } from '../../services/ai'
+import type { IAnswerFeedback, IQuestion, IUserProfile } from '../../types/ai'
+import { AnswerInput } from '../AnswerInput'
+import { QuestionList } from '../questions/QuestionList'
 
-import { AnswerInput } from './AnswerInput'
-import { FeedbackCard } from './FeedbackCard'
-import { QuestionList } from './QuestionList'
-import { Button } from './ui/button'
+import { BackToProfileButton } from './BackToProfileButton'
+import { ErrorMessage } from './ErrorMessage'
+import { FeedbackSection } from './FeedbackSection'
 
 interface IPracticeSessionProps {
   questions: IQuestion[]
@@ -16,75 +17,9 @@ interface IPracticeSessionProps {
   onFinish: () => void
 }
 
-const ErrorMessage = ({ error }: { error: string }): React.ReactElement => (
-  <div className="w-full p-4 bg-red-50 border border-red-200 rounded-md">
-    <p className="text-red-700 text-sm">{error}</p>
-  </div>
-)
 
-const FeedbackActions = ({
-  onTryAgain,
-  onNext,
-  onFinish,
-  isLastQuestion
-}: {
-  onTryAgain: () => void
-  onNext: () => void
-  onFinish: () => void
-  isLastQuestion: boolean
-}): React.ReactElement => (
-  <div className="flex justify-center gap-4">
-    <Button onClick={onTryAgain} variant="outline">
-      Try Again
-    </Button>
-    {!isLastQuestion && (
-      <Button onClick={onNext}>
-        Next Question
-      </Button>
-    )}
-    {isLastQuestion && (
-      <Button onClick={onFinish}>
-        Finish Session
-      </Button>
-    )}
-  </div>
-)
 
-const FeedbackSection = ({
-  feedback,
-  questionTitle,
-  onTryAgain,
-  onNext,
-  onFinish,
-  isLastQuestion
-}: {
-  feedback: IAnswerFeedback
-  questionTitle: string
-  onTryAgain: () => void
-  onNext: () => void
-  onFinish: () => void
-  isLastQuestion: boolean
-}): React.ReactElement => (
-  <div className="space-y-4">
-    <FeedbackCard feedback={feedback} questionTitle={questionTitle} />
-    <FeedbackActions
-      onTryAgain={onTryAgain}
-      onNext={onNext}
-      onFinish={onFinish}
-      isLastQuestion={isLastQuestion}
-    />
-  </div>
-)
-
-const BackToProfileButton = ({ onFinish }: { onFinish: () => void }): React.ReactElement => (
-  <div className="text-center pt-4">
-    <Button onClick={onFinish} variant="ghost" size="sm">
-      Back to Profile
-    </Button>
-  </div>
-)
-
-// eslint-disable-next-line max-lines-per-function
+ 
 export function PracticeSession({
   questions,
   userProfile,
@@ -158,7 +93,7 @@ export function PracticeSession({
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
-      {error && <ErrorMessage error={error} />}
+      {error && <ErrorMessage message={error} onDismiss={() => setError(null)} />}
       
       <QuestionList
         questions={questions}
@@ -191,7 +126,7 @@ export function PracticeSession({
         />
       )}
 
-      <BackToProfileButton onFinish={onFinish} />
+      <BackToProfileButton onEditProfile={onFinish} />
     </div>
   )
 }

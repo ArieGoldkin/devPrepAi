@@ -1,6 +1,6 @@
 import type * as React from 'react'
 
-import { CodeEditor } from '../CodeEditor'
+import { CodeEditor } from '../shared/CodeEditor'
 
 interface ICodeAnswerSectionProps {
   inputValue: string

@@ -3,18 +3,14 @@
 import type * as React from "react"
 import { useState } from "react"
 
-import { Button } from "./ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
-import { Select } from "./ui/select"
-
-export interface IUserProfile {
-  experienceLevel: string
-  technologies: string[]
-  interviewType: string
-}
+import { useAppStore } from "../../store/useAppStore"
+import type { IUserProfile } from "../../types/ai"
+import { Button } from "../ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
+import { Select } from "../ui/select"
 
 interface IProfileWizardProps {
-  onComplete: (profile: IUserProfile) => void
+  onComplete?: () => void
 }
 
 const AVAILABLE_TECHNOLOGIES = ["React", "TypeScript", "Node.js", "Python", "Java"]
@@ -84,6 +80,7 @@ const InterviewTypeSelector = ({
 )
 
 export function ProfileWizard({ onComplete }: IProfileWizardProps): React.JSX.Element {
+  const { setUserProfile } = useAppStore()
   const [experience, setExperience] = useState("")
   const [techs, setTechs] = useState<string[]>([])
   const [type, setType] = useState("")
@@ -94,11 +91,14 @@ export function ProfileWizard({ onComplete }: IProfileWizardProps): React.JSX.El
 
   const handleSubmit = (): void => {
     if (experience && techs.length > 0 && type) {
-      onComplete({ 
-        experienceLevel: experience, 
-        technologies: techs, 
-        interviewType: type 
-      })
+      const profile: IUserProfile = {
+        experienceLevel: experience as 'junior' | 'mid' | 'senior',
+        technologies: techs,
+        role: 'fullstack',
+        interviewType: type as 'technical' | 'behavioral' | 'system-design'
+      }
+      setUserProfile(profile)
+      onComplete?.()
     }
   }
 

@@ -1,9 +1,8 @@
 import type * as React from 'react'
 
-import type { IAnswerFeedback } from '../types/ai'
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
-import { Separator } from './ui/separator'
+import type { IAnswerFeedback } from '../../types/ai'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Separator } from '../ui/separator'
 
 
 const EXCELLENT_THRESHOLD = 80

@@ -1,11 +1,10 @@
 import type * as React from 'react'
 import { useState } from 'react'
 
-import type { IQuestion } from '../types/ai'
-
-import { Badge } from './ui/badge'
-import { Button } from './ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
+import type { IQuestion } from '../../types/ai'
+import { Badge } from '../ui/badge'
+import { Button } from '../ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 
 
 const EASY_THRESHOLD = 3

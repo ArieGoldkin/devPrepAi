@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { ReactElement } from 'react';
 
 import { Badge } from '@/components/ui/badge';
@@ -26,9 +27,24 @@ export default function Home(): ReactElement {
             <Badge variant="outline">Tailwind CSS</Badge>
           </div>
         </header>
-        
+
+        <nav className="flex gap-4 justify-center">
+          <Link href="/practice">
+            <Button variant="ghost">Practice</Button>
+          </Link>
+          <Link href="/assessment">
+            <Button variant="ghost">Assessment</Button>
+          </Link>
+          <Link href="/results">
+            <Button variant="ghost">Results</Button>
+          </Link>
+          <Link href="/demo">
+            <Button variant="ghost">Demo</Button>
+          </Link>
+        </nav>
+
         <Separator />
-        
+
         <PracticeSection />
       </main>
     </div>
@@ -47,10 +63,14 @@ function PracticeSection(): ReactElement {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-2">
-            <Button size="sm">Start Practice</Button>
-            <Button variant="outline" size="sm">
-              View Sample
-            </Button>
+            <Link href="/practice">
+              <Button size="sm">Start Practice</Button>
+            </Link>
+            <Link href="/demo">
+              <Button variant="outline" size="sm">
+                View Sample
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

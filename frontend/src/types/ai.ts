@@ -100,3 +100,18 @@ export interface IAPIResponse<T> {
   success: boolean;
   error?: string;
 }
+
+// Assessment results types
+export interface IQuestionResult {
+  question: IQuestion;
+  userAnswer: string;
+  feedback: IAnswerFeedback;
+  timeSpent: number; // in seconds
+}
+
+export interface IAssessmentResults {
+  questions: IQuestionResult[];
+  totalTimeSpent: number; // in seconds
+  totalTimeAllocated: number; // in seconds
+  completedAt: string;
+}
