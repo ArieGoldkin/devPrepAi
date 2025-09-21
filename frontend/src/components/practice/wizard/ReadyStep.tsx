@@ -1,20 +1,25 @@
-import { ChevronLeft, Loader2, Sparkles, Trophy } from 'lucide-react'
-import React from 'react'
+import { ChevronLeft, Loader2, Sparkles, Trophy } from "lucide-react";
+import React from "react";
 
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from "@components/ui/badge";
+import { Button } from "@components/ui/button";
+import { Card, CardContent } from "@components/ui/card";
 
-import type { PracticeSettings } from './constants'
+import type { PracticeSettings } from "./constants";
 
 interface IReadyStepProps {
-  settings: PracticeSettings
-  loading: boolean
-  onStart: () => Promise<void>
-  onBack: () => void
+  settings: PracticeSettings;
+  loading: boolean;
+  onStart: () => Promise<void>;
+  onBack: () => void;
 }
 
-export function ReadyStep({ settings, loading, onStart, onBack }: IReadyStepProps): React.JSX.Element {
+export function ReadyStep({
+  settings,
+  loading,
+  onStart,
+  onBack,
+}: IReadyStepProps): React.JSX.Element {
   return (
     <Card className="card-gradient max-w-2xl mx-auto text-center">
       <CardContent className="pt-8 space-y-6">
@@ -25,7 +30,8 @@ export function ReadyStep({ settings, loading, onStart, onBack }: IReadyStepProp
         <div className="space-y-2">
           <h2 className="text-headline text-white">You&apos;re All Set!</h2>
           <p className="text-lg text-white/90 max-w-md mx-auto">
-            Your personalized practice session is ready. Let&apos;s begin your interview preparation.
+            Your personalized practice session is ready. Let&apos;s begin your
+            interview preparation.
           </p>
         </div>
 
@@ -44,8 +50,12 @@ export function ReadyStep({ settings, loading, onStart, onBack }: IReadyStepProp
 
         {settings.focusAreas.length > 0 && (
           <div className="flex flex-wrap gap-2 justify-center">
-            {settings.focusAreas.map(area => (
-              <Badge key={area} variant="secondary" className="bg-white/20 text-white border-white/30">
+            {settings.focusAreas.map((area) => (
+              <Badge
+                key={area}
+                variant="secondary"
+                className="bg-white/20 text-white border-white/30"
+              >
                 {area}
               </Badge>
             ))}
@@ -53,11 +63,7 @@ export function ReadyStep({ settings, loading, onStart, onBack }: IReadyStepProp
         )}
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <Button
-            size="lg"
-            variant="secondary"
-            onClick={onBack}
-          >
+          <Button size="lg" variant="secondary" onClick={onBack}>
             <ChevronLeft className="mr-2 h-5 w-5" />
             Adjust Settings
           </Button>
@@ -83,5 +89,5 @@ export function ReadyStep({ settings, loading, onStart, onBack }: IReadyStepProp
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

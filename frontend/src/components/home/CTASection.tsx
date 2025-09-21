@@ -1,9 +1,9 @@
-import { ArrowRight, Zap } from 'lucide-react';
-import Link from 'next/link';
-import type { ReactElement } from 'react';
+import { ArrowRight, Zap } from "lucide-react";
+import Link from "next/link";
+import type { ReactElement } from "react";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from "@components/ui/button";
+import { Card, CardContent } from "@components/ui/card";
 
 export function CTASection(): ReactElement {
   return (
@@ -15,9 +15,12 @@ export function CTASection(): ReactElement {
               <Zap className="h-8 w-8 text-white" />
             </div>
             <div className="space-y-2">
-              <h3 className="text-headline text-white">Ready to Ace Your Interview?</h3>
+              <h3 className="text-headline text-white">
+                Ready to Ace Your Interview?
+              </h3>
               <p className="text-lg text-white/90 max-w-xl mx-auto">
-                Join thousands of developers who&apos;ve successfully prepared with DevPrep AI
+                Join thousands of developers who&apos;ve successfully prepared
+                with DevPrep AI
               </p>
             </div>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -28,7 +31,11 @@ export function CTASection(): ReactElement {
                 </Button>
               </Link>
               <Link href="/demo">
-                <Button size="lg" variant="outline" className="bg-white/10 border-white/20 text-white hover:bg-white/20">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+                >
                   View Demo First
                 </Button>
               </Link>

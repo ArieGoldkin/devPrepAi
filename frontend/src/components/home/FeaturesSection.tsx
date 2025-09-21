@@ -1,5 +1,5 @@
-import { Brain, CheckCircle2, Code2, Target } from 'lucide-react';
-import type { ReactElement } from 'react';
+import { Brain, CheckCircle2, Code2, Target } from "lucide-react";
+import type { ReactElement } from "react";
 
 import {
   Card,
@@ -7,7 +7,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@components/ui/card";
 
 export function FeaturesSection(): ReactElement {
   return (
@@ -15,10 +15,12 @@ export function FeaturesSection(): ReactElement {
       <div className="container-xl">
         <div className="text-center space-y-4 mb-12">
           <h2 className="text-headline">
-            Everything You Need to <span className="text-gradient">Succeed</span>
+            Everything You Need to{" "}
+            <span className="text-gradient">Succeed</span>
           </h2>
           <p className="text-subtitle text-muted-foreground max-w-2xl mx-auto">
-            Comprehensive preparation tools designed by engineers who&apos;ve been through the process
+            Comprehensive preparation tools designed by engineers who&apos;ve
+            been through the process
           </p>
         </div>
 
@@ -30,7 +32,8 @@ export function FeaturesSection(): ReactElement {
               </div>
               <CardTitle>AI-Generated Questions</CardTitle>
               <CardDescription>
-                Practice with questions tailored to your experience level and target role
+                Practice with questions tailored to your experience level and
+                target role
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -58,7 +61,8 @@ export function FeaturesSection(): ReactElement {
               </div>
               <CardTitle>Instant Feedback</CardTitle>
               <CardDescription>
-                Get detailed analysis and improvement suggestions for every answer
+                Get detailed analysis and improvement suggestions for every
+                answer
               </CardDescription>
             </CardHeader>
             <CardContent>

@@ -1,22 +1,22 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import type React from "react"
+import { useRouter } from "next/navigation";
+import type React from "react";
 
-import AssessmentSetup from "@/components/assessment/AssessmentSetup"
-import type { IAssessmentSettings } from "@/components/assessment/AssessmentSetup"
+import AssessmentSetup from "@components/assessment/AssessmentSetup";
+import type { IAssessmentSettings } from "@components/assessment/AssessmentSetup";
 
 export default function AssessmentSetupPage(): React.JSX.Element {
-  const router = useRouter()
+  const router = useRouter();
 
   const handleComplete = (_settings: IAssessmentSettings) => {
     // Navigate to assessment page after settings are saved
-    router.push("/assessment")
-  }
+    router.push("/assessment");
+  };
 
   const handleBack = () => {
-    router.push("/")
-  }
+    router.push("/");
+  };
 
   return (
     <div className="min-h-screen bg-background p-4">
@@ -24,5 +24,5 @@ export default function AssessmentSetupPage(): React.JSX.Element {
         <AssessmentSetup onComplete={handleComplete} onBack={handleBack} />
       </div>
     </div>
-  )
+  );
 }

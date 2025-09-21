@@ -49,7 +49,10 @@
       "@services/*": ["./src/services/*"],
       "@lib/*": ["./src/lib/*"],
       "@types/*": ["./src/types/*"],
-      "@stores/*": ["./src/stores/*"]
+      "@store/*": ["./src/store/*"],
+      "@data/*": ["./src/data/*"],
+      "@constants/*": ["./src/constants/*"],
+      "@utils/*": ["./src/utils/*"]
     },
 
     // Next.js

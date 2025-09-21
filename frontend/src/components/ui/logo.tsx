@@ -1,15 +1,19 @@
-import React from 'react';
+import React from "react";
 
-import { cn } from '@/lib/utils';
+import { cn } from "@lib/utils";
 
 interface ILogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
-  variant?: 'default' | 'gradient' | 'dark' | 'light';
+  size?: "sm" | "md" | "lg" | "xl";
+  variant?: "default" | "gradient" | "dark" | "light";
   showText?: boolean;
 }
 
-const renderLogoIcon = (currentSize: { icon: number }, color1: string, color2: string): React.ReactElement => (
+const renderLogoIcon = (
+  currentSize: { icon: number },
+  color1: string,
+  color2: string,
+): React.ReactElement => (
   <svg
     width={currentSize.icon}
     height={currentSize.icon}
@@ -42,12 +46,7 @@ const renderLogoIcon = (currentSize: { icon: number }, color1: string, color2: s
     />
 
     {/* Center AI symbol */}
-    <circle
-      cx="24"
-      cy="24"
-      r="4"
-      fill="url(#logo-gradient)"
-    />
+    <circle cx="24" cy="24" r="4" fill="url(#logo-gradient)" />
     <circle
       cx="24"
       cy="24"
@@ -64,55 +63,60 @@ const renderLogoIcon = (currentSize: { icon: number }, color1: string, color2: s
     <circle cx="12" cy="24" r="1.5" fill="url(#logo-gradient)" opacity="0.8" />
     <circle cx="36" cy="24" r="1.5" fill="url(#logo-gradient)" opacity="0.8" />
   </svg>
-)
+);
 
-const renderLogoText = (currentSize: { text: string }, textColor: string): React.ReactElement => (
+const renderLogoText = (
+  currentSize: { text: string },
+  textColor: string,
+): React.ReactElement => (
   <div className="flex flex-col">
-    <span className={cn('font-bold tracking-tight', currentSize.text, textColor)}>
+    <span
+      className={cn("font-bold tracking-tight", currentSize.text, textColor)}
+    >
       DevPrep
     </span>
-    <span className={cn('text-xs font-medium text-muted-foreground -mt-1')}>
+    <span className={cn("text-xs font-medium text-muted-foreground -mt-1")}>
       AI-Powered Prep
     </span>
   </div>
-)
+);
 
 const Logo: React.FC<ILogoProps> = ({
   className,
-  size = 'md',
-  variant = 'default',
-  showText = true
+  size = "md",
+  variant = "default",
+  showText = true,
 }): React.ReactElement => {
   const sizes = {
-    sm: { icon: 24, text: 'text-base' },
-    md: { icon: 32, text: 'text-lg' },
-    lg: { icon: 40, text: 'text-xl' },
-    xl: { icon: 48, text: 'text-2xl' }
+    sm: { icon: 24, text: "text-base" },
+    md: { icon: 32, text: "text-lg" },
+    lg: { icon: 40, text: "text-xl" },
+    xl: { icon: 48, text: "text-2xl" },
   };
 
   const currentSize = sizes[size];
 
   const getTextColor = (): string => {
     switch (variant) {
-      case 'gradient':
-        return 'text-gradient';
-      case 'dark':
-        return 'text-foreground';
-      case 'light':
-        return 'text-white';
+      case "gradient":
+        return "text-gradient";
+      case "dark":
+        return "text-foreground";
+      case "light":
+        return "text-white";
       default:
-        return 'text-foreground';
+        return "text-foreground";
     }
   };
 
   const getIconColor = (): string[] => {
     switch (variant) {
-      case 'dark':
-        return ['#5b6cf8', '#8b5cf6'];
-      case 'light':
-        return ['#ffffff', '#f0f0f0'];
+      case "dark":
+        return ["#5b6cf8", "#8b5cf6"];
+      case "light":
+        return ["#ffffff", "#f0f0f0"];
       default:
-        return ['#5b6cf8', '#8b5cf6'];
+        return ["#5b6cf8", "#8b5cf6"];
     }
   };
 
@@ -120,11 +124,11 @@ const Logo: React.FC<ILogoProps> = ({
   const textColor = getTextColor();
 
   // Ensure colors are never undefined
-  const safeColor1 = color1 || '#5b6cf8';
-  const safeColor2 = color2 || '#8b5cf6';
+  const safeColor1 = color1 || "#5b6cf8";
+  const safeColor2 = color2 || "#8b5cf6";
 
   return (
-    <div className={cn('flex items-center gap-2', className || '')}>
+    <div className={cn("flex items-center gap-2", className || "")}>
       {renderLogoIcon(currentSize, safeColor1, safeColor2)}
       {showText && renderLogoText(currentSize, textColor)}
     </div>

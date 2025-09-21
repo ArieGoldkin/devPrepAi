@@ -7,12 +7,12 @@ import {
   CheckCircle2,
   TrendingUp,
   Users,
-} from 'lucide-react';
-import Link from 'next/link';
-import type { ReactElement } from 'react';
+} from "lucide-react";
+import Link from "next/link";
+import type { ReactElement } from "react";
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
+import { Button } from "@components/ui/button";
+import { Card, CardContent } from "@components/ui/card";
 
 export function HeroSection(): ReactElement {
   return (
@@ -34,7 +34,9 @@ export function HeroSection(): ReactElement {
                 <span className="text-gradient"> Technical Interview</span>
               </h1>
               <p className="text-subtitle text-muted-foreground max-w-lg">
-                Leverage AI to practice coding challenges, system design questions, and behavioral scenarios tailored to your target role.
+                Leverage AI to practice coding challenges, system design
+                questions, and behavioral scenarios tailored to your target
+                role.
               </p>
             </div>
 
@@ -46,7 +48,11 @@ export function HeroSection(): ReactElement {
                 </Button>
               </Link>
               <Link href="/demo">
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="w-full sm:w-auto"
+                >
                   Watch Demo
                 </Button>
               </Link>
@@ -55,11 +61,15 @@ export function HeroSection(): ReactElement {
             <div className="flex items-center gap-8 pt-4">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="h-5 w-5 text-brand-success" />
-                <span className="text-sm text-muted-foreground">Instant Feedback</span>
+                <span className="text-sm text-muted-foreground">
+                  Instant Feedback
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-brand-primary" />
-                <span className="text-sm text-muted-foreground">Track Progress</span>
+                <span className="text-sm text-muted-foreground">
+                  Track Progress
+                </span>
               </div>
             </div>
           </div>
@@ -72,28 +82,36 @@ export function HeroSection(): ReactElement {
                   <CardContent className="pt-6">
                     <Code2 className="h-8 w-8 text-primary mb-2" />
                     <div className="text-2xl font-bold">500+</div>
-                    <p className="text-xs text-muted-foreground">Practice Questions</p>
+                    <p className="text-xs text-muted-foreground">
+                      Practice Questions
+                    </p>
                   </CardContent>
                 </Card>
                 <Card className="card-feature">
                   <CardContent className="pt-6">
                     <Brain className="h-8 w-8 text-accent mb-2" />
                     <div className="text-2xl font-bold">AI</div>
-                    <p className="text-xs text-muted-foreground">Powered Analysis</p>
+                    <p className="text-xs text-muted-foreground">
+                      Powered Analysis
+                    </p>
                   </CardContent>
                 </Card>
                 <Card className="card-feature">
                   <CardContent className="pt-6">
                     <Target className="h-8 w-8 text-secondary mb-2" />
                     <div className="text-2xl font-bold">95%</div>
-                    <p className="text-xs text-muted-foreground">Success Rate</p>
+                    <p className="text-xs text-muted-foreground">
+                      Success Rate
+                    </p>
                   </CardContent>
                 </Card>
                 <Card className="card-feature">
                   <CardContent className="pt-6">
                     <Users className="h-8 w-8 text-brand-success mb-2" />
                     <div className="text-2xl font-bold">10k+</div>
-                    <p className="text-xs text-muted-foreground">Active Users</p>
+                    <p className="text-xs text-muted-foreground">
+                      Active Users
+                    </p>
                   </CardContent>
                 </Card>
               </div>

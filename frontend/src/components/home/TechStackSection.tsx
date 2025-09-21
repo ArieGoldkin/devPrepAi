@@ -1,6 +1,6 @@
-import type { ReactElement } from 'react';
+import type { ReactElement } from "react";
 
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@components/ui/badge";
 
 export function TechStackSection(): ReactElement {
   return (

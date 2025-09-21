@@ -1,17 +1,26 @@
-import { User, ChevronLeft } from 'lucide-react'
-import React from 'react'
+import { User, ChevronLeft } from "lucide-react";
+import React from "react";
 
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Button } from "@components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@components/ui/card";
 
-import { ProfileSetup } from '../ProfileSetup'
+import { ProfileSetup } from "../ProfileSetup";
 
 interface IProfileStepProps {
-  onNext: () => void
-  onBack: () => void
+  onNext: () => void;
+  onBack: () => void;
 }
 
-export function ProfileStep({ onNext, onBack }: IProfileStepProps): React.JSX.Element {
+export function ProfileStep({
+  onNext,
+  onBack,
+}: IProfileStepProps): React.JSX.Element {
   return (
     <Card className="card-feature max-w-2xl mx-auto">
       <CardHeader>
@@ -27,15 +36,12 @@ export function ProfileStep({ onNext, onBack }: IProfileStepProps): React.JSX.El
         <ProfileSetup onComplete={onNext} />
 
         <div className="flex justify-between mt-6">
-          <Button
-            variant="outline"
-            onClick={onBack}
-          >
+          <Button variant="outline" onClick={onBack}>
             <ChevronLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

@@ -1,9 +1,15 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 
-import { Button } from '../../components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Button } from "@components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@components/ui/card";
 
 export default function DesignSystemPage(): React.JSX.Element {
   return (
@@ -14,7 +20,8 @@ export default function DesignSystemPage(): React.JSX.Element {
             DevPrep AI Design System
           </h1>
           <p className="text-subtitle text-muted-foreground max-w-3xl mx-auto">
-            A comprehensive design system with blue-purple brand colors and modern components.
+            A comprehensive design system with blue-purple brand colors and
+            modern components.
           </p>
         </div>
 
@@ -38,7 +45,9 @@ export default function DesignSystemPage(): React.JSX.Element {
             <Card variant="feature">
               <CardHeader>
                 <CardTitle>Button Showcase</CardTitle>
-                <CardDescription>Various button styles and variants</CardDescription>
+                <CardDescription>
+                  Various button styles and variants
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-4">
@@ -80,7 +89,8 @@ export default function DesignSystemPage(): React.JSX.Element {
 
         <footer className="text-center py-8 border-t">
           <div className="text-body text-muted-foreground">
-            DevPrep AI Design System - Modern, accessible, and developer-friendly.
+            DevPrep AI Design System - Modern, accessible, and
+            developer-friendly.
           </div>
         </footer>
       </div>
