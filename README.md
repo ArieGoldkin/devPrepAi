@@ -45,7 +45,8 @@ devprep-ai/
 ## ✨ Features
 
 - **AI-Powered Questions**: Dynamic question generation based on user profile
-- **Practice Mode**: Interactive wizard with personalized settings
+- **5-Step Practice Wizard**: Welcome → Profile → Focus → Settings → Ready
+- **Technology Focus**: Select specific technologies for targeted practice
 - **Assessment Mode**: Timed tests with auto-save
 - **Instant Feedback**: AI evaluation with detailed scoring
 - **Progress Tracking**: Statistics and performance metrics
