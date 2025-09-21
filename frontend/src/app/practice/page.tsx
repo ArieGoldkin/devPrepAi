@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
+import type { InterviewType } from "@/types/ai";
 import { AppLayout } from "@components/layout/AppLayout";
 import { ErrorMessage } from "@components/practice/ErrorMessage";
 import { TOTAL_STEPS, PROGRESS_MULTIPLIER } from "@components/practice/wizard";
@@ -18,6 +19,8 @@ export default function PracticePage(): React.JSX.Element {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentStep, setCurrentStep] = useState<WizardStep>("welcome");
+  const [selectedInterviewType, setSelectedInterviewType] =
+    useState<InterviewType | null>(null);
   const [practiceSettings, setPracticeSettings] = useState<PracticeSettings>({
     duration: 30,
     questionCount: 5,
@@ -69,10 +72,12 @@ export default function PracticePage(): React.JSX.Element {
         return 1;
       case "profile":
         return 2;
-      case "settings":
+      case "focus":
         return 3;
-      case "ready":
+      case "settings":
         return 4;
+      case "ready":
+        return 5;
       default:
         return 1;
     }
@@ -101,9 +106,11 @@ export default function PracticePage(): React.JSX.Element {
           currentStep={currentStep}
           userProfile={userProfile}
           practiceSettings={practiceSettings}
+          selectedInterviewType={selectedInterviewType}
           loading={loading}
           onStepChange={setCurrentStep}
           onSettingsChange={setPracticeSettings}
+          onInterviewTypeSelect={setSelectedInterviewType}
           onStart={handleGenerateQuestions}
         />
       </div>

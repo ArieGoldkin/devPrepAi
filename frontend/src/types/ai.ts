@@ -3,12 +3,30 @@
  * Clean types for interview prep platform
  */
 
+// Interview type options
+export type InterviewType = "coding" | "system-design" | "behavioral";
+
+// Company size preference
+export type CompanySize = "startup" | "mid-size" | "enterprise" | "any";
+
+// Role focus areas
+export type RoleFocus =
+  | "frontend"
+  | "backend"
+  | "fullstack"
+  | "devops"
+  | "mobile";
+
 // User profile for interview preparation
 export interface IUserProfile {
-  experienceLevel: 'junior' | 'mid' | 'senior';
+  experienceLevel: "junior" | "mid" | "senior";
+  yearsOfExperience: number;
   technologies: string[];
-  role: 'frontend' | 'backend' | 'fullstack';
-  interviewType: 'technical' | 'behavioral' | 'system-design';
+  roleFocus: RoleFocus;
+  interviewType: InterviewType;
+  companySizePreference: CompanySize;
+  previousInterviewExperience: "none" | "some" | "extensive";
+  targetRole?: string; // Optional field for specific role targeting
 }
 
 // Interview question structure
@@ -16,7 +34,7 @@ export interface IQuestion {
   id: string;
   title: string;
   content: string;
-  type: 'behavioral' | 'system-design' | 'coding' | 'conceptual';
+  type: "behavioral" | "system-design" | "coding" | "conceptual";
   difficulty: number;
   category: string;
   hints: string[];
@@ -32,7 +50,7 @@ export interface IGenerateQuestionsRequest {
   profile: IUserProfile;
   count: number;
   difficulty: number;
-  type: IQuestion['type'];
+  type: IQuestion["type"];
 }
 
 export interface IGenerateQuestionsResponse {
@@ -60,7 +78,7 @@ export interface IEvaluateAnswerResponse {
 
 export interface IExplainConceptRequest {
   concept: string;
-  userLevel: IUserProfile['experienceLevel'];
+  userLevel: IUserProfile["experienceLevel"];
   includeExamples: boolean;
 }
 
@@ -80,7 +98,7 @@ export interface IExplainConceptResponse {
 // AI Service types
 export interface IClaudeResponse {
   content: Array<{
-    type: 'text';
+    type: "text";
     text: string;
   }>;
   usage: {

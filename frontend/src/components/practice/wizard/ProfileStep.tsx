@@ -1,6 +1,7 @@
 import { User, ChevronLeft } from "lucide-react";
 import React from "react";
 
+import type { InterviewType } from "@/types/ai";
 import { Button } from "@components/ui/button";
 import {
   Card,
@@ -15,11 +16,13 @@ import { ProfileSetup } from "../ProfileSetup";
 interface IProfileStepProps {
   onNext: () => void;
   onBack: () => void;
+  selectedInterviewType: InterviewType | null;
 }
 
 export function ProfileStep({
   onNext,
   onBack,
+  selectedInterviewType,
 }: IProfileStepProps): React.JSX.Element {
   return (
     <Card className="card-feature max-w-2xl mx-auto">
@@ -33,7 +36,10 @@ export function ProfileStep({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <ProfileSetup onComplete={onNext} />
+        <ProfileSetup
+          onComplete={onNext}
+          selectedInterviewType={selectedInterviewType}
+        />
 
         <div className="flex justify-between mt-6">
           <Button variant="outline" onClick={onBack}>

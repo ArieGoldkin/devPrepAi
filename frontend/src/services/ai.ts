@@ -3,7 +3,7 @@
  * Client-side service that communicates with API routes
  */
 
-import { apiClient } from '../lib/api-client';
+import { apiClient } from "../lib/api-client";
 import type {
   IGenerateQuestionsRequest,
   IGenerateQuestionsResponse,
@@ -11,8 +11,8 @@ import type {
   IEvaluateAnswerResponse,
   IExplainConceptRequest,
   IExplainConceptResponse,
-  IAPIResponse
-} from '../types/ai';
+  IAPIResponse,
+} from "../types/ai";
 
 class AIService {
   constructor() {
@@ -20,27 +20,27 @@ class AIService {
   }
 
   async generateQuestions(
-    request: IGenerateQuestionsRequest
+    request: IGenerateQuestionsRequest,
   ): Promise<IAPIResponse<IGenerateQuestionsResponse>> {
     try {
       return await apiClient.generateQuestions(request);
     } catch (error) {
-      console.error('Generate questions error:', error);
+      console.error("Generate questions error:", error);
       return {
         data: { questions: [], totalGenerated: 0 },
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
 
   async evaluateAnswer(
-    request: IEvaluateAnswerRequest
+    request: IEvaluateAnswerRequest,
   ): Promise<IAPIResponse<IEvaluateAnswerResponse>> {
     try {
       return await apiClient.evaluateAnswer(request);
     } catch (error) {
-      console.error('Evaluate answer error:', error);
+      console.error("Evaluate answer error:", error);
       return {
         data: {
           feedback: {
@@ -48,36 +48,36 @@ class AIService {
             strengths: [],
             improvements: [],
             suggestions: [],
-            overallFeedback: 'Unable to evaluate answer'
+            overallFeedback: "Unable to evaluate answer",
           },
-          success: false
+          success: false,
         },
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
 
   async explainConcept(
-    request: IExplainConceptRequest
+    request: IExplainConceptRequest,
   ): Promise<IAPIResponse<IExplainConceptResponse>> {
     try {
       return await apiClient.explainConcept(request);
     } catch (error) {
-      console.error('Explain concept error:', error);
+      console.error("Explain concept error:", error);
       return {
         data: {
           explanation: {
             concept: request.concept,
-            explanation: 'Unable to generate explanation',
+            explanation: "Unable to generate explanation",
             examples: [],
             keyPoints: [],
-            relatedConcepts: []
+            relatedConcepts: [],
           },
-          success: false
+          success: false,
         },
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   }
@@ -87,21 +87,22 @@ export const aiService = new AIService();
 
 // Export convenience functions for backward compatibility
 export const generatePracticeQuestions = async (
-  profile: IGenerateQuestionsRequest['profile']
-): Promise<IGenerateQuestionsResponse['questions']> => {
+  profile: IGenerateQuestionsRequest["profile"],
+): Promise<IGenerateQuestionsResponse["questions"]> => {
   const response = await aiService.generateQuestions({
     profile,
     count: 5, // Default count
     difficulty: 5, // Default difficulty
-    type: profile.interviewType === 'technical' ? 'coding' : 'behavioral' // Map interview type to question type
+    type: profile.interviewType, // Use interview type directly as it matches
   });
 
   if (!response.success || response.data === undefined) {
-    throw new Error(response.error ?? 'Failed to generate questions');
+    throw new Error(response.error ?? "Failed to generate questions");
   }
   return response.data.questions;
 };
 
 export const evaluateAssessment = async (
-  request: IEvaluateAnswerRequest
-): Promise<IAPIResponse<IEvaluateAnswerResponse>> => aiService.evaluateAnswer(request);
+  request: IEvaluateAnswerRequest,
+): Promise<IAPIResponse<IEvaluateAnswerResponse>> =>
+  aiService.evaluateAnswer(request);

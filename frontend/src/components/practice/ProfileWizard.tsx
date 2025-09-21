@@ -1,118 +1,120 @@
-"use client"
+"use client";
 
-import type * as React from "react"
-import { useState } from "react"
+import type * as React from "react";
+import { useState } from "react";
 
-import { useAppStore } from "../../store/useAppStore"
-import type { IUserProfile } from "../../types/ai"
-import { Button } from "../ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card"
-import { Select } from "../ui/select"
+import { useAppStore } from "../../store/useAppStore";
+import type {
+  CompanySize,
+  InterviewType,
+  IUserProfile,
+  RoleFocus,
+} from "../../types/ai";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+
+import {
+  CompanySizeSelector,
+  ExperienceSelector,
+  InterviewExperienceSelector,
+  RoleFocusSelector,
+  TechnologySelector,
+  YearsExperienceInput,
+} from "./profile-wizard";
 
 interface IProfileWizardProps {
-  onComplete?: () => void
+  onComplete?: () => void;
+  selectedInterviewType: InterviewType | null;
 }
 
-const AVAILABLE_TECHNOLOGIES = ["React", "TypeScript", "Node.js", "Python", "Java"]
-
-const ExperienceSelector = ({
-  value,
-  onChange
-}: {
-  value: string
-  onChange: (value: string) => void
-}): React.JSX.Element => (
-  <div>
-    <label className="block text-body font-medium mb-2">Experience</label>
-    <Select 
-      value={value} 
-      onChange={(e): void => onChange(e.target.value)} 
-      placeholder="Select level"
-    >
-      <option value="junior">Junior</option>
-      <option value="mid">Mid-level</option>
-      <option value="senior">Senior</option>
-    </Select>
-  </div>
-)
-
-const TechnologySelector = ({
-  selectedTechs,
-  onToggle
-}: {
-  selectedTechs: string[]
-  onToggle: (tech: string) => void
-}): React.JSX.Element => (
-  <div>
-    <label className="block text-body font-medium mb-2">Technologies</label>
-    {AVAILABLE_TECHNOLOGIES.map(tech => (
-      <label key={tech} className="flex items-center space-x-2">
-        <input 
-          type="checkbox" 
-          checked={selectedTechs.includes(tech)} 
-          onChange={(): void => onToggle(tech)} 
-        />
-        <span className="text-body">{tech}</span>
-      </label>
-    ))}
-  </div>
-)
-
-const InterviewTypeSelector = ({
-  value,
-  onChange
-}: {
-  value: string
-  onChange: (value: string) => void
-}): React.JSX.Element => (
-  <div>
-    <label className="block text-body font-medium mb-2">Interview Type</label>
-    <Select 
-      value={value} 
-      onChange={(e): void => onChange(e.target.value)} 
-      placeholder="Select type"
-    >
-      <option value="technical">Technical</option>
-      <option value="behavioral">Behavioral</option>
-      <option value="system-design">System Design</option>
-    </Select>
-  </div>
-)
-
-export function ProfileWizard({ onComplete }: IProfileWizardProps): React.JSX.Element {
-  const { setUserProfile } = useAppStore()
-  const [experience, setExperience] = useState("")
-  const [techs, setTechs] = useState<string[]>([])
-  const [type, setType] = useState("")
+export function ProfileWizard({
+  onComplete,
+  selectedInterviewType,
+}: IProfileWizardProps): React.JSX.Element {
+  const { setUserProfile } = useAppStore();
+  const [experience, setExperience] = useState("");
+  const [yearsOfExperience, setYearsOfExperience] = useState(0);
+  const [techs, setTechs] = useState<string[]>([]);
+  const [roleFocus, setRoleFocus] = useState("");
+  const [companySize, setCompanySize] = useState("");
+  const [interviewExperience, setInterviewExperience] = useState("");
 
   const toggleTech = (tech: string): void => {
-    setTechs(prev => prev.includes(tech) ? prev.filter(t => t !== tech) : [...prev, tech])
-  }
+    setTechs((prev) =>
+      prev.includes(tech) ? prev.filter((t) => t !== tech) : [...prev, tech],
+    );
+  };
 
   const handleSubmit = (): void => {
-    if (experience && techs.length > 0 && type) {
+    if (
+      experience &&
+      techs.length > 0 &&
+      roleFocus &&
+      companySize &&
+      interviewExperience &&
+      selectedInterviewType
+    ) {
       const profile: IUserProfile = {
-        experienceLevel: experience as 'junior' | 'mid' | 'senior',
+        experienceLevel: experience as "junior" | "mid" | "senior",
+        yearsOfExperience,
         technologies: techs,
-        role: 'fullstack',
-        interviewType: type as 'technical' | 'behavioral' | 'system-design'
-      }
-      setUserProfile(profile)
-      onComplete?.()
+        roleFocus: roleFocus as RoleFocus,
+        interviewType: selectedInterviewType,
+        companySizePreference: companySize as CompanySize,
+        previousInterviewExperience: interviewExperience as
+          | "none"
+          | "some"
+          | "extensive",
+      };
+      setUserProfile(profile);
+      onComplete?.();
     }
-  }
+  };
 
-  const isFormValid = Boolean(experience && techs.length > 0 && type)
+  const isFormValid = Boolean(
+    experience &&
+      techs.length > 0 &&
+      roleFocus &&
+      companySize &&
+      interviewExperience &&
+      selectedInterviewType,
+  );
+
   return (
-    <Card variant="elevated" className="w-full max-w-md mx-auto animate-slide-up">
+    <Card
+      variant="elevated"
+      className="w-full max-w-2xl mx-auto animate-slide-up"
+    >
       <CardHeader>
         <CardTitle>Setup Profile</CardTitle>
-        <CardDescription>Configure your interview practice</CardDescription>
+        <CardDescription>
+          Configure your interview practice for {selectedInterviewType}{" "}
+          questions
+        </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <ExperienceSelector value={experience} onChange={setExperience} />
+      <CardContent className="space-y-6">
+        <div className="grid md:grid-cols-2 gap-4">
+          <ExperienceSelector value={experience} onChange={setExperience} />
+          <YearsExperienceInput
+            value={yearsOfExperience}
+            onChange={setYearsOfExperience}
+          />
+        </div>
+        <div className="grid md:grid-cols-2 gap-4">
+          <RoleFocusSelector value={roleFocus} onChange={setRoleFocus} />
+          <CompanySizeSelector value={companySize} onChange={setCompanySize} />
+        </div>
+        <InterviewExperienceSelector
+          value={interviewExperience}
+          onChange={setInterviewExperience}
+        />
         <TechnologySelector selectedTechs={techs} onToggle={toggleTech} />
-        <InterviewTypeSelector value={type} onChange={setType} />
         <Button
           onClick={handleSubmit}
           disabled={!isFormValid}
@@ -123,5 +125,5 @@ export function ProfileWizard({ onComplete }: IProfileWizardProps): React.JSX.El
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }

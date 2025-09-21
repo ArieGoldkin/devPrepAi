@@ -1,6 +1,7 @@
-import { User, Briefcase, Code2, ChevronRight } from "lucide-react";
-import React from "react";
+import { User, Briefcase, Code2, ChevronRight, Check } from "lucide-react";
+import React, { useState } from "react";
 
+import type { InterviewType } from "@/types/ai";
 import { Button } from "@components/ui/button";
 import {
   Card,
@@ -10,26 +11,41 @@ import {
   CardTitle,
 } from "@components/ui/card";
 import Logo from "@components/ui/logo";
+import { cn } from "@lib/utils";
 
 interface IWelcomeStepProps {
-  onNext: () => void;
+  onNext: (selectedInterviewType: InterviewType) => void;
 }
 
 export function WelcomeStep({ onNext }: IWelcomeStepProps): React.JSX.Element {
-  const renderPracticeTypeCard = (
-    icon: React.ReactNode,
-    title: string,
-    description: string,
-    className: string,
-  ): React.JSX.Element => (
-    <Card className={className}>
-      <CardContent className="pt-6 text-center">
-        {icon}
-        <div className="font-semibold">{title}</div>
-        <p className="text-xs text-muted-foreground mt-1">{description}</p>
-      </CardContent>
-    </Card>
-  );
+  const [selectedType, setSelectedType] = useState<InterviewType | null>(null);
+
+  const practiceTypes = [
+    {
+      id: "coding",
+      icon: Code2,
+      label: "Coding Questions",
+      description: "Algorithm & data structure challenges",
+    },
+    {
+      id: "system-design",
+      icon: Briefcase,
+      label: "System Design",
+      description: "Architecture & scalability problems",
+    },
+    {
+      id: "behavioral",
+      icon: User,
+      label: "Behavioral",
+      description: "Situational & leadership questions",
+    },
+  ];
+
+  const handleNext = (): void => {
+    if (selectedType) {
+      onNext(selectedType);
+    }
+  };
 
   return (
     <Card className="card-feature max-w-2xl mx-auto">
@@ -41,39 +57,52 @@ export function WelcomeStep({ onNext }: IWelcomeStepProps): React.JSX.Element {
           Welcome to Practice Mode
         </CardTitle>
         <CardDescription className="text-subtitle text-muted-foreground">
-          Prepare for your technical interview with AI-powered practice sessions
+          Choose your interview type to get started with personalized practice
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid md:grid-cols-3 gap-4">
-          {renderPracticeTypeCard(
-            <Code2 className="h-8 w-8 text-primary mx-auto mb-2" />,
-            "Coding Questions",
-            "Algorithm & data structure challenges",
-            "border-primary/20 bg-primary/5",
-          )}
-          {renderPracticeTypeCard(
-            <Briefcase className="h-8 w-8 text-accent mx-auto mb-2" />,
-            "System Design",
-            "Architecture & scalability problems",
-            "border-accent/20 bg-accent/5",
-          )}
-          {renderPracticeTypeCard(
-            <User className="h-8 w-8 text-secondary mx-auto mb-2" />,
-            "Behavioral",
-            "Situational & leadership questions",
-            "border-secondary/20 bg-secondary/5",
-          )}
+          {practiceTypes.map((type) => {
+            const isSelected = selectedType === type.id;
+            const Icon = type.icon;
+
+            return (
+              <Card
+                key={type.id}
+                className={cn(
+                  "cursor-pointer transition-all hover:shadow-lg",
+                  isSelected
+                    ? "border-primary bg-primary/10 ring-2 ring-primary/20"
+                    : "hover:border-primary/50",
+                )}
+                onClick={() => setSelectedType(type.id as InterviewType)}
+              >
+                <CardContent className="pt-6 text-center">
+                  {isSelected && (
+                    <div className="absolute top-2 right-2">
+                      <Check className="h-4 w-4 text-primary" />
+                    </div>
+                  )}
+                  <Icon className="h-8 w-8 text-primary mx-auto mb-2" />
+                  <div className="font-semibold">{type.label}</div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {type.description}
+                  </p>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         <div className="flex justify-center pt-4">
           <Button
             size="lg"
             variant="accent"
-            onClick={onNext}
+            onClick={handleNext}
+            disabled={!selectedType}
             className="min-w-[200px]"
           >
-            Get Started
+            {selectedType ? "Continue" : "Select Interview Type"}
             <ChevronRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
