@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { TECHNOLOGY_OPTIONS } from "../wizard/constants";
+import { TECHNOLOGY_OPTIONS } from "@components/practice/wizard/constants";
 
 interface ITechnologySelectorProps {
   selectedTechs: string[];

@@ -1,51 +1,50 @@
-import type * as React from 'react'
-import { useState } from 'react'
+import type * as React from "react";
+import { useState } from "react";
 
-import type { IQuestion } from '../../types/ai'
-import { Button } from '../ui/button'
+import type { IQuestion } from "@/types/ai";
+import { Button } from "@components/ui/button";
 
-import { QuestionCard } from './QuestionCard'
-
+import { QuestionCard } from "./QuestionCard";
 
 interface IQuestionListProps {
-  questions: IQuestion[]
-  currentIndex?: number
-  onNext?: () => void
-  onPrevious?: () => void
-  onQuestionChange?: (index: number) => void | undefined
+  questions: IQuestion[];
+  currentIndex?: number;
+  onNext?: () => void;
+  onPrevious?: () => void;
+  onQuestionChange?: (index: number) => void | undefined;
 }
 
 const EmptyState = ({ message }: { message: string }): React.ReactElement => (
   <div className="flex items-center justify-center py-12">
     <p className="text-muted-foreground">{message}</p>
   </div>
-)
+);
 
 const getIndicatorClass = (index: number, activeIndex: number): string => {
-  const baseClass = 'w-2 h-2 rounded-full transition-colors'
-  if (index === activeIndex) return `${baseClass  } bg-primary`
-  if (index < activeIndex) return `${baseClass  } bg-primary/50`
-  return `${baseClass  } bg-muted`
-}
+  const baseClass = "w-2 h-2 rounded-full transition-colors";
+  if (index === activeIndex) return `${baseClass} bg-primary`;
+  if (index < activeIndex) return `${baseClass} bg-primary/50`;
+  return `${baseClass} bg-muted`;
+};
 
 const QuestionIndicator = ({
   questions,
   activeIndex,
   onQuestionChange,
-  setLocalIndex
+  setLocalIndex,
 }: {
-  questions: IQuestion[]
-  activeIndex: number
-  onQuestionChange?: (index: number) => void | undefined
-  setLocalIndex: (index: number) => void
+  questions: IQuestion[];
+  activeIndex: number;
+  onQuestionChange?: (index: number) => void | undefined;
+  setLocalIndex: (index: number) => void;
 }): React.ReactElement => {
   const handleQuestionClick = (index: number): void => {
     if (onQuestionChange) {
-      onQuestionChange(index)
+      onQuestionChange(index);
     } else {
-      setLocalIndex(index)
+      setLocalIndex(index);
     }
-  }
+  };
 
   return (
     <div className="flex items-center justify-between">
@@ -63,21 +62,21 @@ const QuestionIndicator = ({
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
 const NavigationButtons = ({
   activeIndex,
   questionsLength,
   onPrevious,
-  onNext
+  onNext,
 }: {
-  activeIndex: number
-  questionsLength: number
-  onPrevious: () => void
-  onNext: () => void
+  activeIndex: number;
+  questionsLength: number;
+  onPrevious: () => void;
+  onNext: () => void;
 }): React.ReactElement => {
-  const shouldShowCounter = questionsLength > 1
+  const shouldShowCounter = questionsLength > 1;
 
   return (
     <div className="flex items-center justify-between">
@@ -99,44 +98,44 @@ const NavigationButtons = ({
         Next
       </Button>
     </div>
-  )
-}
+  );
+};
 
 export function QuestionList({
   questions,
   currentIndex = 0,
   onNext,
   onPrevious,
-  onQuestionChange
+  onQuestionChange,
 }: IQuestionListProps): React.ReactElement {
-  const [localIndex, setLocalIndex] = useState(currentIndex)
+  const [localIndex, setLocalIndex] = useState(currentIndex);
 
   // Use controlled index if provided, otherwise use local state
-  const activeIndex = onQuestionChange ? currentIndex : localIndex
+  const activeIndex = onQuestionChange ? currentIndex : localIndex;
 
   const handleNext = (): void => {
     if (onNext && onQuestionChange) {
-      onNext()
+      onNext();
     } else {
-      setLocalIndex(Math.min(activeIndex + 1, questions.length - 1))
+      setLocalIndex(Math.min(activeIndex + 1, questions.length - 1));
     }
-  }
+  };
 
   const handlePrevious = (): void => {
     if (onPrevious && onQuestionChange) {
-      onPrevious()
+      onPrevious();
     } else {
-      setLocalIndex(Math.max(activeIndex - 1, 0))
+      setLocalIndex(Math.max(activeIndex - 1, 0));
     }
-  }
+  };
 
   if (!questions?.length) {
-    return <EmptyState message="No questions available" />
+    return <EmptyState message="No questions available" />;
   }
 
-  const currentQuestion = questions[activeIndex]
+  const currentQuestion = questions[activeIndex];
   if (!currentQuestion) {
-    return <EmptyState message="Question not found" />
+    return <EmptyState message="Question not found" />;
   }
 
   return (
@@ -158,5 +157,5 @@ export function QuestionList({
         onNext={handleNext}
       />
     </div>
-  )
+  );
 }

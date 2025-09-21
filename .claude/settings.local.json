@@ -36,7 +36,9 @@
       "Bash(chmod:*)",
       "Bash(ln:*)",
       "Bash(next dev:*)",
-      "Bash(npx next:*)"
+      "Bash(npx next:*)",
+      "Read(//Users/ariegoldkin/Desktop/**)",
+      "Bash(./update-imports.sh)"
     ]
   },
   "enableAllProjectMcpServers": true,

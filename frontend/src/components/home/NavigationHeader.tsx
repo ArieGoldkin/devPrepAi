@@ -5,9 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { ReactElement } from "react";
 
-import { useAppStore } from "../../store/useAppStore";
-import { MobileNavigation } from "../layout/MobileNavigation";
-import { Button } from "../ui/button";
+import { MobileNavigation } from "@components/layout/MobileNavigation";
+import { Button } from "@components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,8 +14,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import Logo from "../ui/logo";
+} from "@components/ui/dialog";
+import Logo from "@components/ui/logo";
+import { useAppStore } from "@store/useAppStore";
 
 import { DesktopNavigation } from "./DesktopNavigation";
 import {

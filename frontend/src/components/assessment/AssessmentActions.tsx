@@ -1,15 +1,15 @@
-import React from 'react'
+import React from "react";
 
-import { Button } from '../ui/button'
+import { Button } from "@components/ui/button";
 
 interface IAssessmentActionsProps {
-  answersCount: number
-  totalQuestions: number
-  hasAnswered: boolean
-  isLastQuestion: boolean
-  currentAnswer: string
-  onSubmitAnswer: () => void
-  onNext: () => void
+  answersCount: number;
+  totalQuestions: number;
+  hasAnswered: boolean;
+  isLastQuestion: boolean;
+  currentAnswer: string;
+  onSubmitAnswer: () => void;
+  onNext: () => void;
 }
 
 export function AssessmentActions({
@@ -19,7 +19,7 @@ export function AssessmentActions({
   isLastQuestion,
   currentAnswer,
   onSubmitAnswer,
-  onNext
+  onNext,
 }: IAssessmentActionsProps): React.JSX.Element {
   return (
     <div className="flex justify-between">
@@ -43,9 +43,9 @@ export function AssessmentActions({
           disabled={!hasAnswered && !currentAnswer.trim()}
           variant="accent"
         >
-          {isLastQuestion ? 'Complete Assessment' : 'Next Question'}
+          {isLastQuestion ? "Complete Assessment" : "Next Question"}
         </Button>
       </div>
     </div>
-  )
+  );
 }

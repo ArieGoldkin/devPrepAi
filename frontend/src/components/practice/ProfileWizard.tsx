@@ -3,21 +3,21 @@
 import type * as React from "react";
 import { useState } from "react";
 
-import { useAppStore } from "../../store/useAppStore";
 import type {
   CompanySize,
   InterviewType,
   IUserProfile,
   RoleFocus,
-} from "../../types/ai";
-import { Button } from "../ui/button";
+} from "@/types/ai";
+import { Button } from "@components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
+} from "@components/ui/card";
+import { useAppStore } from "@store/useAppStore";
 
 import {
   CompanySizeSelector,

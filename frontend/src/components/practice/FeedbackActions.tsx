@@ -1,19 +1,19 @@
-import type React from "react"
+import type React from "react";
 
-import { Button } from "../ui/button"
+import { Button } from "@components/ui/button";
 
 interface IFeedbackActionsProps {
-  onTryAgain: () => void
-  onNext: () => void
-  onFinish: () => void
-  isLastQuestion: boolean
+  onTryAgain: () => void;
+  onNext: () => void;
+  onFinish: () => void;
+  isLastQuestion: boolean;
 }
 
 export const FeedbackActions = ({
   onTryAgain,
   onNext,
   onFinish,
-  isLastQuestion
+  isLastQuestion,
 }: IFeedbackActionsProps): React.ReactElement => (
   <div className="flex gap-2 justify-center pt-4 animate-fade-in">
     <Button onClick={onTryAgain} variant="outline" size="sm">
@@ -29,4 +29,4 @@ export const FeedbackActions = ({
       </Button>
     )}
   </div>
-)
+);

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { ReactElement } from "react";
 
-import { cn } from "../../lib/utils";
+import { cn } from "@lib/utils";
 
 export interface IDesktopNavigationProps {
   mode: "default" | "practice" | "assessment" | "results";

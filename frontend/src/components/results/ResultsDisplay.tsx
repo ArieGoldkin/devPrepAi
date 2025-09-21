@@ -1,20 +1,23 @@
-import * as React from 'react'
+import * as React from "react";
 
-import type { IAssessmentResults } from '../../types/ai'
-import { QuestionResult } from '../questions/QuestionResult'
+import type { IAssessmentResults } from "@/types/ai";
+import { QuestionResult } from "@components/questions/QuestionResult";
 
-import { ResultsSummary } from './ResultsSummary'
+import { ResultsSummary } from "./ResultsSummary";
 
 interface IResultsDisplayProps {
-  assessmentResults: IAssessmentResults
-  className?: string
+  assessmentResults: IAssessmentResults;
+  className?: string;
 }
 
-export function ResultsDisplay({ assessmentResults, className = '' }: IResultsDisplayProps): React.JSX.Element {
+export function ResultsDisplay({
+  assessmentResults,
+  className = "",
+}: IResultsDisplayProps): React.JSX.Element {
   return (
     <div className={`${className} animate-fade-in`}>
       <ResultsSummary results={assessmentResults} />
-      
+
       <div className="mt-6 space-y-4">
         <h3 className="text-title font-semibold">Question Details</h3>
         {assessmentResults.questions.map((result, index) => (
@@ -22,5 +25,5 @@ export function ResultsDisplay({ assessmentResults, className = '' }: IResultsDi
         ))}
       </div>
     </div>
-  )
+  );
 }

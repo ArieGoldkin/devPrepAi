@@ -1,15 +1,15 @@
 import React from "react";
 
-import type { IUserProfile } from "../../store/types";
-import { Button } from "../ui/button";
+import { Button } from "@components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "../ui/card";
-import { LoadingSpinner } from "../ui/loading-spinner";
+} from "@components/ui/card";
+import { LoadingSpinner } from "@components/ui/loading-spinner";
+import type { IUserProfile } from "@store/types";
 
 import { BackToProfileButton } from "./BackToProfileButton";
 import { FocusAreas } from "./FocusAreas";

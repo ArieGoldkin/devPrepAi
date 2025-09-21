@@ -1,6 +1,6 @@
-import React from 'react'
+import React from "react";
 
-import { Card, CardContent } from '../ui/card'
+import { Card, CardContent } from "@components/ui/card";
 
 export function EmptyState(): React.JSX.Element {
   return (
@@ -12,5 +12,5 @@ export function EmptyState(): React.JSX.Element {
         </p>
       </CardContent>
     </Card>
-  )
+  );
 }

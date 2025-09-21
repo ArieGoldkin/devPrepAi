@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { Select } from "../../ui/select";
+import { Select } from "@components/ui/select";
 
 interface IInterviewExperienceSelectorProps {
   value: string;

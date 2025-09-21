@@ -1,17 +1,17 @@
-import type * as React from 'react'
+import type * as React from "react";
 
-import { CodeEditor } from '../shared/CodeEditor'
+import { CodeEditor } from "@components/shared/CodeEditor";
 
 interface ICodeAnswerSectionProps {
-  inputValue: string
-  onChange: (value: string) => void
-  disabled: boolean
+  inputValue: string;
+  onChange: (value: string) => void;
+  disabled: boolean;
 }
 
 export function CodeAnswerSection({
   inputValue,
   onChange,
-  disabled
+  disabled,
 }: ICodeAnswerSectionProps): React.ReactElement {
   return (
     <div>
@@ -28,5 +28,5 @@ export function CodeAnswerSection({
         maxHeight="500px"
       />
     </div>
-  )
+  );
 }

@@ -4,10 +4,10 @@ import { ArrowRight, LogOut } from "lucide-react";
 import Link from "next/link";
 import type { ReactElement } from "react";
 
-import { useAppStore } from "../../store/useAppStore";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Progress } from "../ui/progress";
+import { Badge } from "@components/ui/badge";
+import { Button } from "@components/ui/button";
+import { Progress } from "@components/ui/progress";
+import { useAppStore } from "@store/useAppStore";
 
 export interface INavigationModeContentProps {
   mode: "default" | "practice" | "assessment" | "results";

@@ -3,7 +3,6 @@
  * Client-side service that communicates with API routes
  */
 
-import { apiClient } from "../lib/api-client";
 import type {
   IGenerateQuestionsRequest,
   IGenerateQuestionsResponse,
@@ -12,7 +11,8 @@ import type {
   IExplainConceptRequest,
   IExplainConceptResponse,
   IAPIResponse,
-} from "../types/ai";
+} from "@/types/ai";
+import { apiClient } from "@lib/api-client";
 
 class AIService {
   constructor() {

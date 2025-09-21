@@ -1,19 +1,21 @@
-"use client"
+"use client";
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from "react";
 
-import type { IAssessmentAnswer } from '../../store/slices/assessmentSlice'
-import { useAppStore } from '../../store/useAppStore'
+import type { IAssessmentAnswer } from "@store/slices/assessmentSlice";
+import { useAppStore } from "@store/useAppStore";
 
-import { AssessmentActions } from './AssessmentActions'
-import { AssessmentHeader } from './AssessmentHeader'
-import { QuestionDisplay } from './QuestionDisplay'
+import { AssessmentActions } from "./AssessmentActions";
+import { AssessmentHeader } from "./AssessmentHeader";
+import { QuestionDisplay } from "./QuestionDisplay";
 
 interface IAssessmentViewProps {
-  onComplete?: () => void
+  onComplete?: () => void;
 }
 
-export function AssessmentView({ onComplete }: IAssessmentViewProps): React.JSX.Element {
+export function AssessmentView({
+  onComplete,
+}: IAssessmentViewProps): React.JSX.Element {
   const {
     questions,
     currentQuestionIndex,
@@ -21,72 +23,83 @@ export function AssessmentView({ onComplete }: IAssessmentViewProps): React.JSX.
     submitAnswer,
     nextQuestion,
     completeAssessment,
-    addResult
-  } = useAppStore()
+    addResult,
+  } = useAppStore();
 
-  const [currentAnswer, setCurrentAnswer] = useState('')
-  const [hasAnswered, setHasAnswered] = useState(false)
+  const [currentAnswer, setCurrentAnswer] = useState("");
+  const [hasAnswered, setHasAnswered] = useState(false);
 
-  const currentQuestion = questions[currentQuestionIndex]
-  const isLastQuestion = currentQuestionIndex === questions.length - 1
+  const currentQuestion = questions[currentQuestionIndex];
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
   useEffect(() => {
     if (currentQuestion !== null && currentQuestion !== undefined) {
-      const existingAnswer = answers.find((a: IAssessmentAnswer) => a.questionId === currentQuestion.id)
-      setCurrentAnswer(existingAnswer?.answer ?? '')
-      setHasAnswered(existingAnswer !== null && existingAnswer !== undefined)
+      const existingAnswer = answers.find(
+        (a: IAssessmentAnswer) => a.questionId === currentQuestion.id,
+      );
+      setCurrentAnswer(existingAnswer?.answer ?? "");
+      setHasAnswered(existingAnswer !== null && existingAnswer !== undefined);
     }
-  }, [currentQuestionIndex, answers, currentQuestion])
+  }, [currentQuestionIndex, answers, currentQuestion]);
 
   const handleAnswerChange = (value: string): void => {
-    setCurrentAnswer(value)
-  }
+    setCurrentAnswer(value);
+  };
 
   const handleSubmitAnswer = (): void => {
-    if (currentQuestion === null || currentQuestion === undefined || currentAnswer.trim() === "") return
+    if (
+      currentQuestion === null ||
+      currentQuestion === undefined ||
+      currentAnswer.trim() === ""
+    )
+      return;
 
-    submitAnswer(currentQuestion.id, currentAnswer.trim())
-    setHasAnswered(true)
-  }
+    submitAnswer(currentQuestion.id, currentAnswer.trim());
+    setHasAnswered(true);
+  };
 
   const handleComplete = (): void => {
-    const result = completeAssessment()
-    addResult(result)
-    onComplete?.()
-  }
+    const result = completeAssessment();
+    addResult(result);
+    onComplete?.();
+  };
 
   const handleNext = (): void => {
     if (hasAnswered === false) {
-      handleSubmitAnswer()
+      handleSubmitAnswer();
     }
 
     if (isLastQuestion) {
-      handleComplete()
+      handleComplete();
     } else {
-      nextQuestion()
-      setHasAnswered(false)
+      nextQuestion();
+      setHasAnswered(false);
     }
-  }
+  };
 
   const handleTimeUp = (): void => {
     if (currentAnswer.trim() !== "" && hasAnswered === false) {
-      handleSubmitAnswer()
+      handleSubmitAnswer();
     }
-    handleComplete()
-  }
+    handleComplete();
+  };
 
   const getAnswerTimeSpent = (): number | undefined => {
-    if (!currentQuestion) return undefined
-    const answerData = answers.find((a: IAssessmentAnswer) => a.questionId === currentQuestion.id)
-    return answerData?.timeSpent
-  }
+    if (!currentQuestion) return undefined;
+    const answerData = answers.find(
+      (a: IAssessmentAnswer) => a.questionId === currentQuestion.id,
+    );
+    return answerData?.timeSpent;
+  };
 
   if (currentQuestion === null || currentQuestion === undefined) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-subtitle text-gray-500">No questions available</div>
+        <div className="text-subtitle text-gray-500">
+          No questions available
+        </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -113,5 +126,5 @@ export function AssessmentView({ onComplete }: IAssessmentViewProps): React.JSX.
         onNext={handleNext}
       />
     </div>
-  )
+  );
 }

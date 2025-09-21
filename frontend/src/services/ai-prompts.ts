@@ -7,7 +7,7 @@ import type {
   IGenerateQuestionsRequest,
   IEvaluateAnswerRequest,
   IExplainConceptRequest,
-} from "../types/ai";
+} from "@/types/ai";
 
 export function buildQuestionsPrompt(
   request: IGenerateQuestionsRequest,

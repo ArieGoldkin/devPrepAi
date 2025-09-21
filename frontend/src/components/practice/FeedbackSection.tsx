@@ -1,17 +1,17 @@
-import type React from "react"
+import type React from "react";
 
-import type { IAnswerFeedback } from "../../types/ai"
-import { FeedbackCard } from "../results/FeedbackCard"
+import type { IAnswerFeedback } from "@/types/ai";
+import { FeedbackCard } from "@components/results/FeedbackCard";
 
-import { FeedbackActions } from "./FeedbackActions"
+import { FeedbackActions } from "./FeedbackActions";
 
 interface IFeedbackSectionProps {
-  feedback: IAnswerFeedback
-  questionTitle: string
-  onTryAgain: () => void
-  onNext: () => void
-  onFinish: () => void
-  isLastQuestion: boolean
+  feedback: IAnswerFeedback;
+  questionTitle: string;
+  onTryAgain: () => void;
+  onNext: () => void;
+  onFinish: () => void;
+  isLastQuestion: boolean;
 }
 
 export const FeedbackSection = ({
@@ -20,7 +20,7 @@ export const FeedbackSection = ({
   onTryAgain,
   onNext,
   onFinish,
-  isLastQuestion
+  isLastQuestion,
 }: IFeedbackSectionProps): React.ReactElement => (
   <div className="space-y-4 animate-fade-in">
     <FeedbackCard feedback={feedback} questionTitle={questionTitle} />
@@ -31,4 +31,4 @@ export const FeedbackSection = ({
       isLastQuestion={isLastQuestion}
     />
   </div>
-)
+);

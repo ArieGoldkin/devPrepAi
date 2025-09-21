@@ -3,14 +3,14 @@
 import type * as React from "react";
 import { useState } from "react";
 
-import { useAppStore } from "../../store/useAppStore";
 import type {
   IUserProfile,
   InterviewType,
   RoleFocus,
   CompanySize,
-} from "../../types/ai";
-import { Button } from "../ui/button";
+} from "@/types/ai";
+import { Button } from "@components/ui/button";
+import { useAppStore } from "@store/useAppStore";
 
 import {
   ExperienceSelector,
