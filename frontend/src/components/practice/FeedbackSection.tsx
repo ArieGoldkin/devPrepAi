@@ -22,7 +22,7 @@ export const FeedbackSection = ({
   onFinish,
   isLastQuestion
 }: IFeedbackSectionProps): React.ReactElement => (
-  <div className="space-y-4">
+  <div className="space-y-4 animate-fade-in">
     <FeedbackCard feedback={feedback} questionTitle={questionTitle} />
     <FeedbackActions
       onTryAgain={onTryAgain}

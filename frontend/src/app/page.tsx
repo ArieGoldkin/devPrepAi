@@ -1,96 +1,19 @@
-import Link from 'next/link';
 import type { ReactElement } from 'react';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
+import { CTASection } from '@/components/home/CTASection';
+import { FeaturesSection } from '@/components/home/FeaturesSection';
+import { HeroSection } from '@/components/home/HeroSection';
+import { NavigationHeader } from '@/components/home/NavigationHeader';
+import { TechStackSection } from '@/components/home/TechStackSection';
 
 export default function Home(): ReactElement {
   return (
-    <div className="min-h-screen bg-background p-8">
-      <main className="max-w-4xl mx-auto space-y-8">
-        <header className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-foreground">DevPrep AI</h1>
-          <p className="text-lg text-muted-foreground">
-            AI-powered interview preparation platform
-          </p>
-          <div className="flex gap-2 justify-center">
-            <Badge variant="default">TypeScript</Badge>
-            <Badge variant="secondary">Next.js 15</Badge>
-            <Badge variant="outline">Tailwind CSS</Badge>
-          </div>
-        </header>
-
-        <nav className="flex gap-4 justify-center">
-          <Link href="/practice">
-            <Button variant="ghost">Practice</Button>
-          </Link>
-          <Link href="/assessment">
-            <Button variant="ghost">Assessment</Button>
-          </Link>
-          <Link href="/results">
-            <Button variant="ghost">Results</Button>
-          </Link>
-          <Link href="/demo">
-            <Button variant="ghost">Demo</Button>
-          </Link>
-        </nav>
-
-        <Separator />
-
-        <PracticeSection />
-      </main>
+    <div className="min-h-screen bg-background">
+      <NavigationHeader />
+      <HeroSection />
+      <FeaturesSection />
+      <CTASection />
+      <TechStackSection />
     </div>
-  );
-}
-
-function PracticeSection(): ReactElement {
-  return (
-    <section className="grid md:grid-cols-2 gap-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Practice Questions</CardTitle>
-          <CardDescription>
-            Generate AI-powered interview questions tailored to your role
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-2">
-            <Link href="/practice">
-              <Button size="sm">Start Practice</Button>
-            </Link>
-            <Link href="/demo">
-              <Button variant="outline" size="sm">
-                View Sample
-              </Button>
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Answer Evaluation</CardTitle>
-          <CardDescription>
-            Get detailed feedback on your interview responses
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div>• Code Review</div>
-            <div>• Best Practices</div>
-            <div>• Performance Tips</div>
-            <div>• Improvement Areas</div>
-          </div>
-        </CardContent>
-      </Card>
-    </section>
   );
 }

@@ -26,9 +26,9 @@ export function ResultCard({ result, index, totalResults }: IResultCardProps): R
   const averageScore = result.questions.reduce((acc, q) => acc + q.feedback.score, 0) / result.questions.length
 
   return (
-    <Card className="mb-4">
+    <Card variant="elevated" className="mb-4 animate-slide-up">
       <CardHeader>
-        <CardTitle className="text-lg">
+        <CardTitle className="text-title">
           Assessment #{totalResults - index}
         </CardTitle>
         <CardDescription>
@@ -37,18 +37,18 @@ export function ResultCard({ result, index, totalResults }: IResultCardProps): R
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-4 text-sm">
+        <div className="grid grid-cols-2 gap-4 text-body">
           <div>
-            <span className="font-medium">Questions:</span> {result.questions.length}
+            <span className="font-medium text-body">Questions:</span> {result.questions.length}
           </div>
           <div>
-            <span className="font-medium">Time Spent:</span> {formatDuration(result.totalTimeSpent)}
+            <span className="font-medium text-body">Time Spent:</span> {formatDuration(result.totalTimeSpent)}
           </div>
           <div>
-            <span className="font-medium">Average Score:</span> {averageScore.toFixed(1)}%
+            <span className="font-medium text-body">Average Score:</span> {averageScore.toFixed(1)}%
           </div>
           <div>
-            <span className="font-medium">Completion:</span> 100%
+            <span className="font-medium text-body">Completion:</span> 100%
           </div>
         </div>
         <ResultsDisplay assessmentResults={result} className="mt-4" />

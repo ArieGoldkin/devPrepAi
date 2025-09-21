@@ -37,27 +37,27 @@ export function Statistics({ results }: IStatisticsProps): React.JSX.Element {
   )
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <Card>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in">
+      <Card variant="feature">
         <CardContent className="pt-6">
-          <div className="text-2xl font-bold">{results.length}</div>
-          <p className="text-sm text-gray-600">Total Assessments</p>
+          <div className="text-headline font-bold text-brand-primary">{results.length}</div>
+          <p className="text-caption text-gray-600">Total Assessments</p>
         </CardContent>
       </Card>
-      <Card>
+      <Card variant="feature">
         <CardContent className="pt-6">
-          <div className="text-2xl font-bold">
+          <div className="text-headline font-bold text-brand-primary">
             {calculateAverageScore().toFixed(1)}%
           </div>
-          <p className="text-sm text-gray-600">Average Score</p>
+          <p className="text-caption text-gray-600">Average Score</p>
         </CardContent>
       </Card>
-      <Card>
+      <Card variant="feature">
         <CardContent className="pt-6">
-          <div className="text-2xl font-bold">
+          <div className="text-headline font-bold text-brand-primary">
             {formatDuration(averageTime)}
           </div>
-          <p className="text-sm text-gray-600">Average Time</p>
+          <p className="text-caption text-gray-600">Average Time</p>
         </CardContent>
       </Card>
     </div>

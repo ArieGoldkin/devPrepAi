@@ -92,7 +92,7 @@ export function PracticeSession({
   const isLastQuestion = currentQuestionIndex === questions.length - 1
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6">
+    <div className="w-full max-w-4xl mx-auto space-y-6 animate-fade-in">
       {error && <ErrorMessage message={error} onDismiss={() => setError(null)} />}
       
       <QuestionList

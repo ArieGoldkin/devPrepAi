@@ -14,12 +14,12 @@ export function AssessmentHeader({ currentIndex, totalQuestions, onTimeUp }: IAs
   return (
     <div className="flex justify-between items-start">
       <div>
-        <h2 className="text-2xl font-bold">
+        <h2 className="text-headline font-bold">
           Question {currentIndex + 1} of {totalQuestions}
         </h2>
         <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
           <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            className="bg-brand-primary h-2 rounded-full transition-all duration-300 animate-scale-in"
             style={{ width: `${progressPercentage}%` }}
           />
         </div>

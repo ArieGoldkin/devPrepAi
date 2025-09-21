@@ -23,7 +23,7 @@ const ExperienceSelector = ({
   onChange: (value: string) => void
 }): React.JSX.Element => (
   <div>
-    <label className="block text-sm font-medium mb-2">Experience</label>
+    <label className="block text-body font-medium mb-2">Experience</label>
     <Select 
       value={value} 
       onChange={(e): void => onChange(e.target.value)} 
@@ -44,7 +44,7 @@ const TechnologySelector = ({
   onToggle: (tech: string) => void
 }): React.JSX.Element => (
   <div>
-    <label className="block text-sm font-medium mb-2">Technologies</label>
+    <label className="block text-body font-medium mb-2">Technologies</label>
     {AVAILABLE_TECHNOLOGIES.map(tech => (
       <label key={tech} className="flex items-center space-x-2">
         <input 
@@ -52,7 +52,7 @@ const TechnologySelector = ({
           checked={selectedTechs.includes(tech)} 
           onChange={(): void => onToggle(tech)} 
         />
-        <span className="text-sm">{tech}</span>
+        <span className="text-body">{tech}</span>
       </label>
     ))}
   </div>
@@ -66,7 +66,7 @@ const InterviewTypeSelector = ({
   onChange: (value: string) => void
 }): React.JSX.Element => (
   <div>
-    <label className="block text-sm font-medium mb-2">Interview Type</label>
+    <label className="block text-body font-medium mb-2">Interview Type</label>
     <Select 
       value={value} 
       onChange={(e): void => onChange(e.target.value)} 
@@ -104,7 +104,7 @@ export function ProfileWizard({ onComplete }: IProfileWizardProps): React.JSX.El
 
   const isFormValid = Boolean(experience && techs.length > 0 && type)
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card variant="elevated" className="w-full max-w-md mx-auto animate-slide-up">
       <CardHeader>
         <CardTitle>Setup Profile</CardTitle>
         <CardDescription>Configure your interview practice</CardDescription>
@@ -113,9 +113,10 @@ export function ProfileWizard({ onComplete }: IProfileWizardProps): React.JSX.El
         <ExperienceSelector value={experience} onChange={setExperience} />
         <TechnologySelector selectedTechs={techs} onToggle={toggleTech} />
         <InterviewTypeSelector value={type} onChange={setType} />
-        <Button 
-          onClick={handleSubmit} 
-          disabled={!isFormValid} 
+        <Button
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+          variant="accent"
           className="w-full"
         >
           Complete Setup

@@ -84,13 +84,13 @@ export function AssessmentView({ onComplete }: IAssessmentViewProps): React.JSX.
   if (currentQuestion === null || currentQuestion === undefined) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">No questions available</div>
+        <div className="text-subtitle text-gray-500">No questions available</div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       <AssessmentHeader
         currentIndex={currentQuestionIndex}
         totalQuestions={questions.length}

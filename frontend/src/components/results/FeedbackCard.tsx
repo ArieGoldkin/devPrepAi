@@ -14,9 +14,9 @@ interface IFeedbackCardProps {
 }
 
 const getScoreColor = (score: number): string => {
-  if (score >= EXCELLENT_THRESHOLD) return 'bg-green-500'
-  if (score >= GOOD_THRESHOLD) return 'bg-yellow-500'
-  return 'bg-red-500'
+  if (score >= EXCELLENT_THRESHOLD) return 'bg-brand-success'
+  if (score >= GOOD_THRESHOLD) return 'bg-brand-warning'
+  return 'bg-brand-error'
 }
 
 const getScoreLabel = (score: number): string => {
@@ -41,7 +41,7 @@ const FeedbackHeader = ({
     <CardHeader>
       <div className="flex items-center justify-between">
         <div>
-          <CardTitle className="text-lg">Feedback</CardTitle>
+          <CardTitle className="text-title">Feedback</CardTitle>
           <CardDescription>{questionTitle}</CardDescription>
         </div>
         <div className="text-right">
@@ -74,10 +74,10 @@ const FeedbackSection = ({
 
   return (
     <div>
-      <h4 className={`font-medium mb-2 text-sm ${colorClass}`}>{title}</h4>
+      <h4 className={`font-medium mb-2 text-body ${colorClass}`}>{title}</h4>
       <ul className="space-y-1">
         {items.map((item, index) => (
-          <li key={index} className="text-sm text-muted-foreground flex items-start">
+          <li key={index} className="text-body text-muted-foreground flex items-start">
             <span className={`mr-2 mt-0.5 ${iconColorClass}`}>
               {icon}
             </span>
@@ -95,7 +95,7 @@ const OverallFeedback = ({
   feedback: string 
 }): React.ReactElement => (
   <div>
-    <p className="text-sm text-muted-foreground leading-relaxed">
+    <p className="text-body text-muted-foreground leading-relaxed">
       {feedback}
     </p>
   </div>
@@ -110,7 +110,7 @@ const StrengthsSection = ({
     title="Strengths"
     items={strengths}
     icon="✓"
-    colorClass="text-green-700"
+    colorClass="text-brand-success"
   />
 )
 
@@ -123,7 +123,7 @@ const ImprovementsSection = ({
     title="Areas for Improvement"
     items={improvements}
     icon="→"
-    colorClass="text-orange-700"
+    colorClass="text-brand-warning"
   />
 )
 
@@ -136,7 +136,7 @@ const SuggestionsSection = ({
     title="Suggestions"
     items={suggestions}
     icon="💡"
-    colorClass="text-blue-700"
+    colorClass="text-brand-primary"
   />
 )
 
@@ -145,7 +145,7 @@ export function FeedbackCard({
   questionTitle = "Your Answer"
 }: IFeedbackCardProps): React.ReactElement {
   return (
-    <Card className="w-full">
+    <Card className="w-full animate-slide-up" variant="interactive">
       <FeedbackHeader questionTitle={questionTitle} feedback={feedback} />
       <CardContent className="space-y-4">
         <OverallFeedback feedback={feedback.overallFeedback} />

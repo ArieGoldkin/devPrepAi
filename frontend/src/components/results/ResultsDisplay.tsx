@@ -12,11 +12,11 @@ interface IResultsDisplayProps {
 
 export function ResultsDisplay({ assessmentResults, className = '' }: IResultsDisplayProps): React.JSX.Element {
   return (
-    <div className={className}>
+    <div className={`${className} animate-fade-in`}>
       <ResultsSummary results={assessmentResults} />
       
       <div className="mt-6 space-y-4">
-        <h3 className="text-lg font-semibold">Question Details</h3>
+        <h3 className="text-title font-semibold">Question Details</h3>
         {assessmentResults.questions.map((result, index) => (
           <QuestionResult key={index} result={result} index={index} />
         ))}

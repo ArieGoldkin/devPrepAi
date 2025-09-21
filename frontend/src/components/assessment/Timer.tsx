@@ -56,12 +56,12 @@ export function Timer({ onTimeUp, className = '' }: ITimerProps): React.JSX.Elem
   }
 
   return (
-    <div className={`font-mono text-2xl font-bold ${  getColorClass()  } ${  className}`}>
+    <div className={`font-mono text-headline font-bold ${  getColorClass()  } ${  className}`}>
       <div className="flex items-center space-x-2">
         <div className="w-3 h-3 rounded-full bg-current animate-pulse" />
         <span>{formatTime(timeRemaining)}</span>
       </div>
-      <div className="text-sm text-gray-500 mt-1">
+      <div className="text-caption text-gray-500 mt-1">
         {Math.floor(timeRemaining / TIME_CONSTANTS.SECONDS_PER_MINUTE)}m {timeRemaining % TIME_CONSTANTS.SECONDS_PER_MINUTE}s remaining
       </div>
     </div>

@@ -26,13 +26,13 @@ export function QuestionDisplay({
   }
 
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm border">
-      <h3 className="text-lg font-semibold mb-4">{question.content}</h3>
+    <div className="bg-white rounded-lg p-6 shadow-sm border animate-slide-up">
+      <h3 className="text-title font-semibold mb-4">{question.content}</h3>
 
       {question.content !== null && question.content !== undefined && question.content !== "" && (
         <div className="bg-gray-50 p-4 rounded-lg mb-4">
-          <h4 className="font-medium mb-2">Context:</h4>
-          <pre className="whitespace-pre-wrap text-sm">{question.content}</pre>
+          <h4 className="font-medium mb-2 text-body">Context:</h4>
+          <pre className="whitespace-pre-wrap text-body">{question.content}</pre>
         </div>
       )}
 
@@ -45,10 +45,10 @@ export function QuestionDisplay({
       />
 
       {hasAnswered && answerTimeSpent !== undefined && (
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-          <div className="flex items-center text-green-700">
-            <span className="font-medium">Answer submitted!</span>
-            <span className="ml-2 text-sm">
+        <div className="mt-4 p-3 bg-brand-success/10 border border-brand-success/30 rounded-lg animate-fade-in">
+          <div className="flex items-center text-brand-success">
+            <span className="font-medium text-body">Answer submitted!</span>
+            <span className="ml-2 text-caption">
               Time spent: {formatTimeSpent(answerTimeSpent)}
             </span>
           </div>

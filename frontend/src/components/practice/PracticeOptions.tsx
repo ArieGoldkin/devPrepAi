@@ -24,7 +24,7 @@ export function PracticeOptions({
 }: IPracticeOptionsProps): React.JSX.Element {
   return (
     <>
-      <Card>
+      <Card variant="feature" className="animate-slide-up">
         <CardHeader>
           <CardTitle>Welcome back!</CardTitle>
           <CardDescription>
@@ -42,6 +42,7 @@ export function PracticeOptions({
               onClick={onGenerateQuestions}
               disabled={loading}
               size="lg"
+              variant="accent"
               className="w-full"
             >
               {loading ? (

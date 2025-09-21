@@ -15,16 +15,16 @@ export const FeedbackActions = ({
   onFinish,
   isLastQuestion
 }: IFeedbackActionsProps): React.ReactElement => (
-  <div className="flex gap-2 justify-center pt-4">
+  <div className="flex gap-2 justify-center pt-4 animate-fade-in">
     <Button onClick={onTryAgain} variant="outline" size="sm">
       Try Again
     </Button>
     {isLastQuestion ? (
-      <Button onClick={onFinish} size="sm">
+      <Button onClick={onFinish} size="sm" variant="accent">
         Finish Practice
       </Button>
     ) : (
-      <Button onClick={onNext} size="sm">
+      <Button onClick={onNext} size="sm" variant="accent">
         Next Question
       </Button>
     )}

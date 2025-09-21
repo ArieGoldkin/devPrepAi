@@ -22,7 +22,7 @@ interface IAssessmentSetupProps {
 
 const TimerSelector = ({ value, onChange }: { value: number; onChange: (value: number) => void }): React.JSX.Element => (
   <div>
-    <label className="block text-sm font-medium mb-2">Timer Duration</label>
+    <label className="block text-body font-medium mb-2">Timer Duration</label>
     <Select value={value.toString()} onChange={(e): void => onChange(parseInt(e.target.value, 10))} placeholder="Select duration">
       <option value="15">15 minutes</option>
       <option value="30">30 minutes</option>
@@ -34,7 +34,7 @@ const TimerSelector = ({ value, onChange }: { value: number; onChange: (value: n
 
 const QuestionCountSelector = ({ value, onChange }: { value: number; onChange: (value: number) => void }): React.JSX.Element => (
   <div>
-    <label className="block text-sm font-medium mb-2">Number of Questions</label>
+    <label className="block text-body font-medium mb-2">Number of Questions</label>
     <Select value={value.toString()} onChange={(e): void => onChange(parseInt(e.target.value, 10))} placeholder="Select count">
       <option value="5">5 questions</option>
       <option value="10">10 questions</option>
@@ -45,7 +45,7 @@ const QuestionCountSelector = ({ value, onChange }: { value: number; onChange: (
 
 const DifficultySelector = ({ value, onChange }: { value: string; onChange: (value: string) => void }): React.JSX.Element => (
   <div>
-    <label className="block text-sm font-medium mb-2">Difficulty Level</label>
+    <label className="block text-body font-medium mb-2">Difficulty Level</label>
     <Select value={value} onChange={(e): void => onChange(e.target.value)} placeholder="Select difficulty">
       <option value="junior">Junior</option>
       <option value="mid">Mid-level</option>
@@ -84,12 +84,12 @@ export function AssessmentSetup({ onComplete, onBack }: IAssessmentSetupProps): 
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Assessment Setup</h1>
-        <p className="text-gray-600">Configure your timed assessment settings</p>
+      <div className="text-center mb-8 animate-fade-in">
+        <h1 className="text-display text-gray-900 mb-2">Assessment Setup</h1>
+        <p className="text-subtitle text-gray-600">Configure your timed assessment settings</p>
       </div>
 
-      <Card className="w-full max-w-md mx-auto">
+      <Card variant="elevated" className="w-full max-w-md mx-auto animate-slide-up">
         <CardHeader>
           <CardTitle>Assessment Configuration</CardTitle>
           <CardDescription>Set up your timed coding assessment</CardDescription>
@@ -100,7 +100,7 @@ export function AssessmentSetup({ onComplete, onBack }: IAssessmentSetupProps): 
           <DifficultySelector value={difficultyLevel} onChange={setDifficultyLevel} />
 
           <div className="pt-4 space-y-2">
-            <Button onClick={handleSubmit} disabled={!isFormValid} className="w-full">
+            <Button onClick={handleSubmit} disabled={!isFormValid} variant="accent" className="w-full">
               Start Assessment
             </Button>
             <Button onClick={onBack} variant="outline" className="w-full">

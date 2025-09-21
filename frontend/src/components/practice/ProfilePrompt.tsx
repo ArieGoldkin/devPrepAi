@@ -9,7 +9,7 @@ interface IProfilePromptProps {
 
 export function ProfilePrompt({ onSetupClick }: IProfilePromptProps): React.JSX.Element {
   return (
-    <Card>
+    <Card variant="feature" className="animate-slide-up">
       <CardHeader>
         <CardTitle>Complete Your Profile</CardTitle>
         <CardDescription>
@@ -17,7 +17,7 @@ export function ProfilePrompt({ onSetupClick }: IProfilePromptProps): React.JSX.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button onClick={onSetupClick}>
+        <Button onClick={onSetupClick} variant="accent">
           Set Up Profile
         </Button>
       </CardContent>

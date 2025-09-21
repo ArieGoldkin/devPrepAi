@@ -23,7 +23,7 @@ export function AssessmentActions({
 }: IAssessmentActionsProps): React.JSX.Element {
   return (
     <div className="flex justify-between">
-      <div className="text-sm text-gray-500">
+      <div className="text-caption text-gray-500">
         {answersCount} of {totalQuestions} questions answered
       </div>
 
@@ -41,6 +41,7 @@ export function AssessmentActions({
         <Button
           onClick={onNext}
           disabled={!hasAnswered && !currentAnswer.trim()}
+          variant="accent"
         >
           {isLastQuestion ? 'Complete Assessment' : 'Next Question'}
         </Button>
