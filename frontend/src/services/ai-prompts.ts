@@ -6,14 +6,16 @@
 import type {
   IGenerateQuestionsRequest,
   IEvaluateAnswerRequest,
-  IExplainConceptRequest
-} from '../types/ai';
+  IExplainConceptRequest,
+} from "@/types/ai";
 
-export function buildQuestionsPrompt(request: IGenerateQuestionsRequest): string {
-  const technologies = request.profile.technologies.join(', ');
+export function buildQuestionsPrompt(
+  request: IGenerateQuestionsRequest,
+): string {
+  const technologies = request.profile.technologies.join(", ");
   const currentDate = new Date().toISOString();
-  
-  return `Generate ${request.count} ${request.type} interview questions for a ${request.profile.experienceLevel} ${request.profile.role} developer.
+
+  return `Generate ${request.count} ${request.type} interview questions for a ${request.profile.experienceLevel} ${request.profile.roleFocus} developer.
 
 Technologies: ${technologies}
 Difficulty: ${request.difficulty}/10
@@ -63,8 +65,10 @@ Provide feedback as JSON:
 }
 
 export function buildConceptPrompt(request: IExplainConceptRequest): string {
-  const exampleText = request.includeExamples ? 'Include practical examples.' : '';
-  
+  const exampleText = request.includeExamples
+    ? "Include practical examples."
+    : "";
+
   return `Explain the concept "${request.concept}" for a ${request.userLevel} developer.
 
 ${exampleText}

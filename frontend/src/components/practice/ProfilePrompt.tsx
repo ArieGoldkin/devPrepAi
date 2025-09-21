@@ -1,26 +1,35 @@
-import React from 'react'
+import React from "react";
 
-import { Button } from '../ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
+import { Button } from "@components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@components/ui/card";
 
 interface IProfilePromptProps {
-  onSetupClick: () => void
+  onSetupClick: () => void;
 }
 
-export function ProfilePrompt({ onSetupClick }: IProfilePromptProps): React.JSX.Element {
+export function ProfilePrompt({
+  onSetupClick,
+}: IProfilePromptProps): React.JSX.Element {
   return (
-    <Card>
+    <Card variant="feature" className="animate-slide-up">
       <CardHeader>
         <CardTitle>Complete Your Profile</CardTitle>
         <CardDescription>
-          We need some information about your background to generate personalized practice questions.
+          We need some information about your background to generate
+          personalized practice questions.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Button onClick={onSetupClick}>
+        <Button onClick={onSetupClick} variant="accent">
           Set Up Profile
         </Button>
       </CardContent>
     </Card>
-  )
+  );
 }

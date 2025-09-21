@@ -1,87 +1,119 @@
-"use client"
+"use client";
 
-import { useRouter } from 'next/navigation'
-import React, { useState, useEffect } from 'react'
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
 
-
-import { ErrorMessage } from '../../components/practice/ErrorMessage'
-import { PracticeOptions } from '../../components/practice/PracticeOptions'
-import { ProfilePrompt } from '../../components/practice/ProfilePrompt'
-import { ProfileSetup } from '../../components/practice/ProfileSetup'
-import { generatePracticeQuestions } from '../../services/ai'
-import { useAppStore } from '../../store/useAppStore'
+import type { InterviewType } from "@/types/ai";
+import { AppLayout } from "@components/layout/AppLayout";
+import { ErrorMessage } from "@components/practice/ErrorMessage";
+import { TOTAL_STEPS, PROGRESS_MULTIPLIER } from "@components/practice/wizard";
+import type { WizardStep, PracticeSettings } from "@components/practice/wizard";
+import { PracticeWizard } from "@components/practice/wizard/PracticeWizard";
+import { Progress } from "@components/ui/progress";
+import { generatePracticeQuestions } from "@services/ai";
+import { useAppStore } from "@store/useAppStore";
 
 export default function PracticePage(): React.JSX.Element {
-  const router = useRouter()
-  const { userProfile, startAssessment, recordActivity } = useAppStore()
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [showProfileSetup, setShowProfileSetup] = useState(false)
+  const router = useRouter();
+  const { userProfile, startAssessment, recordActivity } = useAppStore();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [currentStep, setCurrentStep] = useState<WizardStep>("welcome");
+  const [selectedInterviewType, setSelectedInterviewType] =
+    useState<InterviewType | null>(null);
+  const [practiceSettings, setPracticeSettings] = useState<PracticeSettings>({
+    duration: 30,
+    questionCount: 5,
+    difficulty: "medium",
+    focusAreas: [],
+  });
 
   useEffect(() => {
-    if (!userProfile) {
-      setShowProfileSetup(true)
+    if (!userProfile && currentStep !== "welcome") {
+      setCurrentStep("profile");
     }
-  }, [userProfile])
+  }, [userProfile, currentStep]);
 
   const handleGenerateQuestions = async (): Promise<void> => {
     if (!userProfile) {
-      setError('Please complete your profile first')
-      return
+      setError("Please complete your profile first");
+      return;
     }
 
-    setLoading(true)
-    setError('')
+    setLoading(true);
+    setError("");
 
     try {
-      const questions = await generatePracticeQuestions(userProfile)
+      const questions = await generatePracticeQuestions(userProfile);
 
       if (questions.length === 0) {
-        throw new Error('No questions could be generated. Please try again.')
+        throw new Error("No questions could be generated. Please try again.");
       }
 
       startAssessment(questions, {
-        duration: 30,
+        duration: practiceSettings.duration,
         questionCount: questions.length,
-        autoSubmit: false
-      })
-      recordActivity()
-      router.push('/assessment')
+        autoSubmit: false,
+      });
+      recordActivity();
+      router.push("/assessment");
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Failed to generate questions'
-      setError(`Failed to generate practice questions: ${message}`)
+      const message =
+        err instanceof Error ? err.message : "Failed to generate questions";
+      setError(`Failed to generate practice questions: ${message}`);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
-  if (showProfileSetup) {
-    return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Practice Setup</h1>
-        <ProfileSetup onComplete={() => setShowProfileSetup(false)} />
-      </div>
-    )
-  }
+  const getStepNumber = (): number => {
+    switch (currentStep) {
+      case "welcome":
+        return 1;
+      case "profile":
+        return 2;
+      case "focus":
+        return 3;
+      case "settings":
+        return 4;
+      case "ready":
+        return 5;
+      default:
+        return 1;
+    }
+  };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Practice Session</h1>
-
-      {error && <ErrorMessage message={error} onDismiss={() => setError('')} />}
-
-      <div className="max-w-2xl mx-auto space-y-6">
-        {userProfile ? (
-          <PracticeOptions
-            userProfile={userProfile}
-            loading={loading}
-            onGenerateQuestions={() => void handleGenerateQuestions()}
-            onEditProfile={() => setShowProfileSetup(true)}
+    <AppLayout>
+      <div className="container-xl py-8">
+        {/* Progress Indicator */}
+        <div className="mb-8">
+          <Progress
+            value={(getStepNumber() / TOTAL_STEPS) * PROGRESS_MULTIPLIER}
+            className="h-1 max-w-2xl mx-auto"
           />
-        ) : (
-          <ProfilePrompt onSetupClick={() => setShowProfileSetup(true)} />
+        </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="max-w-2xl mx-auto mb-6">
+            <ErrorMessage message={error} onDismiss={() => setError("")} />
+          </div>
         )}
+
+        {/* Practice Wizard */}
+        <PracticeWizard
+          currentStep={currentStep}
+          userProfile={userProfile}
+          practiceSettings={practiceSettings}
+          selectedInterviewType={selectedInterviewType}
+          loading={loading}
+          onStepChange={setCurrentStep}
+          onSettingsChange={setPracticeSettings}
+          onInterviewTypeSelect={setSelectedInterviewType}
+          onStart={handleGenerateQuestions}
+        />
       </div>
-    </div>
-  )
+    </AppLayout>
+  );
 }

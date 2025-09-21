@@ -1,12 +1,22 @@
 ---
-name: claude-main
-description: AI Agent Hub - Modular Intelligence System
-version: 3.4.2
+name: DevPrep AI
+description: AI-Powered Technical Interview Preparation Platform
+version: 1.0.0
 ---
 
-# 🚀 AI Agent Hub - Intelligent Orchestration
+# 🎯 DevPrep AI - Interview Preparation Platform
 
+**Project**: AI-powered platform for developer interview preparation
+**Stack**: Next.js 15, TypeScript, Tailwind CSS, Claude AI
 **Mode**: ⚡ Squad (Parallel)
+
+## 🎓 Project Overview
+
+DevPrep AI helps developers prepare for technical interviews with:
+- **AI-Generated Questions**: Personalized based on role & experience
+- **Real-time Evaluation**: Claude AI provides instant feedback
+- **Practice & Assessment**: Multiple modes for different learning styles
+- **Progress Tracking**: Monitor improvement over time
 
 ## 📋 Dynamic Instruction Loading
 
@@ -31,6 +41,16 @@ This project uses a modular instruction system to optimize token usage.
 3. **Complex projects**: Read `.claude/instructions/orchestration.md` for routing
 4. **Multi-session**: Read `.claude/instructions/context.md` for continuity
 5. **CLI usage**: Read `.claude/instructions/cli-integration.md` for auto-detection
+
+## 📚 Project Documentation
+
+Essential project docs in `/Docs`:
+- `PRD.md` - Product requirements & features
+- `technical-architecture.md` - System design & architecture
+- `ux-ui-improvements.md` - UX/UI enhancement specifications
+- `design-system.md` - Component library & styling guide
+- `api-design.md` - Claude AI integration specs
+- `code-standards.md` - Development guidelines
 
 ## 🔍 Auto-Detection
 

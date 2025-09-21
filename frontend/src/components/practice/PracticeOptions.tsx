@@ -1,34 +1,41 @@
-import React from 'react'
+import React from "react";
 
-import type { IUserProfile } from '../../store/types'
-import { Button } from '../ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card'
-import { LoadingSpinner } from '../ui/loading-spinner'
+import { Button } from "@components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@components/ui/card";
+import { LoadingSpinner } from "@components/ui/loading-spinner";
+import type { IUserProfile } from "@store/types";
 
-import { BackToProfileButton } from './BackToProfileButton'
-import { FocusAreas } from './FocusAreas'
-import { Technologies } from './Technologies'
+import { BackToProfileButton } from "./BackToProfileButton";
+import { FocusAreas } from "./FocusAreas";
+import { Technologies } from "./Technologies";
 
 interface IPracticeOptionsProps {
-  userProfile: IUserProfile
-  loading: boolean
-  onGenerateQuestions: () => void
-  onEditProfile: () => void
+  userProfile: IUserProfile;
+  loading: boolean;
+  onGenerateQuestions: () => void;
+  onEditProfile: () => void;
 }
 
 export function PracticeOptions({
   userProfile,
   loading,
   onGenerateQuestions,
-  onEditProfile
+  onEditProfile,
 }: IPracticeOptionsProps): React.JSX.Element {
   return (
     <>
-      <Card>
+      <Card variant="feature" className="animate-slide-up">
         <CardHeader>
           <CardTitle>Welcome back!</CardTitle>
           <CardDescription>
-            Practice questions tailored for {userProfile.role} roles with {userProfile.experienceLevel} experience.
+            Practice questions tailored for {userProfile.roleFocus} roles with{" "}
+            {userProfile.experienceLevel} experience.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -42,6 +49,7 @@ export function PracticeOptions({
               onClick={onGenerateQuestions}
               disabled={loading}
               size="lg"
+              variant="accent"
               className="w-full"
             >
               {loading ? (
@@ -50,7 +58,7 @@ export function PracticeOptions({
                   Generating Questions...
                 </>
               ) : (
-                'Start Practice Session'
+                "Start Practice Session"
               )}
             </Button>
           </div>
@@ -59,5 +67,5 @@ export function PracticeOptions({
 
       <BackToProfileButton onEditProfile={onEditProfile} />
     </>
-  )
+  );
 }

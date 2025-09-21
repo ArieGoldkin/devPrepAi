@@ -1,100 +1,101 @@
-import type * as React from 'react'
-import { useState } from 'react'
+import type * as React from "react";
+import { useState } from "react";
 
+import type { IAnswerFeedback, IQuestion, IUserProfile } from "@/types/ai";
+import { AnswerInput } from "@components/AnswerInput";
+import { QuestionList } from "@components/questions/QuestionList";
+import { aiService } from "@services/ai";
 
-import { aiService } from '../../services/ai'
-import type { IAnswerFeedback, IQuestion, IUserProfile } from '../../types/ai'
-import { AnswerInput } from '../AnswerInput'
-import { QuestionList } from '../questions/QuestionList'
-
-import { BackToProfileButton } from './BackToProfileButton'
-import { ErrorMessage } from './ErrorMessage'
-import { FeedbackSection } from './FeedbackSection'
+import { BackToProfileButton } from "./BackToProfileButton";
+import { ErrorMessage } from "./ErrorMessage";
+import { FeedbackSection } from "./FeedbackSection";
 
 interface IPracticeSessionProps {
-  questions: IQuestion[]
-  userProfile: IUserProfile
-  onFinish: () => void
+  questions: IQuestion[];
+  userProfile: IUserProfile;
+  onFinish: () => void;
 }
 
-
-
- 
 export function PracticeSession({
   questions,
   userProfile,
-  onFinish
+  onFinish,
 }: IPracticeSessionProps): React.ReactElement {
   // Note: userProfile is available for future enhancements (personalized feedback, etc.)
-  console.warn('Practice session started for profile:', userProfile.experienceLevel)
-  
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [currentAnswer, setCurrentAnswer] = useState("")
-  const [feedback, setFeedback] = useState<IAnswerFeedback | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  console.warn(
+    "Practice session started for profile:",
+    userProfile.experienceLevel,
+  );
+
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentAnswer, setCurrentAnswer] = useState("");
+  const [feedback, setFeedback] = useState<IAnswerFeedback | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmitAnswer = async (answer: string): Promise<void> => {
-    const currentQuestion = questions[currentQuestionIndex]
-    if (!currentQuestion) return
+    const currentQuestion = questions[currentQuestionIndex];
+    if (!currentQuestion) return;
 
-    setIsLoading(true)
-    setError(null)
+    setIsLoading(true);
+    setError(null);
 
     try {
       const response = await aiService.evaluateAnswer({
         question: currentQuestion,
-        answer
-      })
+        answer,
+      });
 
       if (response.success) {
-        setFeedback(response.data.feedback)
-        setCurrentAnswer("")
+        setFeedback(response.data.feedback);
+        setCurrentAnswer("");
       } else {
-        setError(response.error ?? "Failed to evaluate answer")
+        setError(response.error ?? "Failed to evaluate answer");
       }
     } catch {
-      setError("Failed to evaluate answer. Please try again.")
+      setError("Failed to evaluate answer. Please try again.");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const resetQuestionState = (): void => {
-    setCurrentAnswer("")
-    setFeedback(null)
-  }
+    setCurrentAnswer("");
+    setFeedback(null);
+  };
 
   const handleNextQuestion = (): void => {
     if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex(currentQuestionIndex + 1)
-      resetQuestionState()
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      resetQuestionState();
     }
-  }
+  };
 
   const handlePreviousQuestion = (): void => {
     if (currentQuestionIndex > 0) {
-      setCurrentQuestionIndex(currentQuestionIndex - 1)
-      resetQuestionState()
+      setCurrentQuestionIndex(currentQuestionIndex - 1);
+      resetQuestionState();
     }
-  }
+  };
 
   const handleQuestionChange = (index: number): void => {
-    setCurrentQuestionIndex(index)
-    resetQuestionState()
-  }
+    setCurrentQuestionIndex(index);
+    resetQuestionState();
+  };
 
   const handleTryAgain = (): void => {
-    setFeedback(null)
-  }
+    setFeedback(null);
+  };
 
-  const currentQuestion = questions[currentQuestionIndex]
-  const isLastQuestion = currentQuestionIndex === questions.length - 1
+  const currentQuestion = questions[currentQuestionIndex];
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6">
-      {error && <ErrorMessage message={error} onDismiss={() => setError(null)} />}
-      
+    <div className="w-full max-w-4xl mx-auto space-y-6 animate-fade-in">
+      {error && (
+        <ErrorMessage message={error} onDismiss={() => setError(null)} />
+      )}
+
       <QuestionList
         questions={questions}
         currentIndex={currentQuestionIndex}
@@ -128,5 +129,5 @@ export function PracticeSession({
 
       <BackToProfileButton onEditProfile={onFinish} />
     </div>
-  )
+  );
 }

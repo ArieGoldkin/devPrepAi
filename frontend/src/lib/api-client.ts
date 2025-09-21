@@ -10,11 +10,11 @@ import type {
   IEvaluateAnswerResponse,
   IExplainConceptRequest,
   IExplainConceptResponse,
-  IAPIResponse
-} from '../types/ai';
+  IAPIResponse,
+} from "@/types/ai";
 
 // Base configuration
-const API_BASE_URL = '/api';
+const API_BASE_URL = "/api";
 const DEFAULT_TIMEOUT = 30000; // 30 seconds
 
 // Error classes
@@ -22,17 +22,17 @@ export class APIError extends Error {
   constructor(
     message: string,
     public status?: number,
-    public response?: Response
+    public response?: Response,
   ) {
     super(message);
-    this.name = 'APIError';
+    this.name = "APIError";
   }
 }
 
 export class NetworkError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'NetworkError';
+    this.name = "NetworkError";
   }
 }
 
@@ -41,14 +41,17 @@ class HTTPClient {
   private baseURL: string;
   private timeout: number;
 
-  constructor(baseURL: string = API_BASE_URL, timeout: number = DEFAULT_TIMEOUT) {
+  constructor(
+    baseURL: string = API_BASE_URL,
+    timeout: number = DEFAULT_TIMEOUT,
+  ) {
     this.baseURL = baseURL;
     this.timeout = timeout;
   }
 
   private async request<T>(
     endpoint: string,
-    options: RequestInit = {}
+    options: RequestInit = {},
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
 
@@ -61,7 +64,7 @@ class HTTPClient {
         ...options,
         signal: controller.signal,
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           ...options.headers,
         },
       });
@@ -96,7 +99,7 @@ class HTTPClient {
   }
 
   private hasErrorProperty(data: unknown): data is { error: unknown } {
-    return typeof data === 'object' && data !== null && 'error' in data;
+    return typeof data === "object" && data !== null && "error" in data;
   }
 
   private processError(error: unknown): never {
@@ -105,18 +108,18 @@ class HTTPClient {
     }
 
     if (error instanceof Error) {
-      if (error.name === 'AbortError') {
+      if (error.name === "AbortError") {
         throw new NetworkError(`Request timeout after ${this.timeout}ms`);
       }
       throw new NetworkError(`Network error: ${error.message}`);
     }
 
-    throw new NetworkError('Unknown network error');
+    throw new NetworkError("Unknown network error");
   }
 
   async post<T>(endpoint: string, data?: unknown): Promise<T> {
     const requestInit: RequestInit = {
-      method: 'POST',
+      method: "POST",
     };
 
     if (data !== undefined) {
@@ -128,7 +131,7 @@ class HTTPClient {
 
   async get<T>(endpoint: string): Promise<T> {
     return this.request<T>(endpoint, {
-      method: 'GET',
+      method: "GET",
     });
   }
 }
@@ -145,11 +148,11 @@ class APIClient {
    * Generate interview questions
    */
   async generateQuestions(
-    request: IGenerateQuestionsRequest
+    request: IGenerateQuestionsRequest,
   ): Promise<IAPIResponse<IGenerateQuestionsResponse>> {
     return this.http.post<IAPIResponse<IGenerateQuestionsResponse>>(
-      '/ai/generate-questions',
-      request
+      "/ai/generate-questions",
+      request,
     );
   }
 
@@ -157,11 +160,11 @@ class APIClient {
    * Evaluate an answer
    */
   async evaluateAnswer(
-    request: IEvaluateAnswerRequest
+    request: IEvaluateAnswerRequest,
   ): Promise<IAPIResponse<IEvaluateAnswerResponse>> {
     return this.http.post<IAPIResponse<IEvaluateAnswerResponse>>(
-      '/ai/evaluate-answer',
-      request
+      "/ai/evaluate-answer",
+      request,
     );
   }
 
@@ -169,11 +172,11 @@ class APIClient {
    * Explain a concept
    */
   async explainConcept(
-    request: IExplainConceptRequest
+    request: IExplainConceptRequest,
   ): Promise<IAPIResponse<IExplainConceptResponse>> {
     return this.http.post<IAPIResponse<IExplainConceptResponse>>(
-      '/ai/explain-concept',
-      request
+      "/ai/explain-concept",
+      request,
     );
   }
 }

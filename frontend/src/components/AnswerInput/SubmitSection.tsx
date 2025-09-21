@@ -1,19 +1,19 @@
-import type * as React from 'react'
+import type * as React from "react";
 
-import { Button } from '../ui/button'
+import { Button } from "@components/ui/button";
 
 interface ISubmitSectionProps {
-  onSubmit: () => void
-  disabled: boolean
-  inputEmpty: boolean
-  submitButtonText: string
+  onSubmit: () => void;
+  disabled: boolean;
+  inputEmpty: boolean;
+  submitButtonText: string;
 }
 
 export function SubmitSection({
   onSubmit,
   disabled,
   inputEmpty,
-  submitButtonText
+  submitButtonText,
 }: ISubmitSectionProps): React.ReactElement {
   return (
     <div className="flex items-center justify-between">
@@ -28,5 +28,5 @@ export function SubmitSection({
         {submitButtonText}
       </Button>
     </div>
-  )
+  );
 }

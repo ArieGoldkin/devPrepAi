@@ -1,30 +1,30 @@
-import * as React from 'react'
+import * as React from "react";
 
-import type { IQuestionResult } from '../../types/ai'
-import { FeedbackCard } from '../results/FeedbackCard'
-import { QuestionResultCard } from '../results/QuestionResultCard'
-import { Button } from '../ui/button'
-import { Separator } from '../ui/separator'
+import type { IQuestionResult } from "@/types/ai";
+import { FeedbackCard } from "@components/results/FeedbackCard";
+import { QuestionResultCard } from "@components/results/QuestionResultCard";
+import { Button } from "@components/ui/button";
+import { Separator } from "@components/ui/separator";
 
-const ANSWER_MAX_LENGTH = 150
-const FEEDBACK_MAX_LENGTH = 100
-const ELLIPSIS = '...'
+const ANSWER_MAX_LENGTH = 150;
+const FEEDBACK_MAX_LENGTH = 100;
+const ELLIPSIS = "...";
 
 const truncate = (text: string, max: number): string => {
-  if (text.length <= max) return text
-  return text.substring(0, max) + ELLIPSIS
-}
+  if (text.length <= max) return text;
+  return text.substring(0, max) + ELLIPSIS;
+};
 
 interface IQuestionResultProps {
-  result: IQuestionResult
-  index: number
+  result: IQuestionResult;
+  index: number;
 }
 
 export const QuestionResult: React.FC<IQuestionResultProps> = ({
-  result, 
-  index
+  result,
+  index,
 }) => {
-  const [expanded, setExpanded] = React.useState(false)
+  const [expanded, setExpanded] = React.useState(false);
 
   return (
     <QuestionResultCard result={result} index={index}>
@@ -58,5 +58,5 @@ export const QuestionResult: React.FC<IQuestionResultProps> = ({
         </div>
       )}
     </QuestionResultCard>
-  )
-}
+  );
+};
