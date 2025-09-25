@@ -38,7 +38,8 @@
       "Bash(next dev:*)",
       "Bash(npx next:*)",
       "Read(//Users/ariegoldkin/Desktop/**)",
-      "Bash(./update-imports.sh)"
+      "Bash(./update-imports.sh)",
+      "Bash(/Users/ariegoldkin/Arie/projects/test-orchestration-demo/update-imports.sh:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

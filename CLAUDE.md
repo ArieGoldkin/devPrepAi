@@ -60,11 +60,8 @@ This project uses a modular instruction system to optimize token usage.
 - `README.md` - Documentation overview
 
 ### Next Phase Planning (`/Docs/next-plan`)
-- `ESSENTIAL_TASKS.md` - Priority tasks for immediate implementation
-- `IMPLEMENTATION_TASKS.md` - Detailed implementation roadmap
-- `unified-implementation-plan.md` - Comprehensive development strategy
-- `zustand-react-query-integration.md` - State management architecture
-- `complete-implementation-summary.md` - Current implementation status
+- `NEXT_STEPS.md` - Single source of truth for development roadmap
+- `README.md` - Development overview and planning documentation
 
 ## 🔍 Auto-Detection
 
@@ -83,6 +80,33 @@ For semantic routing beyond keywords, load `.claude/instructions/orchestration.m
 - **ux-researcher**
 - **whimsy-injector**
 
+
+## 📁 Component Architecture
+
+The project follows a **feature-based component organization**:
+
+```
+frontend/src/components/
+├── features/        # Business logic components by feature
+│   ├── practice/    # Practice mode components
+│   ├── profile/     # User profile components
+│   ├── assessment/  # Assessment mode components
+│   ├── questions/   # Question display components
+│   ├── results/     # Results & feedback components
+│   ├── feedback/    # Feedback components
+│   └── answer/      # Answer input components
+├── pages/          # Page-level components
+│   └── HomePage/   # Landing page components
+├── shared/         # Reusable components across features
+├── layout/         # App structure components
+└── ui/            # Design system primitives
+```
+
+### Component Guidelines:
+- Max 100 lines per component file
+- Complex logic extracted to custom hooks
+- Self-contained features with own components/hooks/constants
+- Consistent folder structure across all features
 
 ## 🧠 Context Awareness
 

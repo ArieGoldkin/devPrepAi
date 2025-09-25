@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import { AssessmentView } from "@components/assessment/AssessmentView";
+import { AssessmentView } from "@components/features/assessment/AssessmentView";
 import { AppLayout } from "@components/layout/AppLayout";
 import { LoadingSpinner } from "@components/ui/loading-spinner";
 import { useAppStore } from "@store/useAppStore";

@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 
-import { QuestionDisplay } from "@components/assessment/QuestionDisplay";
-import { Timer } from "@components/assessment/Timer";
+import { QuestionDisplay } from "@components/features/assessment/QuestionDisplay";
+import { Timer } from "@components/features/assessment/Timer";
 import { AppLayout } from "@components/layout/AppLayout";
 import { Button } from "@components/ui/button";
 import {

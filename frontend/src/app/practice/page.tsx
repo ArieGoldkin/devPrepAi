@@ -4,11 +4,15 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 import type { InterviewType } from "@/types/ai";
+import {
+  PracticeWizard,
+  TOTAL_STEPS,
+  PROGRESS_MULTIPLIER,
+  type WizardStep,
+  type PracticeSettings,
+} from "@components/features/practice/PracticeWizard";
 import { AppLayout } from "@components/layout/AppLayout";
-import { ErrorMessage } from "@components/practice/ErrorMessage";
-import { TOTAL_STEPS, PROGRESS_MULTIPLIER } from "@components/practice/wizard";
-import type { WizardStep, PracticeSettings } from "@components/practice/wizard";
-import { PracticeWizard } from "@components/practice/wizard/PracticeWizard";
+import { ErrorMessage } from "@components/shared/ErrorMessage";
 import { Progress } from "@components/ui/progress";
 import { generatePracticeQuestions } from "@services/ai";
 import { useAppStore } from "@store/useAppStore";

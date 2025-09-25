@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import type { ReactElement, ReactNode } from "react";
 
-import { NavigationHeader } from "@components/home/NavigationHeader";
+import { NavigationHeader } from "@components/pages/HomePage/NavigationHeader";
 
 export interface IAppLayoutProps {
   children: ReactNode;

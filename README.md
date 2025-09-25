@@ -29,16 +29,45 @@ AI-powered interview preparation platform built with Next.js 15 and Claude AI.
 
 ```
 devprep-ai/
-├── frontend/          # Next.js application
-├── Docs/             # Project documentation
-│   ├── PRD.md        # Product requirements
+├── frontend/                    # Next.js application
+│   └── src/
+│       └── components/
+│           ├── features/        # Feature-based organization
+│           │   ├── practice/    # Practice mode components
+│           │   │   ├── PracticeSession/
+│           │   │   └── PracticeWizard/
+│           │   │       ├── components/
+│           │   │       ├── steps/
+│           │   │       └── constants.ts
+│           │   ├── profile/     # User profile components
+│           │   │   └── ProfileSetup/
+│           │   │       └── profile-wizard/
+│           │   ├── assessment/  # Assessment mode
+│           │   │   └── AssessmentView/
+│           │   │       ├── components/
+│           │   │       └── hooks/
+│           │   ├── questions/   # Question display
+│           │   ├── results/     # Results & feedback
+│           │   ├── feedback/    # Feedback components
+│           │   └── answer/      # Answer input components
+│           ├── pages/          # Page-level components
+│           │   └── HomePage/
+│           │       ├── HeroSection/
+│           │       │   └── components/
+│           │       └── FeaturesSection/
+│           │           └── components/
+│           ├── shared/          # Reusable components
+│           ├── layout/          # Layout components
+│           └── ui/              # Design system components
+├── Docs/                       # Project documentation
+│   ├── PRD.md                  # Product requirements
 │   ├── technical-architecture.md
 │   ├── user-flows.md
 │   ├── api-design.md
 │   ├── code-standards.md
-│   ├── progress-plan.md
-│   └── execution-plan.md
-└── .claude/          # AI agent configuration
+│   └── next-plan/
+│       └── NEXT_STEPS.md       # Development roadmap
+└── .claude/                    # AI agent configuration
 
 ```
 
@@ -52,6 +81,22 @@ devprep-ai/
 - **Progress Tracking**: Statistics and performance metrics
 - **Modern UI**: Professional design system with smooth animations
 - **Responsive Design**: Mobile-first approach
+
+## 🏗️ Component Architecture
+
+The project follows a **feature-based component organization** for better maintainability:
+
+- **`features/`** - Business logic components organized by feature domain
+- **`pages/`** - Page-level components that compose features
+- **`shared/`** - Reusable components used across features
+- **`layout/`** - App structure components (navigation, headers, etc.)
+- **`ui/`** - Design system primitives (buttons, cards, inputs, etc.)
+
+### Key Principles:
+- Each feature is self-contained with its own components, hooks, and constants
+- Components are kept under 100 lines for better maintainability
+- Complex logic is extracted into custom hooks
+- Consistent folder structure across all features
 
 ## 🛠 Tech Stack
 

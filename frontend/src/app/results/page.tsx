@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 
 import type { IAssessmentResults } from "@/types/ai";
+import { EmptyState } from "@components/features/results/EmptyState";
+import { ResultCard } from "@components/features/results/ResultCard";
+import { Statistics } from "@components/features/results/Statistics";
 import { AppLayout } from "@components/layout/AppLayout";
-import { EmptyState } from "@components/results/EmptyState";
-import { ResultCard } from "@components/results/ResultCard";
-import { Statistics } from "@components/results/Statistics";
 import { useAppStore } from "@store/useAppStore";
 
 export default function ResultsPage(): React.JSX.Element {
