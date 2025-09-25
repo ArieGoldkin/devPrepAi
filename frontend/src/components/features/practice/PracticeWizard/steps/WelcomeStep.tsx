@@ -2,6 +2,7 @@ import { User, Briefcase, Code2, ChevronRight, Check } from "lucide-react";
 import React, { useState } from "react";
 
 import type { InterviewType } from "@/types/ai";
+import { cn } from "@/utils/cn";
 import { Button } from "@components/ui/button";
 import {
   Card,
@@ -11,7 +12,6 @@ import {
   CardTitle,
 } from "@components/ui/card";
 import Logo from "@components/ui/logo";
-import { cn } from "@lib/utils";
 
 interface IWelcomeStepProps {
   onNext: (selectedInterviewType: InterviewType) => void;

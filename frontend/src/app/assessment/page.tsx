@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 
 import { AssessmentView } from "@components/features/assessment/AssessmentView";
 import { AppLayout } from "@components/layout/AppLayout";
+import { ErrorBoundary } from "@components/shared";
 import { LoadingSpinner } from "@components/ui/loading-spinner";
 import { useAppStore } from "@store/useAppStore";
 
@@ -87,7 +88,13 @@ export default function AssessmentPage(): React.JSX.Element {
     <AppLayout>
       <div className="container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Assessment</h1>
-        <AssessmentView onComplete={onCompleteHandler} />
+        <ErrorBoundary
+          onError={(error, errorInfo) => {
+            console.error("Assessment component error:", { error, errorInfo });
+          }}
+        >
+          <AssessmentView onComplete={onCompleteHandler} />
+        </ErrorBoundary>
       </div>
     </AppLayout>
   );

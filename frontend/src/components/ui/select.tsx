@@ -1,11 +1,12 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { cn } from "src/lib/utils"
+import { cn } from "@/utils/cn";
 
-export interface ISelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  placeholder?: string
+export interface ISelectProps
+  extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  placeholder?: string;
 }
 
 const Select = React.forwardRef<HTMLSelectElement, ISelectProps>(
@@ -13,7 +14,7 @@ const Select = React.forwardRef<HTMLSelectElement, ISelectProps>(
     <select
       className={cn(
         "flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-        className
+        className,
       )}
       ref={ref}
       {...props}
@@ -25,8 +26,8 @@ const Select = React.forwardRef<HTMLSelectElement, ISelectProps>(
       )}
       {children}
     </select>
-  )
-)
-Select.displayName = "Select"
+  ),
+);
+Select.displayName = "Select";
 
-export { Select }
+export { Select };

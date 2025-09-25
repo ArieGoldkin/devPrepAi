@@ -3,13 +3,18 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-import type { IUserProfile } from "@/types/ai";
+import type { IUserProfile, IQuestion } from "@/types/ai";
 
 import {
   createAssessmentSlice,
   type IAssessmentState,
   type IAssessmentActions,
 } from "./slices/assessmentSlice";
+import {
+  createQuestionsSlice,
+  type IQuestionsState,
+  type IQuestionsActions,
+} from "./slices/questionsSlice";
 import {
   createResultsSlice,
   type IResultsState,
@@ -31,13 +36,15 @@ export interface IAppState
   extends IUserState,
     IAssessmentState,
     IResultsState,
-    IStreakState {}
+    IStreakState,
+    IQuestionsState {}
 
 export interface IAppActions
   extends IUserActions,
     IAssessmentActions,
     IResultsActions,
-    IStreakActions {}
+    IStreakActions,
+    IQuestionsActions {}
 
 // === STORE ===
 export const useAppStore = create<IAppState & IAppActions>()(
@@ -47,6 +54,7 @@ export const useAppStore = create<IAppState & IAppActions>()(
       ...createAssessmentSlice(...args),
       ...createResultsSlice(...args),
       ...createStreakSlice(...args),
+      ...createQuestionsSlice(...args),
     }),
     {
       name: "devprep-app-store",
@@ -54,7 +62,16 @@ export const useAppStore = create<IAppState & IAppActions>()(
         userProfile: state.userProfile,
         assessmentResults: state.assessmentResults,
         streak: state.streak,
-        // Don't persist active assessment state
+        // Persist critical question session data for resume functionality
+        // Only persist if session is active and not completed
+        ...(state.isSessionActive &&
+          !state.isSessionCompleted && {
+            sessionQuestions: state.sessionQuestions,
+            currentQuestionIndex: state.currentQuestionIndex,
+            questionAnswers: state.questionAnswers,
+            hintUsage: state.hintUsage,
+            sessionStartedAt: state.sessionStartedAt,
+          }),
       }),
     },
   ),
@@ -113,3 +130,61 @@ export const useResultsActions = (): Pick<
     addResult: state.addResult,
     getRecentResults: state.getRecentResults,
   }));
+
+// === QUESTIONS SELECTORS ===
+export const useQuestionsState = (): IQuestionsState =>
+  useAppStore((state) => ({
+    sessionQuestions: state.sessionQuestions,
+    currentQuestionIndex: state.currentQuestionIndex,
+    questionAnswers: state.questionAnswers,
+    hintUsage: state.hintUsage,
+    isSessionActive: state.isSessionActive,
+    isSessionCompleted: state.isSessionCompleted,
+    metrics: state.metrics,
+    sessionStartedAt: state.sessionStartedAt,
+  }));
+
+export const useQuestionsActions = (): Pick<
+  IAppActions,
+  | "startQuestionSession"
+  | "completeSession"
+  | "resetSession"
+  | "goToQuestion"
+  | "nextQuestion"
+  | "previousQuestion"
+  | "submitAnswer"
+  | "updateAnswerFeedback"
+  | "revealHint"
+  | "calculateMetrics"
+  | "getQuestionProgress"
+> =>
+  useAppStore((state) => ({
+    startQuestionSession: state.startQuestionSession,
+    completeSession: state.completeSession,
+    resetSession: state.resetSession,
+    goToQuestion: state.goToQuestion,
+    nextQuestion: state.nextQuestion,
+    previousQuestion: state.previousQuestion,
+    submitAnswer: state.submitAnswer,
+    updateAnswerFeedback: state.updateAnswerFeedback,
+    revealHint: state.revealHint,
+    calculateMetrics: state.calculateMetrics,
+    getQuestionProgress: state.getQuestionProgress,
+  }));
+
+export const useCurrentQuestion = (): IQuestion | null =>
+  useAppStore(
+    (state) => state.sessionQuestions[state.currentQuestionIndex] ?? null,
+  );
+
+export const useQuestionProgress = (): {
+  current: number;
+  total: number;
+  percentage: number;
+} =>
+  useAppStore((state) => {
+    const current = state.currentQuestionIndex + 1;
+    const total = state.sessionQuestions.length;
+    const percentage = total > 0 ? (current / total) * 100 : 0;
+    return { current, total, percentage };
+  });

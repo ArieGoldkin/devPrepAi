@@ -39,7 +39,9 @@
       "Bash(npx next:*)",
       "Read(//Users/ariegoldkin/Desktop/**)",
       "Bash(./update-imports.sh)",
-      "Bash(/Users/ariegoldkin/Arie/projects/test-orchestration-demo/update-imports.sh:*)"
+      "Bash(/Users/ariegoldkin/Arie/projects/test-orchestration-demo/update-imports.sh:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(awk:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
@@ -50,5 +52,6 @@
     "playwright",
     "browsermcp",
     "shadcn"
-  ]
+  ],
+  "outputStyle": "Explanatory"
 }

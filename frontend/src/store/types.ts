@@ -12,3 +12,10 @@ export type {
   IStreakActions,
   IStreakData,
 } from "./slices/streakSlice";
+export type {
+  IQuestionsState,
+  IQuestionsActions,
+  IQuestionAnswer,
+  IHintUsage,
+  IPerformanceMetrics,
+} from "./slices/questionsSlice";

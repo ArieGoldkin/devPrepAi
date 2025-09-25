@@ -12,6 +12,7 @@ import {
   type PracticeSettings,
 } from "@components/features/practice/PracticeWizard";
 import { AppLayout } from "@components/layout/AppLayout";
+import { ErrorBoundary } from "@components/shared";
 import { ErrorMessage } from "@components/shared/ErrorMessage";
 import { Progress } from "@components/ui/progress";
 import { generatePracticeQuestions } from "@services/ai";
@@ -106,17 +107,23 @@ export default function PracticePage(): React.JSX.Element {
         )}
 
         {/* Practice Wizard */}
-        <PracticeWizard
-          currentStep={currentStep}
-          userProfile={userProfile}
-          practiceSettings={practiceSettings}
-          selectedInterviewType={selectedInterviewType}
-          loading={loading}
-          onStepChange={setCurrentStep}
-          onSettingsChange={setPracticeSettings}
-          onInterviewTypeSelect={setSelectedInterviewType}
-          onStart={handleGenerateQuestions}
-        />
+        <ErrorBoundary
+          onError={(error, errorInfo) => {
+            console.error("Practice wizard error:", { error, errorInfo });
+          }}
+        >
+          <PracticeWizard
+            currentStep={currentStep}
+            userProfile={userProfile}
+            practiceSettings={practiceSettings}
+            selectedInterviewType={selectedInterviewType}
+            loading={loading}
+            onStepChange={setCurrentStep}
+            onSettingsChange={setPracticeSettings}
+            onInterviewTypeSelect={setSelectedInterviewType}
+            onStart={handleGenerateQuestions}
+          />
+        </ErrorBoundary>
       </div>
     </AppLayout>
   );

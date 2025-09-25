@@ -81,26 +81,46 @@ For semantic routing beyond keywords, load `.claude/instructions/orchestration.m
 - **whimsy-injector**
 
 
-## 📁 Component Architecture
+## 📁 Architecture & Organization
 
-The project follows a **feature-based component organization**:
+### Domain-Driven Structure (NEW - Refactored from lib/)
+
+The project now uses a **domain-driven organization** with dedicated modules:
 
 ```
-frontend/src/components/
-├── features/        # Business logic components by feature
-│   ├── practice/    # Practice mode components
-│   ├── profile/     # User profile components
-│   ├── assessment/  # Assessment mode components
-│   ├── questions/   # Question display components
-│   ├── results/     # Results & feedback components
-│   ├── feedback/    # Feedback components
-│   └── answer/      # Answer input components
-├── pages/          # Page-level components
-│   └── HomePage/   # Landing page components
-├── shared/         # Reusable components across features
-├── layout/         # App structure components
-└── ui/            # Design system primitives
+frontend/src/
+├── api/              # API layer - Claude AI integration & HTTP client
+│   ├── claude/       # Claude-specific client, hooks, and types
+│   ├── client.ts     # Base HTTP client with error handling
+│   └── errors.ts     # Centralized error management
+│
+├── query/            # React Query infrastructure
+│   ├── client.ts     # Query client with caching strategies
+│   ├── helpers.ts    # Query utilities and helpers
+│   └── providers.tsx # React Query context providers
+│
+├── design/           # Design system foundation
+│   ├── tokens.ts     # Colors, spacing, typography, shadows
+│   ├── variants.ts   # Component variant definitions
+│   └── utilities.ts  # Helper functions (cn, formatters)
+│
+├── config/           # Application configuration
+│   └── app.ts        # Environment vars and app settings
+│
+└── components/       # Component architecture (unchanged)
+    ├── features/     # Business logic by feature
+    ├── pages/        # Page-level compositions
+    ├── shared/       # Reusable components
+    ├── layout/       # App structure
+    └── ui/          # Design system primitives
 ```
+
+### Architectural Benefits:
+- **Clear separation of concerns** - Each domain has its own directory
+- **Better maintainability** - Related files grouped together
+- **Improved imports** - Clean TypeScript path aliases (@/api, @/query, etc.)
+- **Reduced complexity** - No more bloated lib/ folder
+- **Domain expertise** - Each module has a single responsibility
 
 ### Component Guidelines:
 - Max 100 lines per component file

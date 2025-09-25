@@ -47,12 +47,15 @@
       "@components/*": ["./src/components/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@services/*": ["./src/services/*"],
-      "@lib/*": ["./src/lib/*"],
       "@types/*": ["./src/types/*"],
       "@store/*": ["./src/store/*"],
       "@data/*": ["./src/data/*"],
       "@constants/*": ["./src/constants/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@api/*": ["./src/api/*"],
+      "@query/*": ["./src/query/*"],
+      "@design/*": ["./src/design/*"],
+      "@config/*": ["./src/config/*"]
     },
 
     // Next.js

@@ -31,34 +31,63 @@ AI-powered interview preparation platform built with Next.js 15 and Claude AI.
 devprep-ai/
 ├── frontend/                    # Next.js application
 │   └── src/
-│       └── components/
-│           ├── features/        # Feature-based organization
-│           │   ├── practice/    # Practice mode components
-│           │   │   ├── PracticeSession/
-│           │   │   └── PracticeWizard/
-│           │   │       ├── components/
-│           │   │       ├── steps/
-│           │   │       └── constants.ts
-│           │   ├── profile/     # User profile components
-│           │   │   └── ProfileSetup/
-│           │   │       └── profile-wizard/
-│           │   ├── assessment/  # Assessment mode
-│           │   │   └── AssessmentView/
-│           │   │       ├── components/
-│           │   │       └── hooks/
-│           │   ├── questions/   # Question display
-│           │   ├── results/     # Results & feedback
-│           │   ├── feedback/    # Feedback components
-│           │   └── answer/      # Answer input components
-│           ├── pages/          # Page-level components
-│           │   └── HomePage/
-│           │       ├── HeroSection/
-│           │       │   └── components/
-│           │       └── FeaturesSection/
-│           │           └── components/
-│           ├── shared/          # Reusable components
-│           ├── layout/          # Layout components
-│           └── ui/              # Design system components
+│       ├── api/                 # API layer (NEW - refactored from lib/)
+│       │   ├── claude/          # Claude AI integration
+│       │   │   ├── client.ts    # API client for Claude
+│       │   │   ├── hooks.ts     # React hooks for AI features
+│       │   │   └── types.ts     # TypeScript types
+│       │   ├── client.ts        # Base HTTP client
+│       │   └── errors.ts        # Error handling
+│       │
+│       ├── query/               # React Query setup (NEW - refactored from lib/)
+│       │   ├── client.ts        # Query client configuration
+│       │   ├── helpers.ts       # Query utilities
+│       │   └── providers.tsx    # React Query providers
+│       │
+│       ├── design/              # Design system (NEW - refactored from lib/)
+│       │   ├── tokens.ts        # Colors, spacing, shadows
+│       │   ├── variants.ts      # Component variants
+│       │   └── utilities.ts     # Helper functions (cn, etc.)
+│       │
+│       ├── config/              # App configuration (NEW - refactored from lib/)
+│       │   └── app.ts           # Environment and app config
+│       │
+│       ├── components/
+│       │   ├── features/        # Feature-based organization
+│       │   │   ├── practice/    # Practice mode components
+│       │   │   ├── profile/     # User profile components
+│       │   │   ├── assessment/  # Assessment mode
+│       │   │   ├── questions/   # Question display
+│       │   │   └── results/     # Results & feedback
+│       │   │   ├── feedback/    # Feedback components
+│       │   │   └── answer/      # Answer input components
+│       │   ├── pages/          # Page-level components
+│       │   │   └── HomePage/
+│       │   │       ├── HeroSection/
+│       │   │       │   └── components/
+│       │   │       └── FeaturesSection/
+│       │   │           └── components/
+│       │   ├── shared/          # Reusable components
+│       │   │   ├── ErrorBoundary.tsx
+│       │   │   └── ErrorFallback.tsx
+│       │   ├── layout/          # Layout components
+│       │   └── ui/              # Design system components
+│       │
+│       ├── hooks/              # Custom React hooks
+│       │   ├── useErrorBoundary.ts
+│       │   ├── use-claude-api.ts
+│       │   └── claude-api-types.ts
+│       │
+│       ├── store/              # Zustand state management
+│       │   ├── slices/
+│       │   │   └── questionsSlice/
+│       │   └── useAppStore.ts
+│       │
+│       ├── services/           # Business logic
+│       ├── types/              # TypeScript types
+│       ├── utils/              # Utility functions
+│       └── constants/          # App constants
+│
 ├── Docs/                       # Project documentation
 │   ├── PRD.md                  # Product requirements
 │   ├── technical-architecture.md
