@@ -4,19 +4,19 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 import type { InterviewType } from "@/types/ai";
+import { generatePracticeQuestions } from "@lib/claude/services/ai";
+import { useAppStore } from "@lib/store/useAppStore";
 import {
   PracticeWizard,
   TOTAL_STEPS,
   PROGRESS_MULTIPLIER,
   type WizardStep,
   type PracticeSettings,
-} from "@components/features/practice/PracticeWizard";
-import { AppLayout } from "@components/layout/AppLayout";
-import { ErrorBoundary } from "@components/shared";
-import { ErrorMessage } from "@components/shared/ErrorMessage";
-import { Progress } from "@components/ui/progress";
-import { generatePracticeQuestions } from "@services/ai";
-import { useAppStore } from "@store/useAppStore";
+} from "@modules/practice/components/PracticeWizard";
+import { AppLayout } from "@shared/components/layout/AppLayout";
+import { ErrorBoundary } from "@shared/ui";
+import { ErrorMessage } from "@shared/ui/ErrorMessage";
+import { Progress } from "@shared/ui/progress";
 
 export default function PracticePage(): React.JSX.Element {
   const router = useRouter();

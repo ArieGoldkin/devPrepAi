@@ -12,7 +12,7 @@ import type {
   IGenerateQuestionsResponse,
   IAPIResponse,
 } from "@/types/ai";
-import { buildQuestionsPrompt } from "@services/ai-prompts";
+import { buildQuestionsPrompt } from "@lib/claude/services/ai-prompts";
 
 const GENERATION_MAX_TOKENS = 2000;
 const DEFAULT_TEMPERATURE = 0.7;

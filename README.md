@@ -28,65 +28,44 @@ AI-powered interview preparation platform built with Next.js 15 and Claude AI.
 ## 📁 Project Structure
 
 ```
-devprep-ai/
-├── frontend/                    # Next.js application
-│   └── src/
-│       ├── api/                 # API layer (NEW - refactored from lib/)
-│       │   ├── claude/          # Claude AI integration
-│       │   │   ├── client.ts    # API client for Claude
-│       │   │   ├── hooks.ts     # React hooks for AI features
-│       │   │   └── types.ts     # TypeScript types
-│       │   ├── client.ts        # Base HTTP client
-│       │   └── errors.ts        # Error handling
+test-orchestration-demo/
+├── frontend/                    # Next.js 15 application
+│   └── src/                    # Source code (6 clean directories)
+│       ├── app/                # Next.js App Router (routes only)
+│       │   ├── api/           # API routes
+│       │   ├── (auth)/        # Auth pages
+│       │   ├── assessment/    # Assessment page
+│       │   ├── practice/      # Practice page
+│       │   ├── results/       # Results page
+│       │   └── page.tsx       # Home page
 │       │
-│       ├── query/               # React Query setup (NEW - refactored from lib/)
-│       │   ├── client.ts        # Query client configuration
-│       │   ├── helpers.ts       # Query utilities
-│       │   └── providers.tsx    # React Query providers
+│       ├── modules/           # Feature-based business logic
+│       │   ├── assessment/    # Assessment module
+│       │   ├── practice/      # Practice module
+│       │   ├── results/       # Results module
+│       │   ├── profile/       # Profile module
+│       │   ├── questions/     # Questions module
+│       │   └── home/          # Home page module
 │       │
-│       ├── design/              # Design system (NEW - refactored from lib/)
-│       │   ├── tokens.ts        # Colors, spacing, shadows
-│       │   ├── variants.ts      # Component variants
-│       │   └── utilities.ts     # Helper functions (cn, etc.)
+│       ├── shared/            # Cross-cutting concerns
+│       │   ├── ui/           # Design system components
+│       │   ├── components/   # Shared layouts
+│       │   ├── hooks/        # Reusable React hooks
+│       │   ├── utils/        # Utility functions
+│       │   ├── constants/    # App constants
+│       │   └── mocks/        # Sample/test data
 │       │
-│       ├── config/              # App configuration (NEW - refactored from lib/)
-│       │   └── app.ts           # Environment and app config
+│       ├── lib/              # External integrations
+│       │   ├── claude/       # Claude AI service
+│       │   ├── query/        # React Query setup
+│       │   └── store/        # Zustand state
 │       │
-│       ├── components/
-│       │   ├── features/        # Feature-based organization
-│       │   │   ├── practice/    # Practice mode components
-│       │   │   ├── profile/     # User profile components
-│       │   │   ├── assessment/  # Assessment mode
-│       │   │   ├── questions/   # Question display
-│       │   │   └── results/     # Results & feedback
-│       │   │   ├── feedback/    # Feedback components
-│       │   │   └── answer/      # Answer input components
-│       │   ├── pages/          # Page-level components
-│       │   │   └── HomePage/
-│       │   │       ├── HeroSection/
-│       │   │       │   └── components/
-│       │   │       └── FeaturesSection/
-│       │   │           └── components/
-│       │   ├── shared/          # Reusable components
-│       │   │   ├── ErrorBoundary.tsx
-│       │   │   └── ErrorFallback.tsx
-│       │   ├── layout/          # Layout components
-│       │   └── ui/              # Design system components
+│       ├── styles/           # Design system foundation
+│       │   ├── globals.css   # Global CSS
+│       │   ├── tokens.ts     # Design tokens
+│       │   └── variants.ts   # Component variants
 │       │
-│       ├── hooks/              # Custom React hooks
-│       │   ├── useErrorBoundary.ts
-│       │   ├── use-claude-api.ts
-│       │   └── claude-api-types.ts
-│       │
-│       ├── store/              # Zustand state management
-│       │   ├── slices/
-│       │   │   └── questionsSlice/
-│       │   └── useAppStore.ts
-│       │
-│       ├── services/           # Business logic
-│       ├── types/              # TypeScript types
-│       ├── utils/              # Utility functions
-│       └── constants/          # App constants
+│       └── types/            # TypeScript definitions
 │
 ├── Docs/                       # Project documentation
 │   ├── PRD.md                  # Product requirements

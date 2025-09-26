@@ -1,10 +1,10 @@
 import type { ReactElement } from "react";
 
-import { AppLayout } from "@components/layout/AppLayout";
-import { CTASection } from "@components/pages/HomePage/CTASection";
-import { FeaturesSection } from "@components/pages/HomePage/FeaturesSection";
-import { HeroSection } from "@components/pages/HomePage/HeroSection";
-import { TechStackSection } from "@components/pages/HomePage/TechStackSection";
+import { CTASection } from "@modules/home/components/CTASection";
+import { FeaturesSection } from "@modules/home/components/FeaturesSection";
+import { HeroSection } from "@modules/home/components/HeroSection";
+import { TechStackSection } from "@modules/home/components/TechStackSection";
+import { AppLayout } from "@shared/components/layout/AppLayout";
 
 export default function Home(): ReactElement {
   return (

@@ -3,11 +3,11 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import { AssessmentView } from "@components/features/assessment/AssessmentView";
-import { AppLayout } from "@components/layout/AppLayout";
-import { ErrorBoundary } from "@components/shared";
-import { LoadingSpinner } from "@components/ui/loading-spinner";
-import { useAppStore } from "@store/useAppStore";
+import { useAppStore } from "@lib/store/useAppStore";
+import { AssessmentView } from "@modules/assessment/components/AssessmentView";
+import { AppLayout } from "@shared/components/layout/AppLayout";
+import { ErrorBoundary } from "@shared/ui";
+import { LoadingSpinner } from "@shared/ui/loading-spinner";
 
 export default function AssessmentPage(): React.JSX.Element {
   const router = useRouter();

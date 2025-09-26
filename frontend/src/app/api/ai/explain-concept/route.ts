@@ -12,7 +12,7 @@ import type {
   IExplainConceptResponse,
   IAPIResponse,
 } from "@/types/ai";
-import { buildConceptPrompt } from "@services/ai-prompts";
+import { buildConceptPrompt } from "@lib/claude/services/ai-prompts";
 
 const DEFAULT_MAX_TOKENS = 1000;
 const DEFAULT_TEMPERATURE = 0.7;

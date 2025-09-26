@@ -3,12 +3,12 @@
 import React, { useEffect, useState } from "react";
 
 import type { IAssessmentResults } from "@/types/ai";
-import { EmptyState } from "@components/features/results/EmptyState";
-import { ResultCard } from "@components/features/results/ResultCard";
-import { Statistics } from "@components/features/results/Statistics";
-import { AppLayout } from "@components/layout/AppLayout";
-import { ErrorBoundary } from "@components/shared";
-import { useAppStore } from "@store/useAppStore";
+import { useAppStore } from "@lib/store/useAppStore";
+import { EmptyState } from "@modules/results/components/EmptyState";
+import { ResultCard } from "@modules/results/components/ResultCard";
+import { Statistics } from "@modules/results/components/Statistics";
+import { AppLayout } from "@shared/components/layout/AppLayout";
+import { ErrorBoundary } from "@shared/ui";
 
 export default function ResultsPage(): React.JSX.Element {
   const { getRecentResults } = useAppStore();

@@ -44,18 +44,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@services/*": ["./src/services/*"],
-      "@types/*": ["./src/types/*"],
-      "@store/*": ["./src/store/*"],
-      "@data/*": ["./src/data/*"],
-      "@constants/*": ["./src/constants/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@api/*": ["./src/api/*"],
-      "@query/*": ["./src/query/*"],
-      "@design/*": ["./src/design/*"],
-      "@config/*": ["./src/config/*"]
+      "@app/*": ["./src/app/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@lib/*": ["./src/lib/*"],
+      "@styles/*": ["./src/styles/*"],
+      "@types/*": ["./src/types/*"]
     },
 
     // Next.js

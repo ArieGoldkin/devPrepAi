@@ -6,7 +6,7 @@ import {
   ColorsAndComponents,
   InteractiveCards,
   ErrorHandlingDemo,
-} from "./components";
+} from "@shared/ui/examples";
 
 export default function DesignSystemPage(): React.JSX.Element {
   return (

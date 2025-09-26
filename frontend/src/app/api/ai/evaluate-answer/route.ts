@@ -12,7 +12,7 @@ import type {
   IEvaluateAnswerResponse,
   IAPIResponse,
 } from "@/types/ai";
-import { buildEvaluationPrompt } from "@services/ai-prompts";
+import { buildEvaluationPrompt } from "@lib/claude/services/ai-prompts";
 
 const DEFAULT_MAX_TOKENS = 1000;
 const DEFAULT_TEMPERATURE = 0.7;

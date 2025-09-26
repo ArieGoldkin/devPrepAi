@@ -83,50 +83,66 @@ For semantic routing beyond keywords, load `.claude/instructions/orchestration.m
 
 ## 📁 Architecture & Organization
 
-### Domain-Driven Structure (NEW - Refactored from lib/)
+### Clean 6-Folder Structure (Final Architecture)
 
-The project now uses a **domain-driven organization** with dedicated modules:
+The project uses a **simplified domain-driven architecture** with just 6 focused directories:
 
 ```
 frontend/src/
-├── api/              # API layer - Claude AI integration & HTTP client
-│   ├── claude/       # Claude-specific client, hooks, and types
-│   ├── client.ts     # Base HTTP client with error handling
-│   └── errors.ts     # Centralized error management
+├── app/              # Next.js App Router (routes only)
+│   ├── api/         # API routes
+│   └── (pages)/     # Page components
 │
-├── query/            # React Query infrastructure
-│   ├── client.ts     # Query client with caching strategies
-│   ├── helpers.ts    # Query utilities and helpers
-│   └── providers.tsx # React Query context providers
+├── modules/         # Feature-based business logic
+│   ├── assessment/  # Assessment module
+│   ├── practice/    # Practice module
+│   ├── results/     # Results module
+│   ├── profile/     # Profile module
+│   ├── questions/   # Questions module
+│   └── home/       # Home page module
 │
-├── design/           # Design system foundation
-│   ├── tokens.ts     # Colors, spacing, typography, shadows
-│   ├── variants.ts   # Component variant definitions
-│   └── utilities.ts  # Helper functions (cn, formatters)
+├── shared/          # Cross-cutting concerns
+│   ├── ui/         # Design system components
+│   ├── components/ # Shared layouts
+│   ├── hooks/      # Reusable React hooks
+│   ├── utils/      # Utility functions
+│   ├── constants/  # App constants
+│   └── mocks/      # Sample data
 │
-├── config/           # Application configuration
-│   └── app.ts        # Environment vars and app settings
+├── lib/            # External integrations
+│   ├── claude/     # Claude AI service
+│   ├── query/      # React Query setup
+│   └── store/      # Zustand state
 │
-└── components/       # Component architecture (unchanged)
-    ├── features/     # Business logic by feature
-    ├── pages/        # Page-level compositions
-    ├── shared/       # Reusable components
-    ├── layout/       # App structure
-    └── ui/          # Design system primitives
+├── styles/         # Design system foundation
+│   ├── globals.css # Global CSS
+│   ├── tokens.ts   # Design tokens
+│   └── variants.ts # Component variants
+│
+└── types/          # TypeScript definitions
+```
+
+### Import Patterns (Clean & Intuitive):
+```typescript
+import { Button } from "@shared/ui/button"
+import { useAppStore } from "@lib/store/useAppStore"
+import { AssessmentView } from "@modules/assessment/components"
+import type { IQuestion } from "@/types/ai"
 ```
 
 ### Architectural Benefits:
-- **Clear separation of concerns** - Each domain has its own directory
-- **Better maintainability** - Related files grouped together
-- **Improved imports** - Clean TypeScript path aliases (@/api, @/query, etc.)
-- **Reduced complexity** - No more bloated lib/ folder
-- **Domain expertise** - Each module has a single responsibility
+- **6 folders instead of 17** - 65% reduction in complexity
+- **Single source of truth** - No duplicate files or overlapping concerns
+- **Clean imports** - Using @modules/, @shared/, @lib/ aliases
+- **Domain-driven** - Features organized by business logic
+- **Zero redundancy** - Each folder has one clear purpose
 
-### Component Guidelines:
-- Max 100 lines per component file
-- Complex logic extracted to custom hooks
-- Self-contained features with own components/hooks/constants
-- Consistent folder structure across all features
+### Module Structure:
+Each module is self-contained with:
+- `components/` - Module-specific components
+- `hooks/` - Module-specific hooks
+- `utils/` - Module utilities
+- `types.ts` - Module types
 
 ## 🧠 Context Awareness
 

@@ -2,17 +2,12 @@
 
 import React, { useState } from "react";
 
-import { QuestionDisplay } from "@components/features/assessment/QuestionDisplay";
-import { Timer } from "@components/features/assessment/Timer";
-import { AppLayout } from "@components/layout/AppLayout";
-import { Button } from "@components/ui/button";
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@components/ui/card";
-import { sampleQuestions } from "@data/sampleQuestions";
+import { QuestionDisplay } from "@modules/assessment/components/QuestionDisplay";
+import { Timer } from "@modules/assessment/components/Timer";
+import { AppLayout } from "@shared/components/layout/AppLayout";
+import { sampleQuestions } from "@shared/mocks/sampleQuestions";
+import { Button } from "@shared/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@shared/ui/card";
 
 export default function DemoPage(): React.JSX.Element {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

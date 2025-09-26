@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import type React from "react";
 
-import AssessmentSetup from "@components/features/assessment/AssessmentSetup";
-import type { IAssessmentSettings } from "@components/features/assessment/AssessmentSetup";
+import AssessmentSetup from "@modules/assessment/components/AssessmentSetup";
+import type { IAssessmentSettings } from "@modules/assessment/components/AssessmentSetup";
 
 export default function AssessmentSetupPage(): React.JSX.Element {
   const router = useRouter();

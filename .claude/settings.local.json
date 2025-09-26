@@ -41,7 +41,21 @@
       "Bash(./update-imports.sh)",
       "Bash(/Users/ariegoldkin/Arie/projects/test-orchestration-demo/update-imports.sh:*)",
       "Bash(npm run typecheck:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__get-library-docs",
+      "Bash(xargs ls:*)",
+      "Bash(for dir in /Users/ariegoldkin/Arie/projects/test-orchestration-demo/frontend/src/features/*)",
+      "Bash(done)",
+      "Bash(for module in /Users/ariegoldkin/Arie/projects/test-orchestration-demo/frontend/src/modules/*)",
+      "Bash(ls:*)",
+      "Bash(for module in assessment home practice profile questions results)",
+      "Bash(do touch \"/Users/ariegoldkin/Arie/projects/test-orchestration-demo/frontend/src/modules/$module/types.ts\")",
+      "Bash(for:*)",
+      "Bash(do echo \"=== $file ===\")",
+      "Bash(xargs sed:*)",
+      "Bash(echo:*)",
+      "mcp__playwright__browser_press_key"
     ]
   },
   "enableAllProjectMcpServers": true,
