@@ -8,7 +8,7 @@ import { cn } from "@shared/utils/cn";
 const FULL_PERCENTAGE = 100;
 
 const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
+  React.ComponentRef<typeof ProgressPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 >(({ className, value, ...props }, ref) => {
   const safeValue = value ?? 0;

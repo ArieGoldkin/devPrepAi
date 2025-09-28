@@ -3,7 +3,7 @@ import React from "react";
 
 import { Badge } from "@shared/ui/badge";
 
-import type { ValidationStatus } from "../utils/validationUtils";
+import type { ValidationStatus } from "./utils/validationUtils";
 
 interface IValidationIndicatorProps {
   status: ValidationStatus;

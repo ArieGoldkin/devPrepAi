@@ -4,13 +4,13 @@ import React from "react";
 import { MS_PER_SECOND, SECONDS_PER_MINUTE } from "@shared/constants/time";
 import { Badge } from "@shared/ui/badge";
 
-import type { AutoSaveStatus } from "../utils/autoSaveUtils";
-import { getAutoSaveStatusColor, getAutoSaveStatusText } from "../utils/autoSaveUtils";
+import type { AutoSaveStatus } from "./utils/autoSaveUtils";
+import { getAutoSaveStatusColor, getAutoSaveStatusText } from "./utils/autoSaveUtils";
 
 interface IAutoSaveIndicatorProps {
   status: AutoSaveStatus;
   isOnline: boolean;
-  lastSaveTime?: number;
+  lastSaveTime?: number | undefined;
 }
 
 export function AutoSaveIndicator({

@@ -8,7 +8,7 @@ interface IUseNavigationParams {
 }
 
 interface IUseNavigationReturn {
-  handleNavigate: (direction: "next" | "previous") => void;
+  handleNavigate: (direction: "next" | "previous" | number) => void;
 }
 
 export function useNavigation({
@@ -17,7 +17,13 @@ export function useNavigation({
   handleNext,
   handlePrevious,
 }: IUseNavigationParams): IUseNavigationReturn {
-  const handleNavigate = useCallback((direction: "next" | "previous"): void => {
+  const handleNavigate = useCallback((direction: "next" | "previous" | number): void => {
+    if (typeof direction === "number") {
+      // For numeric navigation, we don't handle it in this hook
+      // This is a placeholder for potential future functionality
+      return;
+    }
+
     if (direction === "next" && !isLastQuestion) {
       handleNext();
     } else if (direction === "previous" && !isFirstQuestion) {

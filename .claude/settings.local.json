@@ -63,7 +63,8 @@
       "mcp__playwright__browser_console_messages",
       "Bash(npm uninstall:*)",
       "Bash(mkdir:*)",
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(npm run:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -4,8 +4,8 @@ import React from "react";
 
 import { AssessmentActions } from "../AssessmentActions";
 import { AssessmentHeader } from "../AssessmentHeader";
-import { StatusBar } from "../feedback/StatusBar";
 import { QuestionDisplay } from "../QuestionDisplay";
+import { TopBar } from "../TopBar";
 
 import { AccessibilityAnnouncements } from "./components/AccessibilityAnnouncements";
 import { EmptyQuestionState } from "./components/EmptyQuestionState";
@@ -59,22 +59,23 @@ export function AssessmentView({
 
   return (
     <div className="flex flex-col h-full">
-      {/* Status Bar */}
-      <StatusBar
+      {/* Unified Top Bar */}
+      <TopBar
         currentAnswer={draftAnswer}
-        onAutoSave={handleAutoSave}
+        onAutoSave={() => handleAutoSave(draftAnswer)}
         questionType={getQuestionType()}
-        className="mb-4"
+        onTimeUp={handleTimeUp}
+        currentIndex={currentQuestionIndex}
+        totalQuestions={questions.length}
       />
 
       {/* Main content area */}
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-hidden pt-4">
         <div className="h-full flex flex-col space-y-6 animate-fade-in">
-          {/* Assessment Header */}
+          {/* Assessment Header - now without timer */}
           <AssessmentHeader
             currentIndex={currentQuestionIndex}
             totalQuestions={questions.length}
-            onTimeUp={handleTimeUp}
           />
 
           {/* Question Display */}

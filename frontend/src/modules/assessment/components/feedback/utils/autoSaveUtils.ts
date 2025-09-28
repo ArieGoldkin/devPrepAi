@@ -1,10 +1,12 @@
-export type AutoSaveStatus = "typing" | "saving" | "saved" | "error";
+export type AutoSaveStatus = "idle" | "typing" | "saving" | "saved" | "error";
 
 export const AUTO_SAVE_INTERVAL = 30000; // 30 seconds
 export const TYPING_DEBOUNCE = 1000; // 1 second
 
 export function getAutoSaveStatusColor(status: AutoSaveStatus): string {
   switch (status) {
+    case "idle":
+      return "text-gray-600";
     case "typing":
       return "text-yellow-600";
     case "saving":
@@ -20,6 +22,8 @@ export function getAutoSaveStatusColor(status: AutoSaveStatus): string {
 
 export function getAutoSaveStatusText(status: AutoSaveStatus): string {
   switch (status) {
+    case "idle":
+      return "Draft";
     case "typing":
       return "Typing...";
     case "saving":

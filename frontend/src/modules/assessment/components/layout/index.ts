@@ -24,5 +24,3 @@ export { CollapsibleSection } from "./sections/CollapsibleSection";
 export { QuestionHeader } from "./sections/QuestionHeader";
 export { QuestionSections } from "./sections/QuestionSections";
 
-// Status Components
-export { AutoSaveStatus } from "./status/AutoSaveStatus";

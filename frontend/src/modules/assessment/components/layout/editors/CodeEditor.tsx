@@ -1,10 +1,9 @@
 "use client";
-
 import React from "react";
 
 import { CodeMirrorEditor } from "@shared/ui/CodeMirrorEditor";
 
-import { AutoSaveStatus } from "../status/AutoSaveStatus";
+import { AutoSaveIndicator } from "../../feedback/AutoSaveIndicator";
 
 interface ICodeEditorProps {
   value: string;
@@ -33,6 +32,19 @@ export function CodeEditor({
   hasUnsavedChanges,
   lastAutoSaved,
 }: ICodeEditorProps): React.JSX.Element {
+  // Calculate save status
+  let saveStatus: "idle" | "saving" | "saved" | "error" | "typing";
+  if (isSaving) {
+    saveStatus = "saving";
+  } else if (hasUnsavedChanges) {
+    saveStatus = "typing";
+  } else {
+    saveStatus = "saved";
+  }
+
+  // Calculate last save time with null check
+  const lastSaveTime = lastAutoSaved?.getTime() ?? Date.now();
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
@@ -40,17 +52,16 @@ export function CodeEditor({
           Code Solution
         </label>
         <div className="flex items-center gap-3">
-          <AutoSaveStatus
-            isSaving={isSaving}
-            hasUnsavedChanges={hasUnsavedChanges}
-            lastAutoSaved={lastAutoSaved}
+          <AutoSaveIndicator
+            status={saveStatus}
+            isOnline={true}
+            lastSaveTime={lastSaveTime}
           />
           <span className="text-xs text-muted-foreground">
             {lineCount} lines
           </span>
         </div>
       </div>
-
       <div className="relative">
         <CodeMirrorEditor
           value={value}
@@ -64,7 +75,6 @@ export function CodeEditor({
           minHeight="300px"
           maxHeight="600px"
         />
-
         {syntaxErrors.length > 0 && (
           <div className="mt-2 p-2 bg-destructive/10 border border-destructive/20 rounded-md">
             <div className="text-xs font-medium text-destructive mb-1">Syntax Issues:</div>
@@ -76,7 +86,6 @@ export function CodeEditor({
           </div>
         )}
       </div>
-
       <div className="text-xs text-muted-foreground">
         <strong>Shortcuts:</strong> Ctrl+Enter (Submit) • Ctrl+S (Save) • Ctrl+/ (Toggle hints)
       </div>

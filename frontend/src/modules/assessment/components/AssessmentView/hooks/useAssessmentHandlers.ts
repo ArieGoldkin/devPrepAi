@@ -1,15 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 
 import type { IQuestion } from "@/types/ai";
 import type { IAssessmentAnswer } from "@lib/store/slices/assessmentSlice";
+import type { IDraftAnswer } from "@lib/store/slices/questionsSlice/types";
 import { useAppStore } from "@lib/store/useAppStore";
 
 import {
   initializeAnswerState,
   shouldAutoSave,
-  canSubmitAnswer,
   getNavigationState,
 } from "./assessmentHandlerUtils";
+import { useAssessmentCallbacks } from "./useAssessmentCallbacks";
 import { useAutoSave } from "./useAutoSave";
 import { useKeyboardShortcuts } from "./useKeyboardShortcuts";
 import { useQuestionHelpers } from "./useQuestionHelpers";
@@ -36,26 +37,52 @@ interface IUseAssessmentHandlersReturn {
   getQuestionType: () => "behavioral" | "system-design" | "coding" | "conceptual";
 }
 
-export function useAssessmentHandlers(
-  onComplete?: () => void,
-): IUseAssessmentHandlersReturn {
-  const {
-    questions,
-    currentQuestionIndex,
-    answers,
-    submitAnswer,
-    nextQuestion,
-    previousQuestion,
-    completeAssessment,
-    addResult,
-    updateDraft,
-    autoSave,
-    draftAnswers,
-  } = useAppStore();
+interface IUseAnswerStateReturn {
+  currentAnswer: string;
+  setCurrentAnswer: (answer: string) => void;
+  draftAnswer: string;
+  setDraftAnswer: (answer: string) => void;
+  hasAnswered: boolean;
+  setHasAnswered: (hasAnswered: boolean) => void;
+}
 
+// Extract answer management logic
+function useAnswerState(
+  currentQuestion: IQuestion | null,
+  answers: IAssessmentAnswer[],
+  draftAnswers: IDraftAnswer[],
+): IUseAnswerStateReturn {
   const [currentAnswer, setCurrentAnswer] = useState("");
   const [draftAnswer, setDraftAnswer] = useState("");
   const [hasAnswered, setHasAnswered] = useState(false);
+
+  useEffect(() => {
+    // Transform IDraftAnswer[] to expected format for initializeAnswerState
+    const draftAnswersForInit = draftAnswers.map((da) => ({
+      questionId: da.questionId,
+      draft: da.draft,
+    }));
+    const state = initializeAnswerState(currentQuestion, answers, draftAnswersForInit);
+    setCurrentAnswer(state.currentAnswer);
+    setDraftAnswer(state.draftAnswer);
+    setHasAnswered(state.hasAnswered);
+  }, [currentQuestion, answers, draftAnswers]);
+
+  return {
+    currentAnswer,
+    setCurrentAnswer,
+    draftAnswer,
+    setDraftAnswer,
+    hasAnswered,
+    setHasAnswered,
+  };
+}
+
+export function useAssessmentHandlers(
+  onComplete?: () => void,
+): IUseAssessmentHandlersReturn {
+  const store = useAppStore();
+  const { questions, currentQuestionIndex, answers, draftAnswers } = store;
 
   const currentQuestion = questions[currentQuestionIndex] || null;
   const { isFirstQuestion, isLastQuestion } = getNavigationState(
@@ -63,121 +90,79 @@ export function useAssessmentHandlers(
     questions.length,
   );
 
+  // Use answer state management
+  const answerState = useAnswerState(currentQuestion, answers, draftAnswers);
+
   // Initialize helper hooks
   const { handleAutoSave, scheduleAutoSave, clearTimers } = useAutoSave({
     currentQuestion,
     autoSave: (questionId: string, answer: string) => {
-      updateDraft(questionId, answer);
-      autoSave(questionId);
+      store.updateDraft(questionId, answer);
+      store.autoSave(questionId);
     },
   });
 
-  const { getQuestionType, getAnswerTimeSpent } = useQuestionHelpers({
+  const helpers = useQuestionHelpers({ currentQuestion, answers });
+
+  // Use extracted callbacks hook
+  const callbacks = useAssessmentCallbacks({
     currentQuestion,
-    answers,
+    draftAnswer: answerState.draftAnswer,
+    hasAnswered: answerState.hasAnswered,
+    isLastQuestion,
+    isFirstQuestion,
+    submitAnswer: store.submitAnswer,
+    nextQuestion: store.nextQuestion,
+    previousQuestion: store.previousQuestion,
+    completeAssessment: store.completeAssessment,
+    addResult: store.addResult,
+    clearTimers,
+    setCurrentAnswer: answerState.setCurrentAnswer,
+    setHasAnswered: answerState.setHasAnswered,
+    setDraftAnswer: answerState.setDraftAnswer,
+    onComplete,
   });
 
-  // Load existing answer and draft when question changes
+  // Auto-save effect
   useEffect(() => {
-    const state = initializeAnswerState(currentQuestion, answers, draftAnswers);
-    setCurrentAnswer(state.currentAnswer);
-    setDraftAnswer(state.draftAnswer);
-    setHasAnswered(state.hasAnswered);
-  }, [currentQuestionIndex, answers, draftAnswers, currentQuestion]);
-
-  // Auto-save draft answers with debouncing
-  useEffect(() => {
-    if (!currentQuestion) {
+    if (!currentQuestion || !shouldAutoSave(answerState.draftAnswer, answerState.currentAnswer)) {
       return;
     }
-
-    if (shouldAutoSave(draftAnswer, currentAnswer)) {
-      scheduleAutoSave(draftAnswer);
-    }
-
+    scheduleAutoSave(answerState.draftAnswer);
     return clearTimers;
-  }, [draftAnswer, currentAnswer, currentQuestion, scheduleAutoSave, clearTimers]);
-
-  const handleAnswerChange = useCallback((value: string): void => {
-    setCurrentAnswer(value);
-  }, []);
-
-  const handleDraftChange = useCallback((value: string): void => {
-    setDraftAnswer(value);
-  }, []);
-
-  const handleSubmitAnswer = useCallback((): void => {
-    if (!currentQuestion || !canSubmitAnswer(currentQuestion, draftAnswer)) return;
-
-    const finalAnswer = draftAnswer.trim();
-    submitAnswer(currentQuestion.id, finalAnswer);
-    setCurrentAnswer(finalAnswer);
-    setHasAnswered(true);
-    clearTimers();
-  }, [currentQuestion, draftAnswer, submitAnswer, clearTimers, setCurrentAnswer, setHasAnswered]);
-
-  const handleComplete = useCallback((): void => {
-    const result = completeAssessment();
-    addResult(result);
-    onComplete?.();
-  }, [completeAssessment, addResult, onComplete]);
-  const handleNext = useCallback((): void => {
-    if (!hasAnswered && draftAnswer.trim() !== "") {
-      handleSubmitAnswer();
-    }
-
-    if (isLastQuestion) {
-      handleComplete();
-    } else {
-      nextQuestion();
-      setHasAnswered(false);
-    }
-  }, [hasAnswered, draftAnswer, isLastQuestion, nextQuestion, completeAssessment, addResult, onComplete, currentQuestion, submitAnswer, clearTimers, setCurrentAnswer, setHasAnswered]);
-
-  const handlePrevious = useCallback((): void => {
-    if (!isFirstQuestion) {
-      previousQuestion();
-    }
-  }, [isFirstQuestion, previousQuestion]);
-
-  const handleTimeUp = useCallback((): void => {
-    if (draftAnswer.trim() !== "" && !hasAnswered) {
-      handleSubmitAnswer();
-    }
-    handleComplete();
-  }, [draftAnswer, hasAnswered, completeAssessment, addResult, onComplete, currentQuestion, submitAnswer, clearTimers, setCurrentAnswer, setHasAnswered]);
+  }, [answerState.draftAnswer, answerState.currentAnswer, currentQuestion, scheduleAutoSave, clearTimers]);
 
   const { handleKeyboardShortcuts } = useKeyboardShortcuts({
-    hasAnswered,
-    draftAnswer,
+    hasAnswered: answerState.hasAnswered,
+    draftAnswer: answerState.draftAnswer,
     currentQuestion,
     isFirstQuestion,
     isLastQuestion,
-    handleSubmitAnswer,
+    handleSubmitAnswer: callbacks.handleSubmitAnswer,
     handleAutoSave,
-    handlePrevious,
-    handleNext,
+    handlePrevious: callbacks.handlePrevious,
+    handleNext: callbacks.handleNext,
   });
 
   return {
     questions,
     currentQuestion,
     currentQuestionIndex,
-    currentAnswer,
-    draftAnswer,
-    hasAnswered,
+    currentAnswer: answerState.currentAnswer,
+    draftAnswer: answerState.draftAnswer,
+    hasAnswered: answerState.hasAnswered,
     isLastQuestion,
     isFirstQuestion,
     answers,
-    handleAnswerChange,
-    handleDraftChange,
-    handleSubmitAnswer,
-    handleNext,
-    handlePrevious,
-    handleTimeUp,
+    handleAnswerChange: callbacks.handleAnswerChange,
+    handleDraftChange: callbacks.handleDraftChange,
+    handleSubmitAnswer: callbacks.handleSubmitAnswer,
+    handleNext: callbacks.handleNext,
+    handlePrevious: callbacks.handlePrevious,
+    handleTimeUp: callbacks.handleTimeUp,
     handleAutoSave,
     handleKeyboardShortcuts,
-    getAnswerTimeSpent,
-    getQuestionType,
+    getAnswerTimeSpent: helpers.getAnswerTimeSpent,
+    getQuestionType: helpers.getQuestionType,
   };
 }

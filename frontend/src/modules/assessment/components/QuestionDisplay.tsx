@@ -1,15 +1,7 @@
 import React from "react";
 
 import type { IQuestion } from "@/types/ai";
-import { Textarea } from "@shared/ui/textarea";
-
-import { isCodingQuestion } from "./answer/utils";
-import QuestionLayout from "./layout/containers/QuestionLayout";
-import { AnswerSubmitted } from "./question/AnswerSubmitted";
-import { QuestionConstraints } from "./question/QuestionConstraints";
-import { QuestionContext } from "./question/QuestionContext";
-import { QuestionEdgeCases } from "./question/QuestionEdgeCases";
-import { QuestionExamples } from "./question/QuestionExamples";
+import { QuestionLayout } from "@shared/ui/UnifiedQuestion";
 
 interface IQuestionDisplayProps {
   question: IQuestion;
@@ -18,59 +10,42 @@ interface IQuestionDisplayProps {
   answerTimeSpent?: number;
   onAnswerChange: (value: string) => void;
   onSubmit?: () => void;
-  onNavigate?: (direction: "next" | "previous") => void;
+  onNavigate?: (direction: "next" | "previous" | number) => void;
   isLastQuestion?: boolean;
   isFirstQuestion?: boolean;
+  currentIndex?: number;
+  totalQuestions?: number;
 }
 
 export function QuestionDisplay({
   question,
   currentAnswer,
   hasAnswered,
-  answerTimeSpent,
+  answerTimeSpent: _answerTimeSpent, // Prefixed with _ to indicate it's intentionally unused
   onAnswerChange,
   onSubmit,
   onNavigate,
   isLastQuestion = false,
   isFirstQuestion = false,
+  currentIndex,
+  totalQuestions,
 }: IQuestionDisplayProps): React.JSX.Element {
-  // Use QuestionLayout for coding questions with enhanced features
-  if (isCodingQuestion(question)) {
-    return (
-      <QuestionLayout
-        question={question}
-        currentAnswer={currentAnswer}
-        onAnswerChange={onAnswerChange}
-        onSubmit={onSubmit ?? (() => {})}
-        isLastQuestion={isLastQuestion}
-        isFirstQuestion={isFirstQuestion}
-        className="animate-slide-up"
-        {...(onNavigate ? { onNavigate } : {})}
-      />
-    );
-  }
-
-  // Fallback to original layout for non-coding questions
+  // Use unified QuestionLayout for all question types
   return (
-    <div className="bg-white rounded-lg p-6 shadow-sm border animate-slide-up">
-      <h3 className="text-title font-semibold mb-4">{question.content}</h3>
-
-      <QuestionContext question={question} />
-      <QuestionExamples examples={question.examples} />
-      <QuestionConstraints constraints={question.constraints} />
-      <QuestionEdgeCases edgeCases={question.edgeCases} />
-
-      <Textarea
-        value={currentAnswer}
-        onChange={(e) => onAnswerChange(e.target.value)}
-        placeholder="Type your answer here..."
-        className="min-h-32"
-        disabled={hasAnswered}
-      />
-
-      {hasAnswered && answerTimeSpent !== undefined && (
-        <AnswerSubmitted answerTimeSpent={answerTimeSpent} />
-      )}
-    </div>
+    <QuestionLayout
+      question={question}
+      currentAnswer={currentAnswer}
+      onAnswerChange={onAnswerChange}
+      {...(hasAnswered || !onSubmit ? {} : { onSubmit })}
+      {...(onNavigate ? { onNavigate } : {})}
+      isFirstQuestion={isFirstQuestion}
+      isLastQuestion={isLastQuestion}
+      currentIndex={currentIndex}
+      totalQuestions={totalQuestions}
+      showHints={!hasAnswered}
+      showAutoSave={true}
+      variant="assessment"
+      className="animate-slide-up"
+    />
   );
 }
