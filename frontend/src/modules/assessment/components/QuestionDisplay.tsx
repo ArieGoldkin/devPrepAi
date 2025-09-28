@@ -1,8 +1,15 @@
 import React from "react";
 
 import type { IQuestion } from "@/types/ai";
-import { TIME_CONSTANTS } from "@lib/store/constants";
 import { Textarea } from "@shared/ui/textarea";
+
+import { isCodingQuestion } from "./answer/utils";
+import QuestionLayout from "./layout/containers/QuestionLayout";
+import { AnswerSubmitted } from "./question/AnswerSubmitted";
+import { QuestionConstraints } from "./question/QuestionConstraints";
+import { QuestionContext } from "./question/QuestionContext";
+import { QuestionEdgeCases } from "./question/QuestionEdgeCases";
+import { QuestionExamples } from "./question/QuestionExamples";
 
 interface IQuestionDisplayProps {
   question: IQuestion;
@@ -10,6 +17,10 @@ interface IQuestionDisplayProps {
   hasAnswered: boolean;
   answerTimeSpent?: number;
   onAnswerChange: (value: string) => void;
+  onSubmit?: () => void;
+  onNavigate?: (direction: "next" | "previous") => void;
+  isLastQuestion?: boolean;
+  isFirstQuestion?: boolean;
 }
 
 export function QuestionDisplay({
@@ -18,29 +29,36 @@ export function QuestionDisplay({
   hasAnswered,
   answerTimeSpent,
   onAnswerChange,
+  onSubmit,
+  onNavigate,
+  isLastQuestion = false,
+  isFirstQuestion = false,
 }: IQuestionDisplayProps): React.JSX.Element {
-  const formatTimeSpent = (seconds: number): string => {
-    const minutes = Math.floor(seconds / TIME_CONSTANTS.SECONDS_PER_MINUTE);
-    const remainingSeconds = seconds % TIME_CONSTANTS.SECONDS_PER_MINUTE;
-    return minutes > 0
-      ? `${minutes}m ${remainingSeconds}s`
-      : `${remainingSeconds}s`;
-  };
+  // Use QuestionLayout for coding questions with enhanced features
+  if (isCodingQuestion(question)) {
+    return (
+      <QuestionLayout
+        question={question}
+        currentAnswer={currentAnswer}
+        onAnswerChange={onAnswerChange}
+        onSubmit={onSubmit ?? (() => {})}
+        isLastQuestion={isLastQuestion}
+        isFirstQuestion={isFirstQuestion}
+        className="animate-slide-up"
+        {...(onNavigate ? { onNavigate } : {})}
+      />
+    );
+  }
 
+  // Fallback to original layout for non-coding questions
   return (
     <div className="bg-white rounded-lg p-6 shadow-sm border animate-slide-up">
       <h3 className="text-title font-semibold mb-4">{question.content}</h3>
 
-      {question.content !== null &&
-        question.content !== undefined &&
-        question.content !== "" && (
-          <div className="bg-gray-50 p-4 rounded-lg mb-4">
-            <h4 className="font-medium mb-2 text-body">Context:</h4>
-            <pre className="whitespace-pre-wrap text-body">
-              {question.content}
-            </pre>
-          </div>
-        )}
+      <QuestionContext question={question} />
+      <QuestionExamples examples={question.examples} />
+      <QuestionConstraints constraints={question.constraints} />
+      <QuestionEdgeCases edgeCases={question.edgeCases} />
 
       <Textarea
         value={currentAnswer}
@@ -51,14 +69,7 @@ export function QuestionDisplay({
       />
 
       {hasAnswered && answerTimeSpent !== undefined && (
-        <div className="mt-4 p-3 bg-brand-success/10 border border-brand-success/30 rounded-lg animate-fade-in">
-          <div className="flex items-center text-brand-success">
-            <span className="font-medium text-body">Answer submitted!</span>
-            <span className="ml-2 text-caption">
-              Time spent: {formatTimeSpent(answerTimeSpent)}
-            </span>
-          </div>
-        </div>
+        <AnswerSubmitted answerTimeSpent={answerTimeSpent} />
       )}
     </div>
   );

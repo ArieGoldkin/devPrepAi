@@ -4,10 +4,15 @@ import React from "react";
 
 import { AssessmentActions } from "../AssessmentActions";
 import { AssessmentHeader } from "../AssessmentHeader";
+import { StatusBar } from "../feedback/StatusBar";
 import { QuestionDisplay } from "../QuestionDisplay";
 
+import { AccessibilityAnnouncements } from "./components/AccessibilityAnnouncements";
 import { EmptyQuestionState } from "./components/EmptyQuestionState";
+import { useAccessibility } from "./hooks/useAccessibility";
 import { useAssessmentHandlers } from "./hooks/useAssessmentHandlers";
+import { useKeyboardEvents } from "./hooks/useKeyboardEvents";
+import { useNavigation } from "./hooks/useNavigation";
 
 interface IAssessmentViewProps {
   onComplete?: () => void;
@@ -23,40 +28,90 @@ export function AssessmentView({
     currentAnswer,
     hasAnswered,
     isLastQuestion,
+    isFirstQuestion,
     answers,
-    handleAnswerChange,
+    draftAnswer,
+    handleDraftChange,
     handleSubmitAnswer,
     handleNext,
+    handlePrevious,
     handleTimeUp,
+    handleAutoSave,
+    handleKeyboardShortcuts,
     getAnswerTimeSpent,
+    getQuestionType,
   } = useAssessmentHandlers(onComplete);
 
-  if (currentQuestion === null || currentQuestion === undefined) {
+  // Initialize hooks
+  useKeyboardEvents({ handleKeyboardShortcuts });
+  useAccessibility();
+
+  const { handleNavigate } = useNavigation({
+    isLastQuestion,
+    isFirstQuestion,
+    handleNext,
+    handlePrevious,
+  });
+
+  if (!currentQuestion) {
     return <EmptyQuestionState />;
   }
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <AssessmentHeader
-        currentIndex={currentQuestionIndex}
-        totalQuestions={questions.length}
-        onTimeUp={handleTimeUp}
+    <div className="flex flex-col h-full">
+      {/* Status Bar */}
+      <StatusBar
+        currentAnswer={draftAnswer}
+        onAutoSave={handleAutoSave}
+        questionType={getQuestionType()}
+        className="mb-4"
       />
-      <QuestionDisplay
-        question={currentQuestion}
-        currentAnswer={currentAnswer}
-        hasAnswered={hasAnswered}
-        answerTimeSpent={getAnswerTimeSpent() ?? 0}
-        onAnswerChange={handleAnswerChange}
-      />
-      <AssessmentActions
-        answersCount={answers.length}
+
+      {/* Main content area */}
+      <div className="flex-1 overflow-hidden">
+        <div className="h-full flex flex-col space-y-6 animate-fade-in">
+          {/* Assessment Header */}
+          <AssessmentHeader
+            currentIndex={currentQuestionIndex}
+            totalQuestions={questions.length}
+            onTimeUp={handleTimeUp}
+          />
+
+          {/* Question Display */}
+          <div className="flex-1 overflow-hidden">
+            <QuestionDisplay
+              question={currentQuestion}
+              currentAnswer={currentAnswer}
+              hasAnswered={hasAnswered}
+              answerTimeSpent={getAnswerTimeSpent() ?? 0}
+              onAnswerChange={handleDraftChange}
+              onSubmit={handleSubmitAnswer}
+              onNavigate={handleNavigate}
+              isLastQuestion={isLastQuestion}
+              isFirstQuestion={isFirstQuestion}
+            />
+          </div>
+
+          {/* Assessment Actions - Hidden on mobile for coding questions to avoid duplication */}
+          <div className="block md:block lg:block">
+            <AssessmentActions
+              answersCount={answers.length}
+              totalQuestions={questions.length}
+              hasAnswered={hasAnswered}
+              isLastQuestion={isLastQuestion}
+              currentAnswer={currentAnswer}
+              onSubmitAnswer={handleSubmitAnswer}
+              onNext={handleNext}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* WCAG 2.1 AA compliance announcements */}
+      <AccessibilityAnnouncements
+        currentQuestionIndex={currentQuestionIndex}
         totalQuestions={questions.length}
         hasAnswered={hasAnswered}
-        isLastQuestion={isLastQuestion}
-        currentAnswer={currentAnswer}
-        onSubmitAnswer={handleSubmitAnswer}
-        onNext={handleNext}
       />
     </div>
   );

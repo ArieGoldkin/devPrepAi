@@ -13,6 +13,21 @@ export interface IHintUsage {
   questionId: string;
   hintsRevealed: number[];
   revealedAt: string[];
+  scorePenalty: number; // Total penalty for hints used
+}
+
+// Phase II: Draft answer management for auto-save
+export interface IDraftAnswer {
+  questionId: string;
+  draft: string;
+  updatedAt: string;
+  autoSaved: boolean;
+}
+
+// Phase II: Progressive disclosure state
+export interface IProgressiveDisclosure {
+  questionId: string;
+  expandedSections: string[]; // ['context', 'examples', 'constraints', 'edge-cases']
 }
 
 export interface IPerformanceMetrics {
@@ -30,6 +45,10 @@ export interface IQuestionsState {
   isSessionCompleted: boolean;
   metrics: IPerformanceMetrics;
   sessionStartedAt: string | null;
+  // Phase II additions
+  draftAnswers: IDraftAnswer[];
+  disclosureState: IProgressiveDisclosure[];
+  totalHintPenalty: number;
 }
 
 export interface IQuestionsActions {
@@ -57,6 +76,16 @@ export interface IQuestionsActions {
     total: number;
     percentage: number;
   };
+
+  // Phase II: Draft and auto-save management
+  updateDraft: (questionId: string, draft: string) => void;
+  autoSave: (questionId: string) => void;
+
+  // Phase II: Progressive disclosure
+  toggleDisclosure: (questionId: string, section: string) => void;
+
+  // Phase II: Hint penalty calculation
+  calculateHintPenalty: () => number;
 }
 
 // === INITIAL STATE ===
@@ -73,4 +102,8 @@ export const initialState: IQuestionsState = {
     accuracy: 0,
   },
   sessionStartedAt: null,
+  // Phase II additions
+  draftAnswers: [],
+  disclosureState: [],
+  totalHintPenalty: 0,
 };

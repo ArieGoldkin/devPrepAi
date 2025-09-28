@@ -423,3 +423,258 @@ body {
     transform: none;
   }
 }
+
+/* ================ PHASE II: Enhanced Question Experience Styles ================ */
+
+/* CodeMirror Integration */
+.code-mirror-wrapper {
+  @apply relative rounded-lg overflow-hidden;
+}
+
+.code-mirror-wrapper .cm-editor {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', var(--font-mono);
+}
+
+.code-mirror-wrapper .cm-focused {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+/* Progressive Disclosure Animations */
+.disclosure-section {
+  transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
+}
+
+.disclosure-section[aria-expanded="false"] {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.disclosure-section[aria-expanded="true"] {
+  max-height: 1000px;
+  opacity: 1;
+}
+
+/* Hint System Styles */
+.hint-level-1 { color: hsl(var(--brand-primary)); }
+.hint-level-2 { color: hsl(var(--brand-secondary)); }
+.hint-level-3 { color: hsl(var(--brand-warning)); }
+.hint-level-4 { color: hsl(var(--brand-success)); }
+
+.hint-penalty {
+  @apply inline-flex items-center px-2 py-1 text-xs font-medium rounded-full;
+}
+
+.hint-penalty-low {
+  @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400;
+}
+
+.hint-penalty-medium {
+  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400;
+}
+
+.hint-penalty-high {
+  @apply bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400;
+}
+
+.hint-penalty-severe {
+  @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400;
+}
+
+/* Status Bar Styles */
+.status-bar {
+  @apply flex items-center justify-between px-4 py-2 border-b bg-muted/30;
+}
+
+.auto-save-indicator {
+  @apply inline-flex items-center gap-2 text-sm;
+}
+
+.auto-save-typing {
+  @apply text-muted-foreground;
+}
+
+.auto-save-saving {
+  @apply text-blue-600 dark:text-blue-400;
+}
+
+.auto-save-saved {
+  @apply text-green-600 dark:text-green-400;
+}
+
+.auto-save-error {
+  @apply text-red-600 dark:text-red-400;
+}
+
+/* Progress Ring */
+.progress-ring {
+  @apply relative w-12 h-12;
+}
+
+.progress-ring-circle {
+  @apply transition-all duration-300 ease-in-out;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+.progress-ring-background {
+  @apply stroke-muted;
+}
+
+.progress-ring-foreground {
+  transition: stroke-dashoffset 0.3s ease-in-out, stroke 0.3s ease-in-out;
+}
+
+.progress-ring-good {
+  stroke: hsl(var(--brand-success));
+}
+
+.progress-ring-warning {
+  stroke: hsl(var(--brand-warning));
+}
+
+.progress-ring-danger {
+  stroke: hsl(var(--brand-error));
+}
+
+/* Split Pane Styles */
+.split-pane-container {
+  @apply flex h-full;
+}
+
+.split-pane-handle {
+  @apply w-2 bg-border hover:bg-primary/20 transition-colors cursor-col-resize;
+  @apply focus:outline-none focus:bg-primary/30;
+}
+
+.split-pane-handle:active {
+  @apply bg-primary/40;
+}
+
+/* Mobile Tab Navigation */
+.question-tab {
+  @apply flex-1 px-4 py-3 text-sm font-medium transition-colors;
+}
+
+.question-tab-active {
+  @apply bg-primary/10 border-b-2 border-primary;
+}
+
+.question-tab-inactive {
+  @apply hover:bg-muted;
+}
+
+/* High Contrast Mode Enhancements */
+.high-contrast .hint-penalty,
+.high-contrast .auto-save-indicator,
+.high-contrast .progress-ring-foreground {
+  @apply border-2 border-current;
+}
+
+.high-contrast .disclosure-section {
+  @apply border-2 border-foreground;
+}
+
+.high-contrast .split-pane-handle {
+  @apply bg-foreground;
+}
+
+/* Screen Reader Only Content */
+.sr-only-focusable:focus {
+  @apply absolute left-0 top-0 z-50 bg-background p-4 border-2 border-primary;
+  clip: auto !important;
+  clip-path: none !important;
+  height: auto !important;
+  overflow: visible !important;
+  position: absolute !important;
+  width: auto !important;
+  white-space: normal !important;
+}
+
+/* Auto-save Animation */
+@keyframes pulse-save {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.saving-pulse {
+  animation: pulse-save 1.5s ease-in-out infinite;
+}
+
+/* Hint Reveal Animation */
+@keyframes hint-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hint-reveal {
+  animation: hint-reveal 0.3s ease-out;
+}
+
+/* Code Validation Styles */
+.code-valid {
+  @apply border-l-4 border-green-500;
+}
+
+.code-invalid {
+  @apply border-l-4 border-red-500;
+}
+
+.code-warning {
+  @apply border-l-4 border-yellow-500;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  .split-pane-container {
+    @apply flex-col;
+  }
+
+  .split-pane-handle {
+    @apply w-full h-2 cursor-row-resize;
+  }
+
+  .status-bar {
+    @apply flex-wrap gap-2 py-3;
+  }
+
+  .progress-ring {
+    @apply w-10 h-10;
+  }
+}
+
+/* Touch Target Optimization */
+@media (pointer: coarse) {
+  .hint-button,
+  .disclosure-toggle,
+  .question-tab {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Print Styles */
+@media print {
+  .status-bar,
+  .split-pane-handle,
+  .hint-system,
+  .auto-save-indicator {
+    display: none !important;
+  }
+
+  .disclosure-section {
+    max-height: none !important;
+    opacity: 1 !important;
+  }
+}

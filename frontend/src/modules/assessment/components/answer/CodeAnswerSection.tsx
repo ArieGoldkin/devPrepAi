@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { CodeEditor } from "@shared/ui/CodeEditor";
+import { CodeMirrorEditor } from "@shared/ui/CodeMirrorEditor";
 
 interface ICodeAnswerSectionProps {
   inputValue: string;
@@ -18,12 +18,12 @@ export function CodeAnswerSection({
       <div className="mb-2 text-sm text-muted-foreground">
         Write your code solution below:
       </div>
-      <CodeEditor
+      <CodeMirrorEditor
         value={inputValue}
         onChange={onChange}
-        language="tsx"
+        language="typescript"
         placeholder="// Write your solution here..."
-        disabled={disabled}
+        readOnly={disabled}
         minHeight="300px"
         maxHeight="500px"
       />

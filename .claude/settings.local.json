@@ -55,7 +55,15 @@
       "Bash(do echo \"=== $file ===\")",
       "Bash(xargs sed:*)",
       "Bash(echo:*)",
-      "mcp__playwright__browser_press_key"
+      "mcp__playwright__browser_press_key",
+      "Bash(timeout 30s npm run dev)",
+      "Bash(npm run lint:fix:*)",
+      "Bash(xargs cat:*)",
+      "Bash(npm test)",
+      "mcp__playwright__browser_console_messages",
+      "Bash(npm uninstall:*)",
+      "Bash(mkdir:*)",
+      "Bash(mv:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

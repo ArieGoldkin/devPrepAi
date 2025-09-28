@@ -1,4 +1,12 @@
 /**
+ * Helper function to determine language based on role focus
+ */
+function getLanguageForRole(roleFocus: string): string {
+  if (roleFocus === "frontend") return "javascript";
+  if (roleFocus === "backend") return "python";
+  return "typescript";
+}
+/**
  * DevPrep AI - Prompt Building Utilities
  * Separated prompt building logic for better organization
  */
@@ -21,27 +29,61 @@ Technologies: ${technologies}
 Difficulty: ${request.difficulty}/10
 Interview Type: ${request.profile.interviewType}
 
-IMPORTANT: Return ONLY valid JSON without any markdown formatting, explanations, or additional text. The response must start with { and end with }
+CRITICAL: Return ONLY a valid JSON object. No markdown, no code blocks, no explanations. Just pure JSON that starts with { and ends with }
 
-Return exactly this JSON structure:
+Required JSON structure with Phase II fields:
 {
   "questions": [
     {
-      "id": "unique-id",
-      "title": "Question Title",
-      "content": "Question content",
+      "id": "q-1",
+      "title": "Clear, concise title",
+      "content": "Main question content",
       "type": "${request.type}",
       "difficulty": ${request.difficulty},
-      "category": "category",
-      "hints": ["hint1", "hint2"],
-      "solution": "expected solution",
+      "category": "Main category",
+      "subcategory": "Specific subcategory",
+      "hints": ["Basic hint", "Intermediate hint", "Advanced hint", "Solution approach"],
+      "solution": "Detailed solution explanation",
       "timeEstimate": 30,
-      "tags": ["tag1", "tag2"],
+      "tags": ["tag1", "tag2", "tag3"],
+      "sections": [
+        {
+          "type": "examples",
+          "title": "Examples",
+          "content": "<pre>Input: [1,2,3]\\nOutput: [3,2,1]</pre><pre>Input: []\\nOutput: []</pre>",
+          "priority": "high"
+        },
+        {
+          "type": "context",
+          "title": "Context",
+          "content": "This problem tests understanding of...",
+          "priority": "medium"
+        },
+        {
+          "type": "constraints",
+          "title": "Constraints",
+          "content": "• Array length: 0 <= n <= 10^5\\n• Time complexity: O(n)\\n• Space complexity: O(1)",
+          "priority": "medium"
+        },
+        {
+          "type": "edge-cases",
+          "title": "Edge Cases",
+          "content": "• Empty array\\n• Single element\\n• Null input",
+          "priority": "low"
+        }
+      ],
+      "expectedLanguage": "${getLanguageForRole(request.profile.roleFocus)}",
       "createdAt": "${currentDate}",
       "updatedAt": "${currentDate}"
     }
   ]
-}`;
+}
+
+Guidelines:
+- Provide exactly 4 hints of increasing detail for the 4-level hint system
+- Include all 4 section types (examples, context, constraints, edge-cases)
+- Use HTML formatting in section content for better display
+- Ensure valid JSON with proper escaping of quotes and newlines`;
 }
 
 export function buildEvaluationPrompt(request: IEvaluateAnswerRequest): string {

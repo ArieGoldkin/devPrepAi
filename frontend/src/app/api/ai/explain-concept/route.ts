@@ -13,9 +13,8 @@ import type {
   IAPIResponse,
 } from "@/types/ai";
 import { buildConceptPrompt } from "@lib/claude/services/ai-prompts";
-
-const DEFAULT_MAX_TOKENS = 1000;
-const DEFAULT_TEMPERATURE = 0.7;
+import { DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE } from "@shared/constants/ai";
+import { HTTP_BAD_REQUEST, HTTP_SERVER_ERROR } from "@shared/constants/http";
 
 // Initialize Claude client server-side
 const getClaudeClient = (): Anthropic => {
@@ -51,7 +50,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
           success: false,
           error: "Missing required fields: concept or userLevel",
         } as IAPIResponse<IExplainConceptResponse>,
-        { status: 400 },
+        { status: HTTP_BAD_REQUEST },
       );
     }
 
@@ -110,7 +109,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         error:
           error instanceof Error ? error.message : "Unknown error occurred",
       } as IAPIResponse<IExplainConceptResponse>,
-      { status: 500 },
+      { status: HTTP_SERVER_ERROR },
     );
   }
 }

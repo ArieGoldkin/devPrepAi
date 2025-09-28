@@ -1,15 +1,11 @@
 import type { IQuestion } from "@/types/ai";
-import { TIME_CONSTANTS } from "@shared/constants/time";
+import { SECONDS_PER_MINUTE } from "@shared/constants/time";
 
-export const formatTime = (seconds: number): string => {
-  const minutes = Math.floor(seconds / TIME_CONSTANTS.SECONDS_PER_MINUTE);
-  const remainingSeconds = seconds % TIME_CONSTANTS.SECONDS_PER_MINUTE;
-  const minutesStr = minutes
-    .toString()
-    .padStart(TIME_CONSTANTS.PAD_LENGTH, TIME_CONSTANTS.PAD_CHAR);
-  const secondsStr = remainingSeconds
-    .toString()
-    .padStart(TIME_CONSTANTS.PAD_LENGTH, TIME_CONSTANTS.PAD_CHAR);
+export const formatAssessmentTime = (seconds: number): string => {
+  const minutes = Math.floor(seconds / SECONDS_PER_MINUTE);
+  const remainingSeconds = seconds % SECONDS_PER_MINUTE;
+  const minutesStr = minutes.toString().padStart(2, "0");
+  const secondsStr = remainingSeconds.toString().padStart(2, "0");
   return `${minutesStr}:${secondsStr}`;
 };
 

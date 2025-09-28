@@ -29,7 +29,30 @@ export interface IUserProfile {
   targetRole?: string; // Optional field for specific role targeting
 }
 
-// Interview question structure
+// Phase II: Question section types for progressive disclosure
+export interface IQuestionSection {
+  type: "context" | "examples" | "constraints" | "edge-cases";
+  title: string;
+  content: string;
+  priority: "high" | "medium" | "low";
+}
+
+// Phase II: Hint level structure
+export interface IHintLevel {
+  level: number; // 1-4
+  content: string;
+  penalty: number; // Point deduction
+  icon: string; // Emoji or icon identifier
+}
+
+// Phase II: Example structure for questions
+export interface IQuestionExample {
+  input: string;
+  output: string;
+  explanation?: string;
+}
+
+// Interview question structure (enhanced for Phase II)
 export interface IQuestion {
   id: string;
   title: string;
@@ -43,6 +66,14 @@ export interface IQuestion {
   tags: string[];
   createdAt: string;
   updatedAt: string;
+  // Phase II additions
+  sections?: IQuestionSection[]; // Progressive disclosure content
+  hintLevels?: string[]; // 4-level Socratic hints
+  expectedLanguage?: string; // For CodeMirror language detection
+  examples?: IQuestionExample[]; // Code examples with input/output
+  constraints?: string[]; // Technical constraints
+  edgeCases?: string[]; // Edge cases to consider
+  subcategory?: string; // More specific categorization
 }
 
 // Request/Response types for AI service
@@ -63,12 +94,27 @@ export interface IEvaluateAnswerRequest {
   answer: string;
 }
 
+// Phase II: Auto-save status tracking
+export interface IAutoSaveStatus {
+  status: "typing" | "saving" | "saved" | "error";
+  lastSaved?: string;
+  error?: string;
+}
+
+// Phase II: Progressive disclosure state
+export interface IProgressiveDisclosureState {
+  questionId: string;
+  expandedSections: string[];
+}
+
 export interface IAnswerFeedback {
   score: number; // 0-100
   strengths: string[];
   improvements: string[];
   suggestions: string[];
   overallFeedback: string;
+  // Phase II: Include hint penalty in feedback
+  hintPenalty?: number;
 }
 
 export interface IEvaluateAnswerResponse {

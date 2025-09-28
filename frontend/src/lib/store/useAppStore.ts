@@ -142,6 +142,9 @@ export const useQuestionsState = (): IQuestionsState =>
     isSessionCompleted: state.isSessionCompleted,
     metrics: state.metrics,
     sessionStartedAt: state.sessionStartedAt,
+    draftAnswers: state.draftAnswers,
+    disclosureState: state.disclosureState,
+    totalHintPenalty: state.totalHintPenalty,
   }));
 
 export const useQuestionsActions = (): Pick<
@@ -157,6 +160,10 @@ export const useQuestionsActions = (): Pick<
   | "revealHint"
   | "calculateMetrics"
   | "getQuestionProgress"
+  | "updateDraft"
+  | "autoSave"
+  | "toggleDisclosure"
+  | "calculateHintPenalty"
 > =>
   useAppStore((state) => ({
     startQuestionSession: state.startQuestionSession,
@@ -170,6 +177,10 @@ export const useQuestionsActions = (): Pick<
     revealHint: state.revealHint,
     calculateMetrics: state.calculateMetrics,
     getQuestionProgress: state.getQuestionProgress,
+    updateDraft: state.updateDraft,
+    autoSave: state.autoSave,
+    toggleDisclosure: state.toggleDisclosure,
+    calculateHintPenalty: state.calculateHintPenalty,
   }));
 
 export const useCurrentQuestion = (): IQuestion | null =>
