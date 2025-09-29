@@ -2,17 +2,24 @@
 
 import React from "react";
 
+import { AnswerInput } from "@shared/ui/AnswerInput";
+import { QuestionCard } from "@shared/ui/QuestionCard";
+
 import { AssessmentActions } from "../AssessmentActions";
 import { AssessmentHeader } from "../AssessmentHeader";
-import { QuestionDisplay } from "../QuestionDisplay";
 import { TopBar } from "../TopBar";
 
-import { AccessibilityAnnouncements } from "./components/AccessibilityAnnouncements";
-import { EmptyQuestionState } from "./components/EmptyQuestionState";
 import { useAccessibility } from "./hooks/useAccessibility";
 import { useAssessmentHandlers } from "./hooks/useAssessmentHandlers";
 import { useKeyboardEvents } from "./hooks/useKeyboardEvents";
 import { useNavigation } from "./hooks/useNavigation";
+
+// Simple empty state component
+const EmptyQuestionState = (): React.JSX.Element => (
+  <div className="flex items-center justify-center min-h-[400px]">
+    <p className="text-muted-foreground">No questions available</p>
+  </div>
+);
 
 interface IAssessmentViewProps {
   onComplete?: () => void;
@@ -38,7 +45,6 @@ export function AssessmentView({
     handleTimeUp,
     handleAutoSave,
     handleKeyboardShortcuts,
-    getAnswerTimeSpent,
     getQuestionType,
   } = useAssessmentHandlers(onComplete);
 
@@ -46,7 +52,7 @@ export function AssessmentView({
   useKeyboardEvents({ handleKeyboardShortcuts });
   useAccessibility();
 
-  const { handleNavigate } = useNavigation({
+  useNavigation({
     isLastQuestion,
     isFirstQuestion,
     handleNext,
@@ -79,17 +85,20 @@ export function AssessmentView({
           />
 
           {/* Question Display */}
-          <div className="flex-1 overflow-hidden">
-            <QuestionDisplay
+          <div className="flex-1 overflow-hidden space-y-6">
+            <QuestionCard
               question={currentQuestion}
-              currentAnswer={currentAnswer}
-              hasAnswered={hasAnswered}
-              answerTimeSpent={getAnswerTimeSpent() ?? 0}
-              onAnswerChange={handleDraftChange}
-              onSubmit={handleSubmitAnswer}
-              onNavigate={handleNavigate}
-              isLastQuestion={isLastQuestion}
-              isFirstQuestion={isFirstQuestion}
+              questionNumber={currentQuestionIndex + 1}
+              totalQuestions={questions.length}
+              showDifficulty={true}
+              showTags={true}
+              showExamples={true}
+            />
+            <AnswerInput
+              question={currentQuestion}
+              value={draftAnswer}
+              onChange={handleDraftChange}
+              placeholder="Enter your answer here..."
             />
           </div>
 
@@ -107,13 +116,6 @@ export function AssessmentView({
           </div>
         </div>
       </div>
-
-      {/* WCAG 2.1 AA compliance announcements */}
-      <AccessibilityAnnouncements
-        currentQuestionIndex={currentQuestionIndex}
-        totalQuestions={questions.length}
-        hasAnswered={hasAnswered}
-      />
     </div>
   );
 }

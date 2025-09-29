@@ -2,12 +2,13 @@
 
 import React, { useState } from "react";
 
-import { QuestionDisplay } from "@modules/assessment/components/QuestionDisplay";
 import { Timer } from "@modules/assessment/components/Timer";
 import { AppLayout } from "@shared/components/layout/AppLayout";
 import { sampleQuestions } from "@shared/mocks/sampleQuestions";
+import { AnswerInput } from "@shared/ui/AnswerInput";
 import { Button } from "@shared/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@shared/ui/card";
+import { QuestionCard } from "@shared/ui/QuestionCard";
 
 export default function DemoPage(): React.JSX.Element {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -37,8 +38,7 @@ export default function DemoPage(): React.JSX.Element {
     setAnswers({});
   };
 
-  const getProgressPercentage = (): number =>
-    ((currentQuestionIndex + 1) / sampleQuestions.length) * 100;
+  const progressPercentage = ((currentQuestionIndex + 1) / sampleQuestions.length) * 100;
 
   return (
     <AppLayout>
@@ -60,7 +60,7 @@ export default function DemoPage(): React.JSX.Element {
               <div className="w-64 bg-gray-200 rounded-full h-2 mt-2">
                 <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${getProgressPercentage()}%` }}
+                  style={{ width: `${progressPercentage}%` }}
                 />
               </div>
             </div>
@@ -78,14 +78,24 @@ export default function DemoPage(): React.JSX.Element {
           </Card>
 
           {currentQuestion && (
-            <QuestionDisplay
-              question={currentQuestion}
-              currentAnswer={answers[currentQuestion.id] || ""}
-              hasAnswered={!!answers[currentQuestion.id]}
-              onAnswerChange={(answer: string) =>
-                handleAnswerChange(currentQuestion.id, answer)
-              }
-            />
+            <div className="space-y-6">
+              <QuestionCard
+                question={currentQuestion}
+                questionNumber={currentQuestionIndex + 1}
+                totalQuestions={sampleQuestions.length}
+                showDifficulty={true}
+                showTags={true}
+                showExamples={true}
+              />
+              <AnswerInput
+                question={currentQuestion}
+                value={answers[currentQuestion.id] || ""}
+                onChange={(answer: string) =>
+                  handleAnswerChange(currentQuestion.id, answer)
+                }
+                placeholder="Enter your answer here..."
+              />
+            </div>
           )}
 
           <div className="flex justify-between mt-6">

@@ -1,25 +1,31 @@
 import React from "react";
 
 import type { IQuestion } from "@/types/ai";
-import { QuestionDisplay } from "@shared/ui/UnifiedQuestion";
+import { QuestionCard as SharedQuestionCard } from "@shared/ui/QuestionCard";
 
 interface IQuestionCardProps {
   question: IQuestion;
+  questionNumber?: number;
+  totalQuestions?: number;
   onClick?: () => void;
 }
 
 export function QuestionCard({
   question,
+  questionNumber = 1,
+  totalQuestions = 1,
   onClick,
 }: IQuestionCardProps): React.ReactElement {
   return (
     <div onClick={onClick} className={onClick ? "cursor-pointer" : ""}>
-      <QuestionDisplay
+      <SharedQuestionCard
         question={question}
-        variant="compact"
+        questionNumber={questionNumber}
+        totalQuestions={totalQuestions}
         showDifficulty={true}
-        showType={true}
         showTags={true}
+        showExamples={false}
+        className="hover:shadow-lg transition-shadow"
       />
     </div>
   );

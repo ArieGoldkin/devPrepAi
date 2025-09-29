@@ -64,7 +64,8 @@
       "Bash(npm uninstall:*)",
       "Bash(mkdir:*)",
       "Bash(mv:*)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(tee:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

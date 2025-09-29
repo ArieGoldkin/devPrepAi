@@ -4,5 +4,7 @@ export { Timer } from "./Timer";
 export { TopBar } from "./TopBar";
 export { useCountdown } from "./hooks/useCountdown";
 
-// Phase II Components
-export { HintSystem } from "./hints";
+// New simplified components
+export { AssessmentLayout } from "./AssessmentLayout";
+export { NavigationBar } from "./NavigationBar";
+export { ProgressHeader } from "./ProgressHeader";
