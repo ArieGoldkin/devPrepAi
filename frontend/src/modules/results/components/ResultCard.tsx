@@ -1,7 +1,6 @@
 import React from "react";
 
 import type { IAssessmentResults } from "@/types/ai";
-import { TIME_CONSTANTS } from "@lib/store/constants";
 import {
   Card,
   CardContent,
@@ -9,6 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@shared/ui/card";
+import { formatTimeSpent } from "@shared/utils/time";
 
 import { ResultsDisplay } from "./ResultsDisplay";
 
@@ -23,15 +23,6 @@ export function ResultCard({
   index,
   totalResults,
 }: IResultCardProps): React.JSX.Element {
-  const formatDuration = (seconds: number): string => {
-    const minutes = Math.floor(seconds / TIME_CONSTANTS.SECONDS_PER_MINUTE);
-    const remainingSeconds = seconds % TIME_CONSTANTS.SECONDS_PER_MINUTE;
-
-    if (minutes > 0) {
-      return `${minutes} min ${remainingSeconds} sec`;
-    }
-    return `${remainingSeconds} sec`;
-  };
 
   const averageScore =
     result.questions.reduce((acc, q) => acc + q.feedback.score, 0) /
@@ -56,7 +47,7 @@ export function ResultCard({
           </div>
           <div>
             <span className="font-medium text-body">Time Spent:</span>{" "}
-            {formatDuration(result.totalTimeSpent)}
+            {formatTimeSpent(result.totalTimeSpent)}
           </div>
           <div>
             <span className="font-medium text-body">Average Score:</span>{" "}

@@ -5,17 +5,11 @@
 
 import type { QueryClient } from "@tanstack/react-query";
 
-// Time constants to avoid magic numbers
-const TIME_CONSTANTS = {
-  MINUTES_IN_FIVE: 5,
-  SECONDS_PER_MINUTE: 60,
-  MILLISECONDS_PER_SECOND: 1000,
-} as const;
+import { MS_PER_SECOND, SECONDS_PER_MINUTE } from "@shared/utils/time";
 
-const DEFAULT_STALE_TIME =
-  TIME_CONSTANTS.MINUTES_IN_FIVE *
-  TIME_CONSTANTS.SECONDS_PER_MINUTE *
-  TIME_CONSTANTS.MILLISECONDS_PER_SECOND;
+// Query-specific time constants
+const MINUTES_IN_FIVE = 5;
+const DEFAULT_STALE_TIME = MINUTES_IN_FIVE * SECONDS_PER_MINUTE * MS_PER_SECOND;
 
 /**
  * Generate cache key for Claude AI queries

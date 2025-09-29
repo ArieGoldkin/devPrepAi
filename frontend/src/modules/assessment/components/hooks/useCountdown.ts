@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useRef } from "react"
 
+import { SECONDS_PER_HOUR, SECONDS_PER_MINUTE } from "@shared/utils/time"
+
 interface IUseCountdownProps {
   initialTime: number
   onTimeUp: () => void
@@ -22,8 +24,6 @@ interface IUseCountdownReturn {
 
 // Format time as HH:MM:SS
 const formatTime = (seconds: number): string => {
-  const SECONDS_PER_HOUR = 3600
-  const SECONDS_PER_MINUTE = 60
   const hours = Math.floor(seconds / SECONDS_PER_HOUR)
   const minutes = Math.floor((seconds % SECONDS_PER_HOUR) / SECONDS_PER_MINUTE)
   const secs = seconds % SECONDS_PER_MINUTE

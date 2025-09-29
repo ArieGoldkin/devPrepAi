@@ -3,4 +3,4 @@ export * from "./ui";
 export * from "./hooks";
 export * from "./utils/cn";
 export * from "./utils/assessment";
-export * from "./constants/time";
+export * from "./utils/time";

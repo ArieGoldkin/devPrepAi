@@ -1,5 +1,5 @@
 import type { IQuestion } from "@/types/ai";
-import { SECONDS_PER_MINUTE } from "@shared/constants/time";
+import { SECONDS_PER_MINUTE } from "@shared/utils/time";
 
 export const formatAssessmentTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / SECONDS_PER_MINUTE);

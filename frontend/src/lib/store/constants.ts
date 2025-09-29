@@ -1,11 +1,19 @@
 /**
  * Time constants to avoid magic numbers throughout the application
+ * Re-exported from centralized time utilities
  */
+import {
+  SECONDS_PER_MINUTE,
+  MS_PER_SECOND,
+  HOURS_PER_DAY,
+  MINUTES_PER_HOUR,
+} from "@shared/utils/time";
+
 export const TIME_CONSTANTS = {
-  SECONDS_PER_MINUTE: 60,
-  MS_PER_SECOND: 1000,
-  HOURS_PER_DAY: 24,
-  MINUTES_PER_HOUR: 60,
+  SECONDS_PER_MINUTE,
+  MS_PER_SECOND,
+  HOURS_PER_DAY,
+  MINUTES_PER_HOUR,
 } as const;
 
 /**

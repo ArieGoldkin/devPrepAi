@@ -1,23 +1,14 @@
 import React from "react";
 
 import type { IAssessmentResults } from "@/types/ai";
-import { TIME_CONSTANTS } from "@lib/store/constants";
 import { Card, CardContent } from "@shared/ui/card";
+import { formatTimeSpent } from "@shared/utils/time";
 
 interface IStatisticsProps {
   results: IAssessmentResults[];
 }
 
 export function Statistics({ results }: IStatisticsProps): React.JSX.Element {
-  const formatDuration = (seconds: number): string => {
-    const minutes = Math.floor(seconds / TIME_CONSTANTS.SECONDS_PER_MINUTE);
-    const remainingSeconds = seconds % TIME_CONSTANTS.SECONDS_PER_MINUTE;
-
-    if (minutes > 0) {
-      return `${minutes} min ${remainingSeconds} sec`;
-    }
-    return `${remainingSeconds} sec`;
-  };
 
   const calculateAverageScore = (): number => {
     if (results.length === 0) return 0;
@@ -59,7 +50,7 @@ export function Statistics({ results }: IStatisticsProps): React.JSX.Element {
       <Card variant="feature">
         <CardContent className="pt-6">
           <div className="text-headline font-bold text-brand-primary">
-            {formatDuration(averageTime)}
+            {formatTimeSpent(averageTime)}
           </div>
           <p className="text-caption text-gray-600">Average Time</p>
         </CardContent>

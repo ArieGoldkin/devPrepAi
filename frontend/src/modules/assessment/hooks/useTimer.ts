@@ -1,16 +1,10 @@
 import { useEffect, useState } from "react";
 
-// Time constants
-const SECONDS_PER_MINUTE = 60;
-const TIME_WARNING_THRESHOLD = 300; // 5 minutes
-const TIMER_INTERVAL = 1000; // 1 second
-
-// Format time in MM:SS
-const formatTime = (seconds: number): string => {
-  const mins = Math.floor(seconds / SECONDS_PER_MINUTE);
-  const secs = seconds % SECONDS_PER_MINUTE;
-  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-};
+import {
+  formatTime,
+  isTimeLow,
+  INTERVALS
+} from "@shared/utils/time";
 
 interface IUseTimerReturn {
   timeLeft: number;
@@ -38,16 +32,16 @@ export function useTimer(timeRemaining?: number): IUseTimerReturn {
         }
         return prev - 1;
       });
-    }, TIMER_INTERVAL);
+    }, INTERVALS.TIMER);
 
     return () => clearInterval(interval);
   }, [timeRemaining]);
 
-  const isTimeLow = timeLeft > 0 && timeLeft < TIME_WARNING_THRESHOLD;
+  const isTimeWarning = isTimeLow(timeLeft);
 
   return {
     timeLeft,
     formatTime,
-    isTimeLow,
+    isTimeLow: isTimeWarning,
   };
 }

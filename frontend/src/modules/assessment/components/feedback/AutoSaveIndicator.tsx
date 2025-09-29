@@ -1,8 +1,8 @@
 import { Save, Wifi, WifiOff } from "lucide-react";
 import React from "react";
 
-import { MS_PER_SECOND, SECONDS_PER_MINUTE } from "@shared/constants/time";
 import { Badge } from "@shared/ui/badge";
+import { MS_PER_SECOND, SECONDS_PER_MINUTE } from "@shared/utils/time";
 
 import type { AutoSaveStatus } from "./utils/autoSaveUtils";
 import { getAutoSaveStatusColor, getAutoSaveStatusText } from "./utils/autoSaveUtils";
