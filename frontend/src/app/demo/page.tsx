@@ -6,9 +6,10 @@ import { Timer } from "@modules/assessment/components/Timer";
 import { AppLayout } from "@shared/components/layout/AppLayout";
 import { sampleQuestions } from "@shared/mocks/sampleQuestions";
 import { AnswerInput } from "@shared/ui/AnswerInput";
-import { Button } from "@shared/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@shared/ui/card";
 import { QuestionCard } from "@shared/ui/QuestionCard";
+
+import { DemoControls } from "./DemoControls";
 
 export default function DemoPage(): React.JSX.Element {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -38,8 +39,6 @@ export default function DemoPage(): React.JSX.Element {
     setAnswers({});
   };
 
-  const progressPercentage = ((currentQuestionIndex + 1) / sampleQuestions.length) * 100;
-
   return (
     <AppLayout>
       <div className="container mx-auto px-4 py-8">
@@ -60,7 +59,9 @@ export default function DemoPage(): React.JSX.Element {
               <div className="w-64 bg-gray-200 rounded-full h-2 mt-2">
                 <div
                   className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${progressPercentage}%` }}
+                  style={{
+                    width: `${((currentQuestionIndex + 1) / sampleQuestions.length) * 100}%`,
+                  }}
                 />
               </div>
             </div>
@@ -98,27 +99,13 @@ export default function DemoPage(): React.JSX.Element {
             </div>
           )}
 
-          <div className="flex justify-between mt-6">
-            <Button
-              onClick={handlePrevious}
-              disabled={currentQuestionIndex === 0}
-              variant="outline"
-            >
-              Previous
-            </Button>
-
-            <div className="space-x-2">
-              <Button onClick={handleReset} variant="outline">
-                Reset Demo
-              </Button>
-
-              {isLastQuestion ? (
-                <Button onClick={handleReset}>Restart Demo</Button>
-              ) : (
-                <Button onClick={handleNext}>Next Question</Button>
-              )}
-            </div>
-          </div>
+          <DemoControls
+            currentQuestionIndex={currentQuestionIndex}
+            isLastQuestion={isLastQuestion}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            onReset={handleReset}
+          />
         </div>
       </div>
     </AppLayout>

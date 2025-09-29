@@ -2,12 +2,14 @@
 
 import { Clock, Home, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Button } from "@shared/ui/button";
 import Logo from "@shared/ui/logo";
 import { Progress } from "@shared/ui/progress";
 import { cn } from "@shared/utils/cn";
+
+import { useTimer } from "../hooks/useTimer";
 
 interface IProgressHeaderProps {
   currentQuestion: number;
@@ -17,18 +19,6 @@ interface IProgressHeaderProps {
   className?: string;
 }
 
-// Time constants
-const SECONDS_PER_MINUTE = 60;
-const TIME_WARNING_THRESHOLD = 300; // 5 minutes
-const TIMER_INTERVAL = 1000; // 1 second
-
-// Format time in MM:SS
-const formatTime = (seconds: number): string => {
-  const mins = Math.floor(seconds / SECONDS_PER_MINUTE);
-  const secs = seconds % SECONDS_PER_MINUTE;
-  return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-};
-
 export function ProgressHeader({
   currentQuestion,
   totalQuestions,
@@ -37,28 +27,10 @@ export function ProgressHeader({
   className,
 }: IProgressHeaderProps): React.JSX.Element {
   const router = useRouter();
-  const [timeLeft, setTimeLeft] = useState(timeRemaining ?? 0);
+  const { timeLeft, formatTime, isTimeLow } = useTimer(timeRemaining);
 
-  // Timer countdown
-  useEffect(() => {
-    if (timeRemaining === undefined || timeRemaining === null || timeRemaining <= 0) return;
-
-    const interval = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, TIMER_INTERVAL);
-
-    return () => clearInterval(interval);
-  }, [timeRemaining]);
-
-  const progress = totalQuestions > 0
-    ? ((currentQuestion - 1) / totalQuestions) * 100
-    : 0;
+  const progress =
+    totalQuestions > 0 ? ((currentQuestion - 1) / totalQuestions) * 100 : 0;
 
   const handleExit = (): void => {
     if (onExit) {
@@ -68,8 +40,6 @@ export function ProgressHeader({
     }
   };
 
-  const isTimeLow = timeLeft > 0 && timeLeft < TIME_WARNING_THRESHOLD;
-
   return (
     <header
       className={cn(
@@ -77,7 +47,7 @@ export function ProgressHeader({
         "border-b border-border",
         "px-6 py-4",
         "z-20",
-        className
+        className,
       )}
     >
       <div className="container max-w-7xl mx-auto">
@@ -87,7 +57,9 @@ export function ProgressHeader({
             <Logo size="sm" />
             <div className="hidden sm:block">
               <h1 className="text-sm font-semibold text-foreground">DevPrep</h1>
-              <p className="text-xs text-muted-foreground">AI-Powered Assessment</p>
+              <p className="text-xs text-muted-foreground">
+                AI-Powered Assessment
+              </p>
             </div>
           </div>
 
@@ -98,27 +70,28 @@ export function ProgressHeader({
                 <span className="text-muted-foreground">
                   Progress: {Math.round(progress)}%
                 </span>
-                {timeRemaining !== undefined && timeRemaining !== null && timeRemaining > 0 && (
-                  <div
-                    className={cn(
-                      "flex items-center gap-1.5",
-                      isTimeLow && "text-destructive"
-                    )}
-                  >
-                    <Clock className="w-3.5 h-3.5" />
-                    <span className="font-mono font-medium">
-                      {formatTime(timeLeft)}
-                    </span>
-                    <span className="text-xs text-muted-foreground">remaining</span>
-                  </div>
-                )}
+                {timeRemaining !== undefined &&
+                  timeRemaining !== null &&
+                  timeRemaining > 0 && (
+                    <div
+                      className={cn(
+                        "flex items-center gap-1.5",
+                        isTimeLow && "text-destructive",
+                      )}
+                    >
+                      <Clock className="w-3.5 h-3.5" />
+                      <span className="font-mono font-medium">
+                        {formatTime(timeLeft)}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        remaining
+                      </span>
+                    </div>
+                  )}
               </div>
               <Progress
                 value={progress}
-                className={cn(
-                  "h-2",
-                  isTimeLow && "bg-destructive/20"
-                )}
+                className={cn("h-2", isTimeLow && "bg-destructive/20")}
               />
             </div>
           </div>
