@@ -3,11 +3,10 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 
-import { useAppStore } from "@lib/store/useAppStore";
-import { AssessmentView } from "@modules/assessment/components/AssessmentView";
-import { AppLayout } from "@shared/components/layout/AppLayout";
+import { AssessmentLayout } from "@modules/assessment/components/AssessmentLayout";
 import { ErrorBoundary } from "@shared/ui";
 import { LoadingSpinner } from "@shared/ui/loading-spinner";
+import { useAppStore } from "@store";
 
 export default function AssessmentPage(): React.JSX.Element {
   const router = useRouter();
@@ -50,32 +49,22 @@ export default function AssessmentPage(): React.JSX.Element {
 
   if (isNotActive && hasNoQuestions) {
     return (
-      <AppLayout>
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex items-center justify-center h-64">
-            <LoadingSpinner />
-          </div>
-        </div>
-      </AppLayout>
+      <div className="flex items-center justify-center min-h-screen">
+        <LoadingSpinner />
+      </div>
     );
   }
 
   if (isEvaluating) {
     return (
-      <AppLayout>
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col items-center justify-center h-64 space-y-4">
-            <LoadingSpinner />
-            <h2 className="text-xl font-semibold">
-              Evaluating Your Responses...
-            </h2>
-            <p className="text-gray-600 text-center max-w-md">
-              Our AI is analyzing your answers and preparing detailed feedback.
-              This may take a moment.
-            </p>
-          </div>
-        </div>
-      </AppLayout>
+      <div className="flex flex-col items-center justify-center min-h-screen space-y-4">
+        <LoadingSpinner />
+        <h2 className="text-xl font-semibold">Evaluating Your Responses...</h2>
+        <p className="text-gray-600 text-center max-w-md">
+          Our AI is analyzing your answers and preparing detailed feedback. This
+          may take a moment.
+        </p>
+      </div>
     );
   }
 
@@ -85,17 +74,12 @@ export default function AssessmentPage(): React.JSX.Element {
     : handleRedirectToResults;
 
   return (
-    <AppLayout>
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Assessment</h1>
-        <ErrorBoundary
-          onError={(error, errorInfo) => {
-            console.error("Assessment component error:", { error, errorInfo });
-          }}
-        >
-          <AssessmentView onComplete={onCompleteHandler} />
-        </ErrorBoundary>
-      </div>
-    </AppLayout>
+    <ErrorBoundary
+      onError={(error, errorInfo) => {
+        console.error("Assessment component error:", { error, errorInfo });
+      }}
+    >
+      <AssessmentLayout onComplete={onCompleteHandler} />
+    </ErrorBoundary>
   );
 }

@@ -9,8 +9,8 @@ import type {
   RoleFocus,
   CompanySize,
 } from "@/types/ai";
-import { useAppStore } from "@lib/store/useAppStore";
 import { Button } from "@shared/ui/button";
+import { useAppStore } from "@store";
 
 import {
   ExperienceSelector,

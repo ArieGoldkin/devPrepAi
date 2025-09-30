@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPrep AI - Modern Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="modern_dashboard_theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans) !important;
+            background: var(--background) !important;
+            color: var(--foreground) !important;
+            line-height: 1.6 !important;
+        }
+        
+        .card-hover {
+            transition: all 200ms ease-out;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .progress-bar {
+            transition: width 800ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .btn-primary {
+            transition: all 150ms ease-out;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+        
+        .fade-in {
+            animation: fadeInUp 400ms ease-out forwards;
+        }
+        
+        .fade-in-delay-1 { animation-delay: 100ms; }
+        .fade-in-delay-2 { animation-delay: 200ms; }
+        .fade-in-delay-3 { animation-delay: 300ms; }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .score-badge {
+            animation: bounceIn 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .activity-item {
+            transition: transform 200ms ease-out;
+        }
+        
+        .activity-item:hover {
+            transform: translateX(10px);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="bg-white border-b border-gray-200 px-6 py-4 shadow-sm">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                        <i data-lucide="brain-circuit" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <h1 class="text-xl font-bold text-gray-900">DevPrep AI</h1>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-blue-500 rounded-full"></div>
+                    <span class="text-sm font-medium text-gray-700">John Doe</span>
+                </div>
+                <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Category Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Technical Questions -->
+            <div class="card-hover bg-white rounded-xl p-6 shadow-sm border border-gray-200 fade-in">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="code" class="w-6 h-6 text-blue-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900">Technical</h3>
+                            <p class="text-sm text-gray-500">Coding Questions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Completed</span>
+                        <span class="font-medium text-green-600">45</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Remaining</span>
+                        <span class="font-medium text-gray-900">15</span>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full" style="width: 75%"></div>
+                </div>
+                <button class="btn-primary w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700">
+                    Continue Practice
+                </button>
+            </div>
+
+            <!-- Architecture Questions -->
+            <div class="card-hover bg-white rounded-xl p-6 shadow-sm border border-gray-200 fade-in fade-in-delay-1">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="building" class="w-6 h-6 text-purple-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900">Architecture</h3>
+                            <p class="text-sm text-gray-500">System Design</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Completed</span>
+                        <span class="font-medium text-green-600">12</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Remaining</span>
+                        <span class="font-medium text-gray-900">8</span>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full" style="width: 60%"></div>
+                </div>
+                <button class="btn-primary w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700">
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- Open Questions -->
+            <div class="card-hover bg-white rounded-xl p-6 shadow-sm border border-gray-200 fade-in fade-in-delay-2">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i data-lucide="message-circle" class="w-6 h-6 text-green-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-gray-900">Open Questions</h3>
+                            <p class="text-sm text-gray-500">Behavioral & Soft Skills</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-2 mb-4">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Completed</span>
+                        <span class="font-medium text-green-600">23</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Remaining</span>
+                        <span class="font-medium text-gray-900">7</span>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mb-4">
+                    <div class="progress-bar bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full" style="width: 77%"></div>
+                </div>
+                <button class="btn-primary w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700">
+                    Continue Practice
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Overview -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 mb-8 fade-in fade-in-delay-3">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="bar-chart-3" class="w-5 h-5 text-indigo-600"></i>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-900">Progress Overview</h2>
+            </div>
+            
+            <div class="mb-6">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-sm font-medium text-gray-700">Overall Completion</span>
+                    <span class="score-badge text-sm font-bold text-indigo-600">75%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div class="progress-bar bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full" style="width: 75%"></div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-lg font-medium text-gray-900 mb-4">Recent Activity</h3>
+                <div class="space-y-3">
+                    <div class="activity-item flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <span class="text-sm text-gray-700">Completed "React Hooks" practice</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="score-badge text-xs font-medium bg-green-100 text-green-800 px-2 py-1 rounded-full">85% score</span>
+                            <span class="text-xs text-gray-500">2h ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                            <span class="text-sm text-gray-700">Attempted "System Design" challenge</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="score-badge text-xs font-medium bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">70% score</span>
+                            <span class="text-xs text-gray-500">1d ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            <span class="text-sm text-gray-700">Started "Algorithm Practice" session</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded-full">In Progress</span>
+                            <span class="text-xs text-gray-500">3d ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
+            <div class="flex items-center space-x-3 mb-6">
+                <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <i data-lucide="target" class="w-5 h-5 text-orange-600"></i>
+                </div>
+                <h2 class="text-xl font-semibold text-gray-900">Recommended for You</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="card-hover p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-medium bg-green-100 text-green-800 px-2 py-1 rounded-full">Beginner</span>
+                        <i data-lucide="play-circle" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <h3 class="font-medium text-gray-900 mb-2">JavaScript Closures</h3>
+                    <p class="text-sm text-gray-600 mb-3">Master closure concepts with practical examples</p>
+                    <button class="btn-primary w-full bg-green-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-green-700">
+                        Start Practice
+                    </button>
+                </div>
+                
+                <div class="card-hover p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-medium bg-red-100 text-red-800 px-2 py-1 rounded-full">Advanced</span>
+                        <i data-lucide="pause-circle" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <h3 class="font-medium text-gray-900 mb-2">System Architecture</h3>
+                    <p class="text-sm text-gray-600 mb-3">Design scalable distributed systems</p>
+                    <button class="btn-primary w-full bg-purple-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-purple-700">
+                        Continue
+                    </button>
+                </div>
+                
+                <div class="card-hover p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-medium bg-blue-100 text-blue-800 px-2 py-1 rounded-full">Intermediate</span>
+                        <i data-lucide="refresh-ccw" class="w-5 h-5 text-gray-400"></i>
+                    </div>
+                    <h3 class="font-medium text-gray-900 mb-2">Database Design</h3>
+                    <p class="text-sm text-gray-600 mb-3">Review normalization and indexing strategies</p>
+                    <button class="btn-primary w-full bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700">
+                        Review
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Add some interactive behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bars on load
+            setTimeout(() => {
+                const progressBars = document.querySelectorAll('.progress-bar');
+                progressBars.forEach(bar => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 100);
+                });
+            }, 500);
+            
+            // Add click handlers for buttons
+            const buttons = document.querySelectorAll('.btn-primary');
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Add ripple effect
+                    const ripple = document.createElement('span');
+                    ripple.classList.add('ripple');
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 400);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

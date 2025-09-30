@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPrep AI - Glassmorphism Dark</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="glassmorphism_dark_theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-sans) !important;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%) !important;
+            color: var(--foreground) !important;
+            line-height: 1.6 !important;
+            min-height: 100vh;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 
+                0 8px 32px 0 rgba(31, 38, 135, 0.37),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+        
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.02) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 
+                0 20px 40px 0 rgba(31, 38, 135, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        }
+        
+        .glass-header {
+            background: rgba(255, 255, 255, 0.03) !important;
+            backdrop-filter: blur(30px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.2) !important;
+        }
+        
+        .neon-glow {
+            box-shadow: 
+                0 0 20px rgba(120, 119, 198, 0.5),
+                0 0 40px rgba(120, 119, 198, 0.3),
+                0 0 60px rgba(120, 119, 198, 0.1) !important;
+        }
+        
+        .progress-bar {
+            transition: width 1000ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+            background: linear-gradient(90deg, 
+                rgba(120, 119, 198, 1) 0%, 
+                rgba(255, 119, 198, 1) 50%, 
+                rgba(120, 219, 255, 1) 100%) !important;
+            box-shadow: 0 0 20px rgba(120, 119, 198, 0.6) !important;
+        }
+        
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            transition: all 200ms ease-out !important;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 500ms ease-out;
+        }
+        
+        .btn-glass:hover::before {
+            left: 100%;
+        }
+        
+        .btn-glass:hover {
+            transform: scale(1.05) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 8px 25px rgba(120, 119, 198, 0.4) !important;
+        }
+        
+        .btn-glass:active {
+            transform: scale(0.98) !important;
+        }
+        
+        .fade-in {
+            animation: fadeInGlass 600ms ease-out forwards;
+        }
+        
+        .fade-in-delay-1 { animation-delay: 150ms; }
+        .fade-in-delay-2 { animation-delay: 300ms; }
+        .fade-in-delay-3 { animation-delay: 450ms; }
+        
+        @keyframes fadeInGlass {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+                backdrop-filter: blur(20px);
+            }
+        }
+        
+        .icon-glow {
+            filter: drop-shadow(0 0 8px rgba(120, 119, 198, 0.6));
+        }
+        
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+        
+        .activity-item {
+            background: rgba(255, 255, 255, 0.03) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            transition: all 250ms ease-out !important;
+        }
+        
+        .activity-item:hover {
+            transform: translateX(10px) !important;
+            background: rgba(255, 255, 255, 0.06) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        .score-badge {
+            background: rgba(120, 119, 198, 0.2) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(120, 119, 198, 0.3) !important;
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseGlow {
+            0%, 100% { 
+                box-shadow: 0 0 10px rgba(120, 119, 198, 0.4);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(120, 119, 198, 0.8);
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Glassmorphism Header -->
+    <header class="glass-header px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center neon-glow">
+                        <i data-lucide="brain-circuit" class="w-6 h-6 text-white icon-glow"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-white text-glow">DevPrep AI</h1>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button class="p-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 backdrop-blur-sm">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                </button>
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 via-blue-500 to-purple-600 rounded-full neon-glow"></div>
+                    <span class="text-sm font-medium text-gray-200">John Doe</span>
+                </div>
+                <button class="p-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 backdrop-blur-sm">
+                    <i data-lucide="settings" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        <!-- Category Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <!-- Technical Questions -->
+            <div class="glass-card rounded-3xl p-8 fade-in">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center neon-glow">
+                            <i data-lucide="code" class="w-8 h-8 text-white icon-glow"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white text-glow">Technical</h3>
+                            <p class="text-sm text-gray-300">Coding Questions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3 mb-6">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-300">Completed</span>
+                        <span class="font-bold text-green-400 text-glow">45</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-300">Remaining</span>
+                        <span class="font-bold text-white">15</span>
+                    </div>
+                </div>
+                <div class="w-full bg-white/10 rounded-full h-3 mb-6 backdrop-blur-sm">
+                    <div class="progress-bar h-3 rounded-full" style="width: 75%"></div>
+                </div>
+                <button class="btn-glass w-full text-white py-3 px-6 rounded-2xl font-semibold">
+                    Continue Practice
+                </button>
+            </div>
+
+            <!-- Architecture Questions -->
+            <div class="glass-card rounded-3xl p-8 fade-in fade-in-delay-1">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center neon-glow">
+                            <i data-lucide="building" class="w-8 h-8 text-white icon-glow"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white text-glow">Architecture</h3>
+                            <p class="text-sm text-gray-300">System Design</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3 mb-6">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-300">Completed</span>
+                        <span class="font-bold text-green-400 text-glow">12</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-300">Remaining</span>
+                        <span class="font-bold text-white">8</span>
+                    </div>
+                </div>
+                <div class="w-full bg-white/10 rounded-full h-3 mb-6 backdrop-blur-sm">
+                    <div class="progress-bar h-3 rounded-full" style="width: 60%"></div>
+                </div>
+                <button class="btn-glass w-full text-white py-3 px-6 rounded-2xl font-semibold">
+                    Start Practice
+                </button>
+            </div>
+
+            <!-- Open Questions -->
+            <div class="glass-card rounded-3xl p-8 fade-in fade-in-delay-2">
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center space-x-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-400 rounded-2xl flex items-center justify-center neon-glow">
+                            <i data-lucide="message-circle" class="w-8 h-8 text-white icon-glow"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-white text-glow">Open Questions</h3>
+                            <p class="text-sm text-gray-300">Behavioral & Soft Skills</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-3 mb-6">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-300">Completed</span>
+                        <span class="font-bold text-green-400 text-glow">23</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-300">Remaining</span>
+                        <span class="font-bold text-white">7</span>
+                    </div>
+                </div>
+                <div class="w-full bg-white/10 rounded-full h-3 mb-6 backdrop-blur-sm">
+                    <div class="progress-bar h-3 rounded-full" style="width: 77%"></div>
+                </div>
+                <button class="btn-glass w-full text-white py-3 px-6 rounded-2xl font-semibold">
+                    Continue Practice
+                </button>
+            </div>
+        </div>
+
+        <!-- Progress Overview -->
+        <div class="glass-card rounded-3xl p-8 mb-12 fade-in fade-in-delay-3">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center neon-glow">
+                    <i data-lucide="bar-chart-3" class="w-6 h-6 text-white icon-glow"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white text-glow">Progress Overview</h2>
+            </div>
+            
+            <div class="mb-8">
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-lg font-medium text-gray-200">Overall Completion</span>
+                    <span class="score-badge text-lg font-bold text-white px-4 py-2 rounded-xl">75%</span>
+                </div>
+                <div class="w-full bg-white/10 rounded-full h-4 backdrop-blur-sm">
+                    <div class="progress-bar h-4 rounded-full" style="width: 75%"></div>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-bold text-white mb-6 text-glow">Recent Activity</h3>
+                <div class="space-y-4">
+                    <div class="activity-item flex items-center justify-between p-4 rounded-2xl">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-3 h-3 bg-green-400 rounded-full neon-glow"></div>
+                            <span class="text-gray-200">Completed "React Hooks" practice</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="score-badge text-xs font-medium text-green-300 px-3 py-1 rounded-full">85% score</span>
+                            <span class="text-xs text-gray-400">2h ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-center justify-between p-4 rounded-2xl">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-3 h-3 bg-yellow-400 rounded-full neon-glow"></div>
+                            <span class="text-gray-200">Attempted "System Design" challenge</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="score-badge text-xs font-medium text-yellow-300 px-3 py-1 rounded-full">70% score</span>
+                            <span class="text-xs text-gray-400">1d ago</span>
+                        </div>
+                    </div>
+                    <div class="activity-item flex items-center justify-between p-4 rounded-2xl">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-3 h-3 bg-blue-400 rounded-full neon-glow"></div>
+                            <span class="text-gray-200">Started "Algorithm Practice" session</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="score-badge text-xs font-medium text-blue-300 px-3 py-1 rounded-full">In Progress</span>
+                            <span class="text-xs text-gray-400">3d ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="glass-card rounded-3xl p-8">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center neon-glow">
+                    <i data-lucide="target" class="w-6 h-6 text-white icon-glow"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white text-glow">Recommended for You</h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="score-badge text-xs font-medium text-green-300 px-3 py-1 rounded-full">Beginner</span>
+                        <i data-lucide="play-circle" class="w-6 h-6 text-gray-400 icon-glow"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3 text-glow">JavaScript Closures</h3>
+                    <p class="text-sm text-gray-300 mb-4">Master closure concepts with practical examples</p>
+                    <button class="btn-glass w-full text-white py-2 px-4 rounded-xl text-sm font-semibold">
+                        Start Practice
+                    </button>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="score-badge text-xs font-medium text-red-300 px-3 py-1 rounded-full">Advanced</span>
+                        <i data-lucide="pause-circle" class="w-6 h-6 text-gray-400 icon-glow"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3 text-glow">System Architecture</h3>
+                    <p class="text-sm text-gray-300 mb-4">Design scalable distributed systems</p>
+                    <button class="btn-glass w-full text-white py-2 px-4 rounded-xl text-sm font-semibold">
+                        Continue
+                    </button>
+                </div>
+                
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="score-badge text-xs font-medium text-blue-300 px-3 py-1 rounded-full">Intermediate</span>
+                        <i data-lucide="refresh-ccw" class="w-6 h-6 text-gray-400 icon-glow"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-3 text-glow">Database Design</h3>
+                    <p class="text-sm text-gray-300 mb-4">Review normalization and indexing strategies</p>
+                    <button class="btn-glass w-full text-white py-2 px-4 rounded-xl text-sm font-semibold">
+                        Review
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Enhanced interactive behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bars on load with stagger
+            setTimeout(() => {
+                const progressBars = document.querySelectorAll('.progress-bar');
+                progressBars.forEach((bar, index) => {
+                    const width = bar.style.width;
+                    bar.style.width = '0%';
+                    setTimeout(() => {
+                        bar.style.width = width;
+                    }, 200 + (index * 300));
+                });
+            }, 800);
+            
+            // Enhanced button interactions
+            const buttons = document.querySelectorAll('.btn-glass');
+            buttons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    // Create ripple effect
+                    const ripple = document.createElement('span');
+                    const rect = this.getBoundingClientRect();
+                    const size = Math.max(rect.width, rect.height);
+                    const x = e.clientX - rect.left - size / 2;
+                    const y = e.clientY - rect.top - size / 2;
+                    
+                    ripple.style.cssText = `
+                        position: absolute;
+                        width: ${size}px;
+                        height: ${size}px;
+                        left: ${x}px;
+                        top: ${y}px;
+                        background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+                        border-radius: 50%;
+                        transform: scale(0);
+                        animation: ripple 600ms ease-out;
+                        pointer-events: none;
+                    `;
+                    
+                    this.appendChild(ripple);
+                    
+                    setTimeout(() => {
+                        ripple.remove();
+                    }, 600);
+                });
+            });
+            
+            // Add CSS for ripple animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes ripple {
+                    to {
+                        transform: scale(2);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

@@ -15,7 +15,7 @@ import type {
 
 // Base configuration
 const API_BASE_URL = "/api";
-const DEFAULT_TIMEOUT = 30000; // 30 seconds
+const DEFAULT_TIMEOUT = 120000; // 120 seconds (2 minutes) for Claude API calls
 
 // Error classes
 export class APIError extends Error {

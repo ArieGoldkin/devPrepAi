@@ -10,10 +10,13 @@ import type {
   IGenerateQuestionsResponse,
   IQuestion,
 } from "@/types/ai";
-import { generateTestQuestions, generateFallbackQuestion } from "@shared/mocks/question-generator";
+import {
+  generateTestQuestions,
+  generateFallbackQuestion,
+} from "@shared/mocks/question-generator";
 
 import { buildQuestionsPrompt } from "./ai-prompts";
-import { parseClaudeResponse, validateQuestions } from "./json-parser";
+import { parseClaudeResponse, validateQuestions } from "./parser";
 
 const GENERATION_MAX_TOKENS = 4000;
 const DEFAULT_TEMPERATURE = 0.7;
@@ -22,7 +25,7 @@ const DEFAULT_TEMPERATURE = 0.7;
  * Generate questions based on request and environment
  */
 export async function generateQuestions(
-  request: IGenerateQuestionsRequest
+  request: IGenerateQuestionsRequest,
 ): Promise<IGenerateQuestionsResponse> {
   // Check for test mode
   if (shouldUseTestMode()) {
@@ -32,11 +35,29 @@ export async function generateQuestions(
   }
 
   // Use Claude API
+  if (process.env.NODE_ENV === "development") {
+    console.warn(
+      "[QuestionService] Starting question generation with Claude API",
+    );
+    console.warn("[QuestionService] Request:", {
+      count: request.count,
+      type: request.type,
+      difficulty: request.difficulty,
+    });
+  }
+
   try {
+    const startTime = Date.now();
     const questions = await generateWithClaude(request);
+    const duration = Date.now() - startTime;
+    if (process.env.NODE_ENV === "development") {
+      console.warn(
+        `[QuestionService] Generated ${questions.length} questions in ${duration}ms`,
+      );
+    }
     return { questions, totalGenerated: questions.length };
   } catch (error) {
-    console.error("Claude API error, using fallback:", error);
+    console.error("[QuestionService] Claude API error, using fallback:", error);
     return generateFallbackResponse();
   }
 }
@@ -53,13 +74,14 @@ function shouldUseTestMode(): boolean {
  * Generate questions using Claude API
  */
 async function generateWithClaude(
-  request: IGenerateQuestionsRequest
+  request: IGenerateQuestionsRequest,
 ): Promise<IQuestion[]> {
   const client = getClaudeClient();
   const prompt = buildQuestionsPrompt(request);
 
   const response = await client.messages.create({
-    model: process.env["NEXT_PUBLIC_ANTHROPIC_MODEL"] || "claude-3-5-sonnet-latest",
+    model:
+      process.env["NEXT_PUBLIC_ANTHROPIC_MODEL"] || "claude-3-5-sonnet-latest",
     max_tokens: GENERATION_MAX_TOKENS,
     temperature: DEFAULT_TEMPERATURE,
     messages: [{ role: "user", content: prompt }],

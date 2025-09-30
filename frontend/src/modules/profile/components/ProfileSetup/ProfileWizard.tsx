@@ -9,7 +9,6 @@ import type {
   IUserProfile,
   RoleFocus,
 } from "@/types/ai";
-import { useAppStore } from "@lib/store/useAppStore";
 import { Button } from "@shared/ui/button";
 import {
   Card,
@@ -18,6 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@shared/ui/card";
+import { useAppStore } from "@store";
 
 import {
   CompanySizeSelector,

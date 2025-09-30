@@ -48,6 +48,8 @@
       "@modules/*": ["./src/modules/*"],
       "@shared/*": ["./src/shared/*"],
       "@lib/*": ["./src/lib/*"],
+      "@store": ["./src/store"],
+      "@store/*": ["./src/store/*"],
       "@styles/*": ["./src/styles/*"],
       "@types/*": ["./src/types/*"]
     },

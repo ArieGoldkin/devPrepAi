@@ -4,10 +4,10 @@ import { ArrowRight, LogOut } from "lucide-react";
 import Link from "next/link";
 import type { ReactElement } from "react";
 
-import { useAppStore } from "@lib/store/useAppStore";
 import { Badge } from "@shared/ui/badge";
 import { Button } from "@shared/ui/button";
 import { Progress } from "@shared/ui/progress";
+import { useAppStore } from "@store";
 
 export interface INavigationModeContentProps {
   mode: "default" | "practice" | "assessment" | "results";
@@ -18,7 +18,7 @@ export function NavigationModeContent({
   mode,
   onExitAssessment,
 }: INavigationModeContentProps): ReactElement | null {
-  const { isActive, currentQuestionIndex, questions } = useAppStore();
+  const { isActive, currentIndex, questions } = useAppStore();
 
   switch (mode) {
     case "practice":
@@ -37,10 +37,10 @@ export function NavigationModeContent({
           {isActive && questions.length > 0 && (
             <div className="hidden sm:flex items-center gap-2">
               <span className="text-sm text-muted-foreground">
-                Progress: {currentQuestionIndex + 1}/{questions.length}
+                Progress: {currentIndex + 1}/{questions.length}
               </span>
               <Progress
-                value={((currentQuestionIndex + 1) / questions.length) * 100}
+                value={((currentIndex + 1) / questions.length) * 100}
                 className="w-24 h-2"
               />
             </div>

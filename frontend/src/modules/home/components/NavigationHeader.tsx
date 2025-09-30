@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { ReactElement } from "react";
 
-import { useAppStore } from "@lib/store/useAppStore";
 import { MobileNavigation } from "@shared/components/layout/MobileNavigation";
 import { Button } from "@shared/ui/button";
 import {
@@ -17,6 +16,7 @@ import {
   DialogTitle,
 } from "@shared/ui/dialog";
 import Logo from "@shared/ui/logo";
+import { useAppStore } from "@store";
 
 import { DesktopNavigation } from "./DesktopNavigation";
 import {

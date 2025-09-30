@@ -65,7 +65,12 @@
       "Bash(mkdir:*)",
       "Bash(mv:*)",
       "Bash(npm run:*)",
-      "Bash(tee:*)"
+      "Bash(tee:*)",
+      "Bash(npx ts-prune:*)",
+      "Bash(npx depcheck:*)",
+      "Bash(timeout:*)",
+      "Bash(lsof:*)",
+      "Bash(xargs kill:*)"
     ]
   },
   "enableAllProjectMcpServers": true,
