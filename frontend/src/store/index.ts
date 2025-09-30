@@ -38,7 +38,7 @@ export type {
   IStreakState,
   IStreakActions,
   IStreakData,
-} from "./types";
+} from "@/types/store";
 
 // Export constants
 export * from "./constants";

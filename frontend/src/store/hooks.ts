@@ -5,6 +5,7 @@
 "use client";
 
 import type { IUserProfile } from "@/types/ai";
+import type { AppStore, IStreakData } from "@/types/store";
 
 import { appStore } from "./createStore";
 import {
@@ -13,8 +14,7 @@ import {
   selectIsLastQuestion,
   selectQuestionProgress,
   selectFormattedTime,
-} from "./slices/practiceSlice";
-import type { AppStore, IStreakData } from "./types";
+} from "./slices/practice";
 
 // === MAIN STORE HOOK ===
 export const useAppStore = appStore;

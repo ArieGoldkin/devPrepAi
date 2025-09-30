@@ -1,15 +1,14 @@
 /**
- * Practice Slice Types
- * Type definitions for unified practice/assessment functionality
+ * Practice Store Types
  */
 import type { IQuestion, IAnswerFeedback } from "@/types/ai";
 
-// === MODES & DIFFICULTY ===
+// Modes & Difficulty
 export type PracticeMode = "practice" | "assessment" | "mock";
 export type QuestionType = "coding" | "conceptual" | "system-design";
 export type Difficulty = "easy" | "medium" | "hard";
 
-// === INTERFACES ===
+// Interfaces
 export interface IPracticeAnswer {
   questionId: string;
   answer: string;
@@ -73,25 +72,16 @@ export interface IPracticeActions {
     settings?: Partial<IPracticeSettings>,
   ) => void;
   endSession: () => void;
-  pauseSession: () => void;
-  resumeSession: () => void;
-  resetSession: () => void;
 
   // Navigation
   goToQuestion: (index: number) => void;
-  goToNext: () => void;
-  goToPrevious: () => void;
+  nextQuestion: () => void;
 
   // Answer management
-  updateDraft: (draft: string) => void;
+  updateDraft: (content: string) => void;
   saveAnswer: () => void;
-  clearDraft: () => void;
+  submitAnswer: () => void;
 
-  // Time tracking
-  updateTimeElapsed: (seconds: number) => void;
-
-  // Settings
-  updateSettings: (settings: Partial<IPracticeSettings>) => void;
+  // Progress
+  calculateProgress: () => number;
 }
-
-export type IPracticeSlice = IPracticeState & IPracticeActions;

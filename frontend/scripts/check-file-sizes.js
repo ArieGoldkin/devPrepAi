@@ -3,11 +3,15 @@
  * Check file sizes script
  * Ensures no TypeScript file exceeds the max line limit
  */
-const fs = require('fs');
-const path = require('path');
+import { readFileSync, readdirSync, statSync } from 'fs';
+import { join, relative, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const MAX_LINES = 350; // Relaxed for store slices and complex hooks
-const SRC_DIR = path.join(__dirname, '../src');
+const SRC_DIR = join(__dirname, '../src');
 
 // Files/folders to skip
 const SKIP_PATTERNS = [
@@ -20,24 +24,24 @@ const SKIP_PATTERNS = [
 ];
 
 function shouldSkip(filePath) {
-  return SKIP_PATTERNS.some(pattern => filePath.includes(pattern));
+  return SKIP_PATTERNS.some((pattern) => filePath.includes(pattern));
 }
 
 function countLines(filePath) {
-  const content = fs.readFileSync(filePath, 'utf-8');
+  const content = readFileSync(filePath, 'utf-8');
   return content.split('\n').length;
 }
 
 function getAllTsFiles(dir) {
   let results = [];
-  const files = fs.readdirSync(dir);
+  const files = readdirSync(dir);
 
   for (const file of files) {
-    const filePath = path.join(dir, file);
+    const filePath = join(dir, file);
 
     if (shouldSkip(filePath)) continue;
 
-    const stat = fs.statSync(filePath);
+    const stat = statSync(filePath);
 
     if (stat.isDirectory()) {
       results = results.concat(getAllTsFiles(filePath));
@@ -56,13 +60,13 @@ function main() {
   for (const file of files) {
     const lineCount = countLines(file);
     if (lineCount > MAX_LINES) {
-      const relativePath = path.relative(SRC_DIR, file);
+      const relativePath = relative(SRC_DIR, file);
       violations.push({ path: relativePath, lines: lineCount });
     }
   }
 
   if (violations.length > 0) {
-    violations.forEach(v => {
+    violations.forEach((v) => {
       console.log(`❌ src/${v.path}:      ${v.lines} lines (max: ${MAX_LINES})`);
     });
     console.log(`Found ${violations.length} file(s) exceeding ${MAX_LINES} lines`);

@@ -1,26 +1,12 @@
 import type { StateCreator } from "zustand";
 
+import type { IStreakData, IStreakState, IStreakActions } from "@/types/store";
 import {
   MS_PER_SECOND,
   SECONDS_PER_MINUTE,
   MINUTES_PER_HOUR,
   HOURS_PER_DAY,
 } from "@shared/utils/time";
-
-export interface IStreakData {
-  currentStreak: number;
-  longestStreak: number;
-  lastActivityDate: string | null;
-}
-
-export interface IStreakState {
-  streak: IStreakData;
-}
-
-export interface IStreakActions {
-  recordActivity: () => void;
-  getStreakData: () => IStreakData;
-}
 
 const initialStreakData: IStreakData = {
   currentStreak: 0,

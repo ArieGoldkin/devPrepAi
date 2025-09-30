@@ -2,18 +2,17 @@
 
 import type { EditorView } from "@codemirror/view";
 import CodeMirror from "@uiw/react-codemirror";
-import React, { useEffect, useMemo, useRef } from "react";
+import React, { useMemo, useRef } from "react";
 
 import {
   EDITOR_DEFAULTS,
   EDITOR_THEME_CLASSES,
-  themeCompartment,
-  languageCompartment,
 } from "@shared/constants/editor-config";
 import {
   useCodeMirrorConfig,
   useCodeMirrorKeymap,
 } from "@shared/hooks/useCodeMirrorConfig";
+import { useCodeMirrorView } from "@shared/hooks/useCodeMirrorView";
 import { cn } from "@shared/utils/cn";
 import { createEditorExtensions } from "@shared/utils/editor-extensions";
 
@@ -34,7 +33,27 @@ interface ICodeMirrorEditorProps {
   maxHeight?: string;
 }
 
-// eslint-disable-next-line max-lines-per-function
+/**
+ * Standard CodeMirror basic setup configuration
+ * Enables essential editor features for code editing
+ */
+const BASIC_SETUP_CONFIG = {
+  lineNumbers: true,
+  highlightActiveLineGutter: true,
+  highlightSpecialChars: true,
+  history: true,
+  drawSelection: true,
+  dropCursor: true,
+  allowMultipleSelections: true,
+  indentOnInput: true,
+  bracketMatching: true,
+  closeBrackets: true,
+  autocompletion: true,
+  rectangularSelection: true,
+  highlightSelectionMatches: true,
+  searchKeymap: true,
+};
+
 export function CodeMirrorEditor({
   value,
   onChange,
@@ -54,7 +73,7 @@ export function CodeMirrorEditor({
   const viewRef = useRef<EditorView | null>(null);
   const { getLanguageExtension, getThemeExtension } = useCodeMirrorConfig(
     language,
-    theme
+    theme,
   );
   const customKeymap = useCodeMirrorKeymap(onSubmit, onSave, onToggleHints);
 
@@ -81,40 +100,25 @@ export function CodeMirrorEditor({
       readOnly,
       onKeyDown,
       onChange,
-    ]
+    ],
   );
 
-  // Update theme dynamically
-  useEffect(() => {
-    if (viewRef.current) {
-      viewRef.current.dispatch({
-        effects: themeCompartment.reconfigure(getThemeExtension()),
-      });
-    }
-  }, [theme, getThemeExtension]);
-
-  // Update language dynamically
-  useEffect(() => {
-    if (viewRef.current) {
-      viewRef.current.dispatch({
-        effects: languageCompartment.reconfigure(getLanguageExtension()),
-      });
-    }
-  }, [language, getLanguageExtension]);
-
-  // Handle autofocus
-  useEffect(() => {
-    if (autoFocus && viewRef.current) {
-      viewRef.current.focus();
-    }
-  }, [autoFocus]);
+  // Handle theme/language updates and autofocus
+  useCodeMirrorView({
+    viewRef,
+    theme,
+    language,
+    autoFocus,
+    getThemeExtension,
+    getLanguageExtension,
+  });
 
   return (
     <div
       className={cn(
         "code-editor-wrapper relative rounded-lg overflow-hidden",
         EDITOR_THEME_CLASSES[theme],
-        className
+        className,
       )}
       role="group"
       aria-label={`Code editor for ${language}`}
@@ -123,7 +127,7 @@ export function CodeMirrorEditor({
       <div
         className={cn(
           "absolute top-2 right-2 z-10 text-xs uppercase",
-          theme === "light" ? "text-gray-500" : "text-gray-400"
+          theme === "light" ? "text-gray-500" : "text-gray-400",
         )}
       >
         {language}
@@ -136,22 +140,7 @@ export function CodeMirrorEditor({
         onCreateEditor={(view) => {
           viewRef.current = view;
         }}
-        basicSetup={{
-          lineNumbers: true,
-          highlightActiveLineGutter: true,
-          highlightSpecialChars: true,
-          history: true,
-          drawSelection: true,
-          dropCursor: true,
-          allowMultipleSelections: true,
-          indentOnInput: true,
-          bracketMatching: true,
-          closeBrackets: true,
-          autocompletion: true,
-          rectangularSelection: true,
-          highlightSelectionMatches: true,
-          searchKeymap: true,
-        }}
+        basicSetup={BASIC_SETUP_CONFIG}
       />
       <div id="editor-shortcuts" className="sr-only">
         Keyboard shortcuts: Control plus Enter to submit, Control plus S to

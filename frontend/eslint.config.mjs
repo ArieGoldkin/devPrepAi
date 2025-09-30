@@ -262,6 +262,7 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "dist/**",
+      "scripts/**",
       "next-env.d.ts",
       "next.config.ts",
       "postcss.config.mjs",

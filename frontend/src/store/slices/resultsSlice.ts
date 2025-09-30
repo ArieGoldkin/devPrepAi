@@ -1,17 +1,9 @@
 import type { StateCreator } from "zustand";
 
 import type { IAssessmentResults } from "@/types/ai";
+import type { IResultsState, IResultsActions } from "@/types/store";
 
 import { RESULTS_LIMIT } from "../constants";
-
-export interface IResultsState {
-  assessmentResults: IAssessmentResults[];
-}
-
-export interface IResultsActions {
-  addResult: (result: IAssessmentResults) => void;
-  getRecentResults: (limit?: number) => IAssessmentResults[];
-}
 
 type ResultsSlice = IResultsState & IResultsActions;
 

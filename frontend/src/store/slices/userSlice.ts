@@ -1,15 +1,7 @@
 import type { StateCreator } from "zustand";
 
 import type { IUserProfile } from "@/types/ai";
-
-export interface IUserState {
-  userProfile: IUserProfile | null;
-}
-
-export interface IUserActions {
-  setUserProfile: (profile: IUserProfile) => void;
-  clearUserProfile: () => void;
-}
+import type { IUserState, IUserActions } from "@/types/store";
 
 type UserSlice = IUserState & IUserActions;
 

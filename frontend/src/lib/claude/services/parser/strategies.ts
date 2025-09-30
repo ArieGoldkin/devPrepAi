@@ -5,6 +5,19 @@
 import type { IQuestion } from "@/types/ai";
 
 /**
+ * Regex pattern to remove control characters from JSON strings
+ * Matches ASCII control characters (0x00-0x1F) and C1 control characters (0x7F-0x9F)
+ * These characters can appear in LLM responses but are invalid in JSON strings
+ *
+ * eslint-disable-next-line is required here because:
+ * - Control characters are intentionally matched for security/sanitization
+ * - LLM responses may contain these invalid JSON characters
+ * - This regex cleans them before JSON.parse() to prevent parsing errors
+ */
+// eslint-disable-next-line no-control-regex
+const CONTROL_CHARS_REGEX = new RegExp("[\u0000-\u001F\u007F-\u009F]", "g");
+
+/**
  * Primary parsing strategy - handle markdown and clean JSON
  */
 export function tryPrimaryParsing(
@@ -94,16 +107,16 @@ function extractValidJsonBrackets(text: string): string {
 }
 
 /**
- * Clean JSON text from common issues
+ * Clean JSON text from common issues in Claude API responses
+ *
+ * Removes control characters, trailing commas, and fixes escaped quotes
+ * that can appear in LLM-generated JSON
  */
 function cleanJsonText(text: string): string {
-  return (
-    text
-      .trim()
-      // eslint-disable-next-line no-control-regex
-      .replace(/[\u0000-\u001F\u007F-\u009F]/g, "") // Remove control characters
-      .replace(/,\s*([}\]])/g, "$1") // Remove trailing commas
-      .replace(/\\'/g, "'") // Fix escaped quotes
-      .replace(/\\\\/g, "\\")
-  ); // Fix double escaping
+  return text
+    .trim()
+    .replace(CONTROL_CHARS_REGEX, "") // Remove control characters using pre-compiled regex
+    .replace(/,\s*([}\]])/g, "$1") // Remove trailing commas
+    .replace(/\\'/g, "'") // Fix escaped quotes
+    .replace(/\\\\/g, "\\"); // Fix double escaping
 }
