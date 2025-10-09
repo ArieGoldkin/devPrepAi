@@ -265,6 +265,9 @@ shared/dist/
 **/*.key
 **/secrets/
 
+# MCP Configuration with secrets
+.mcp.json
+
 # Development databases
 dev.db
 test.db
