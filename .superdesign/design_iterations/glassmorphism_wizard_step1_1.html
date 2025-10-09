@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPrep AI - Welcome (Step 1)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="glassmorphism_dark_theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans) !important;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%) !important;
+            color: var(--foreground) !important;
+            line-height: 1.6 !important;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.05); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.03) !important;
+            backdrop-filter: blur(30px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(120, 119, 198, 0.5), 0 0 40px rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .icon-glow {
+            filter: drop-shadow(0 0 8px rgba(120, 119, 198, 0.6));
+        }
+
+        .type-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .type-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(120, 119, 198, 0.5);
+            box-shadow: 0 20px 40px rgba(31, 38, 135, 0.5);
+        }
+
+        .type-card.active {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.2) 0%, rgba(255, 119, 198, 0.2) 100%);
+            border: 2px solid rgba(120, 119, 198, 0.8);
+            box-shadow: 0 0 30px rgba(120, 119, 198, 0.6), 0 20px 40px rgba(31, 38, 135, 0.5);
+        }
+
+        .check-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 2rem;
+            height: 2rem;
+            background: linear-gradient(135deg, rgba(120, 119, 198, 1), rgba(255, 119, 198, 1));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 15px rgba(120, 119, 198, 0.8);
+            opacity: 0;
+            transform: scale(0);
+            transition: all 300ms ease-out;
+        }
+
+        .type-card.active .check-badge {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.8) 0%, rgba(255, 119, 198, 0.8) 100%) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 8px 25px rgba(120, 119, 198, 0.5) !important;
+            color: white !important;
+            padding: 1rem 3rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms ease-out !important;
+            font-size: 1.125rem;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 1) 0%, rgba(255, 119, 198, 1) 100%) !important;
+            box-shadow: 0 12px 35px rgba(120, 119, 198, 0.7) !important;
+            transform: scale(1.05) !important;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .fade-in {
+            animation: fadeIn 600ms ease-out forwards;
+            opacity: 0;
+        }
+
+        .fade-in-delay-1 { animation-delay: 150ms; }
+        .fade-in-delay-2 { animation-delay: 300ms; }
+        .fade-in-delay-3 { animation-delay: 450ms; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-gradient {
+            width: 4rem;
+            height: 4rem;
+            background: linear-gradient(135deg, #7877c6, #ff77c6, #78dbff);
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(120, 119, 198, 0.6);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <!-- Main Card -->
+    <div class="glass-card rounded-3xl max-w-4xl w-full p-8 md:p-12 fade-in">
+        <!-- Logo -->
+        <div class="flex justify-center mb-8">
+            <div class="logo-gradient">
+                <i data-lucide="brain-circuit" class="w-10 h-10 text-white icon-glow"></i>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-black text-white text-glow mb-4">
+                Welcome to Practice Mode
+            </h1>
+            <p class="text-lg text-gray-300 max-w-2xl mx-auto">
+                Choose your interview type to get started with personalized practice
+            </p>
+        </div>
+
+        <!-- Interview Type Cards -->
+        <div class="grid md:grid-cols-3 gap-6 mb-12 fade-in fade-in-delay-1">
+            <!-- Coding Questions -->
+            <div class="type-card" onclick="selectType(this, 'coding')">
+                <div class="check-badge">
+                    <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="code-2" class="w-8 h-8 text-white icon-glow"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white text-glow mb-2">
+                        Coding Questions
+                    </h3>
+                    <p class="text-sm text-gray-300">
+                        Algorithm & data structure challenges
+                    </p>
+                </div>
+            </div>
+
+            <!-- System Design -->
+            <div class="type-card" onclick="selectType(this, 'system-design')">
+                <div class="check-badge">
+                    <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="briefcase" class="w-8 h-8 text-white icon-glow"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white text-glow mb-2">
+                        System Design
+                    </h3>
+                    <p class="text-sm text-gray-300">
+                        Architecture & scalability problems
+                    </p>
+                </div>
+            </div>
+
+            <!-- Behavioral -->
+            <div class="type-card" onclick="selectType(this, 'behavioral')">
+                <div class="check-badge">
+                    <i data-lucide="check" class="w-5 h-5 text-white"></i>
+                </div>
+                <div class="flex flex-col items-center text-center">
+                    <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-emerald-400 rounded-2xl flex items-center justify-center mb-4">
+                        <i data-lucide="user" class="w-8 h-8 text-white icon-glow"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white text-glow mb-2">
+                        Behavioral
+                    </h3>
+                    <p class="text-sm text-gray-300">
+                        Situational & leadership questions
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Continue Button -->
+        <div class="flex justify-center fade-in fade-in-delay-2">
+            <button class="btn-primary flex items-center gap-3" id="continueBtn" disabled onclick="handleContinue()">
+                <span id="btnText">Select Interview Type</span>
+                <i data-lucide="chevron-right" class="w-6 h-6"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let selectedInterviewType = null;
+
+        function selectType(card, type) {
+            // Remove active from all cards
+            document.querySelectorAll('.type-card').forEach(c => {
+                c.classList.remove('active');
+            });
+
+            // Add active to clicked card
+            card.classList.add('active');
+            selectedInterviewType = type;
+
+            // Enable continue button
+            const btn = document.getElementById('continueBtn');
+            const btnText = document.getElementById('btnText');
+            btn.disabled = false;
+            btnText.textContent = 'Continue';
+
+            // Recreate icons to update check marks
+            lucide.createIcons();
+        }
+
+        function handleContinue() {
+            if (selectedInterviewType) {
+                console.log('Selected type:', selectedInterviewType);
+                // Navigate to next step
+                alert(`Proceeding with ${selectedInterviewType} practice`);
+            }
+        }
+    </script>
+</body>
+</html>

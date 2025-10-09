@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPrep AI - Ready to Start (Step 5)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="glassmorphism_dark_theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans) !important;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%) !important;
+            color: var(--foreground) !important;
+            line-height: 1.6 !important;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.05); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Gradient overlay card */
+        .card-gradient {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.3) 0%, rgba(255, 119, 198, 0.3) 50%, rgba(120, 219, 255, 0.3) 100%) !important;
+            backdrop-filter: blur(30px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            box-shadow:
+                0 20px 60px rgba(120, 119, 198, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(120, 119, 198, 0.5), 0 0 40px rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .icon-glow {
+            filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.8));
+        }
+
+        /* Trophy icon container */
+        .trophy-container {
+            width: 6rem;
+            height: 6rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow:
+                0 0 40px rgba(255, 215, 0, 0.6),
+                0 0 80px rgba(255, 215, 0, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.2);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow:
+                    0 0 40px rgba(255, 215, 0, 0.6),
+                    0 0 80px rgba(255, 215, 0, 0.3),
+                    inset 0 0 20px rgba(255, 255, 255, 0.2);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow:
+                    0 0 60px rgba(255, 215, 0, 0.8),
+                    0 0 120px rgba(255, 215, 0, 0.5),
+                    inset 0 0 30px rgba(255, 255, 255, 0.3);
+            }
+        }
+
+        /* Stats box */
+        .stats-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+
+        /* Badge styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+        }
+
+        /* Buttons */
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+            transition: all 200ms ease-out !important;
+            padding: 0.875rem 1.75rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1.0625rem;
+        }
+
+        .btn-glass:hover {
+            transform: scale(1.03) !important;
+            background: rgba(255, 255, 255, 0.15) !important;
+            box-shadow: 0 8px 20px rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .btn-start {
+            background: white !important;
+            color: #7877c6 !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.3) !important;
+            padding: 1rem 2.5rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 200ms ease-out !important;
+            font-size: 1.125rem;
+        }
+
+        .btn-start:hover:not(:disabled) {
+            transform: scale(1.05) translateY(-2px) !important;
+            box-shadow: 0 16px 40px rgba(255, 255, 255, 0.4) !important;
+        }
+
+        .btn-start:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* Loading spinner */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        .fade-in {
+            animation: fadeIn 800ms ease-out forwards;
+            opacity: 0;
+        }
+
+        .fade-in-delay-1 { animation-delay: 200ms; }
+        .fade-in-delay-2 { animation-delay: 400ms; }
+        .fade-in-delay-3 { animation-delay: 600ms; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        /* Confetti animation */
+        @keyframes confetti-fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: linear-gradient(45deg, #ff77c6, #7877c6, #78dbff);
+            animation: confetti-fall 3s linear forwards;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-6">
+    <!-- Main Card -->
+    <div class="card-gradient rounded-3xl max-w-2xl w-full p-8 md:p-12 text-center fade-in">
+        <!-- Trophy Icon -->
+        <div class="flex justify-center mb-8 fade-in fade-in-delay-1">
+            <div class="trophy-container">
+                <i data-lucide="trophy" class="w-12 h-12 text-yellow-300 icon-glow"></i>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <div class="mb-8 fade-in fade-in-delay-2">
+            <h1 class="text-4xl md:text-5xl font-black text-white text-glow mb-4">
+                You're All Set!
+            </h1>
+            <p class="text-xl text-white/90 max-w-md mx-auto">
+                Your personalized practice session is ready. Let's begin your interview preparation.
+            </p>
+        </div>
+
+        <!-- Stats Box -->
+        <div class="stats-box max-w-sm mx-auto mb-8 fade-in fade-in-delay-2">
+            <div class="grid grid-cols-2 gap-6 text-white">
+                <div>
+                    <div class="text-4xl font-black text-glow mb-1">5</div>
+                    <div class="text-sm text-white/80 font-medium">Questions</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-black text-glow mb-1">30</div>
+                    <div class="text-sm text-white/80 font-medium">Minutes</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Focus Areas Badges -->
+        <div class="flex flex-wrap gap-3 justify-center mb-10 fade-in fade-in-delay-3">
+            <span class="badge">Algorithms</span>
+            <span class="badge">Data Structures</span>
+            <span class="badge">JavaScript</span>
+            <span class="badge">TypeScript</span>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in fade-in-delay-3">
+            <button class="btn-glass flex items-center justify-center gap-2" onclick="window.history.back()">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                Adjust Settings
+            </button>
+            <button class="btn-start flex items-center justify-center gap-3" id="startBtn" onclick="handleStart()">
+                <i data-lucide="sparkles" class="w-6 h-6" id="startIcon"></i>
+                <span id="startText">Start Practice</span>
+            </button>
+        </div>
+
+        <!-- Pro Tip -->
+        <div class="mt-8 text-sm text-white/60 fade-in fade-in-delay-3">
+            <i data-lucide="lightbulb" class="w-4 h-4 inline mr-1"></i>
+            Pro tip: Find a quiet place and prepare to think out loud
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        let isLoading = false;
+
+        function handleStart() {
+            if (isLoading) return;
+
+            isLoading = true;
+            const btn = document.getElementById('startBtn');
+            const icon = document.getElementById('startIcon');
+            const text = document.getElementById('startText');
+
+            // Update button to loading state
+            btn.disabled = true;
+            icon.setAttribute('data-lucide', 'loader-2');
+            icon.classList.add('spinner');
+            text.textContent = 'Generating Questions...';
+            lucide.createIcons();
+
+            // Create confetti effect
+            createConfetti();
+
+            // Simulate API call
+            setTimeout(() => {
+                alert('Starting your practice session!');
+                // Navigate to practice screen
+            }, 2000);
+        }
+
+        function createConfetti() {
+            const colors = ['#ff77c6', '#7877c6', '#78dbff', '#ffd700', '#00ff88'];
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                    confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    document.body.appendChild(confetti);
+
+                    setTimeout(() => confetti.remove(), 3500);
+                }, i * 50);
+            }
+        }
+
+        // Keyboard shortcut: Enter to start
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !isLoading) {
+                handleStart();
+            }
+        });
+    </script>
+</body>
+</html>

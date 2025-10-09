@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPrep AI - Practice Setup (Glassmorphism)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="glassmorphism_dark_theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans) !important;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%) !important;
+            color: var(--foreground) !important;
+            line-height: 1.6 !important;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.05);
+            }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow:
+                0 8px 32px 0 rgba(31, 38, 135, 0.37),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+            transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1) !important;
+        }
+
+        .glass-card-hover:hover {
+            transform: translateY(-4px) scale(1.01) !important;
+            background: rgba(255, 255, 255, 0.08) !important;
+            box-shadow:
+                0 20px 40px 0 rgba(31, 38, 135, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.03) !important;
+            backdrop-filter: blur(30px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+            box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.2) !important;
+        }
+
+        .neon-glow {
+            box-shadow:
+                0 0 20px rgba(120, 119, 198, 0.5),
+                0 0 40px rgba(120, 119, 198, 0.3),
+                0 0 60px rgba(120, 119, 198, 0.1) !important;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .icon-glow {
+            filter: drop-shadow(0 0 8px rgba(120, 119, 198, 0.6));
+        }
+
+        /* Button styles */
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: white !important;
+            transition: all 200ms ease-out !important;
+            position: relative;
+            overflow: hidden;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-glass:hover {
+            transform: scale(1.02) !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 8px 20px rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .btn-glass.active {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.6) 0%, rgba(255, 119, 198, 0.6) 100%) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 0 20px rgba(120, 119, 198, 0.6) !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.8) 0%, rgba(255, 119, 198, 0.8) 100%) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 8px 25px rgba(120, 119, 198, 0.5) !important;
+            color: white !important;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms ease-out !important;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 1) 0%, rgba(255, 119, 198, 1) 100%) !important;
+            box-shadow: 0 12px 35px rgba(120, 119, 198, 0.7) !important;
+            transform: scale(1.05) !important;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Step indicator */
+        .step-indicator {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 300ms ease-out;
+        }
+
+        .step-dot.active {
+            width: 2rem;
+            background: linear-gradient(90deg, rgba(120, 119, 198, 1), rgba(255, 119, 198, 1));
+            box-shadow: 0 0 10px rgba(120, 119, 198, 0.8);
+        }
+
+        /* Badge styles */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+        }
+
+        .badge:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .badge.active {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.4) 0%, rgba(255, 119, 198, 0.4) 100%);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            box-shadow: 0 0 15px rgba(120, 119, 198, 0.5);
+        }
+
+        /* Checkbox styles */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            cursor: pointer;
+            transition: all 200ms ease-out;
+        }
+
+        .checkbox-wrapper:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .checkbox-wrapper input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 0.375rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            cursor: pointer;
+            appearance: none;
+            position: relative;
+            transition: all 200ms ease-out;
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.8), rgba(255, 119, 198, 0.8));
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 10px rgba(120, 119, 198, 0.6);
+        }
+
+        .checkbox-wrapper input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+
+        .fade-in {
+            animation: fadeIn 600ms ease-out forwards;
+            opacity: 0;
+        }
+
+        .fade-in-delay-1 { animation-delay: 150ms; }
+        .fade-in-delay-2 { animation-delay: 300ms; }
+        .fade-in-delay-3 { animation-delay: 450ms; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            height: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, rgba(120, 119, 198, 1), rgba(255, 119, 198, 1), rgba(120, 219, 255, 1));
+            border-radius: 1rem;
+            transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(120, 119, 198, 0.8);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="glass-header px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center neon-glow">
+                    <i data-lucide="brain-circuit" class="w-6 h-6 text-white icon-glow"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white text-glow">DevPrep AI</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="step-indicator">
+                    <div class="step-dot active"></div>
+                    <div class="step-dot"></div>
+                    <div class="step-dot"></div>
+                    <span class="text-sm text-gray-300 font-medium">Step 1 of 3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar" style="width: 33%"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-4xl mx-auto px-6 py-12">
+        <!-- Welcome Message -->
+        <div class="text-center mb-12 fade-in">
+            <h2 class="text-4xl font-black text-white text-glow mb-3">
+                Let's Setup Your Practice
+            </h2>
+            <p class="text-lg text-gray-300">
+                Customize your session to match your goals and skill level
+            </p>
+        </div>
+
+        <!-- Main Settings Card -->
+        <div class="glass-card rounded-3xl p-8 mb-8 fade-in fade-in-delay-1">
+            <!-- Session Duration -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-xl flex items-center justify-center">
+                        <i data-lucide="timer" class="w-5 h-5 text-white icon-glow"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white text-glow">Session Duration</h3>
+                        <p class="text-sm text-gray-400">How long do you want to practice?</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="btn-glass" onclick="selectDuration(15, this)">
+                        <i data-lucide="zap" class="w-4 h-4 inline mr-2"></i>
+                        15 min
+                    </button>
+                    <button class="btn-glass active" onclick="selectDuration(30, this)">
+                        <i data-lucide="zap" class="w-4 h-4 inline mr-2"></i>
+                        30 min
+                    </button>
+                    <button class="btn-glass" onclick="selectDuration(60, this)">
+                        <i data-lucide="zap" class="w-4 h-4 inline mr-2"></i>
+                        60 min
+                    </button>
+                </div>
+            </div>
+
+            <!-- Number of Questions -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-400 rounded-xl flex items-center justify-center">
+                        <i data-lucide="hash" class="w-5 h-5 text-white icon-glow"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white text-glow">Number of Questions</h3>
+                        <p class="text-sm text-gray-400">How many questions would you like?</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-3">
+                    <button class="btn-glass" onclick="selectQuestions(3, this)">3</button>
+                    <button class="btn-glass active" onclick="selectQuestions(5, this)">5</button>
+                    <button class="btn-glass" onclick="selectQuestions(10, this)">10</button>
+                    <button class="btn-glass" onclick="selectQuestions(15, this)">15</button>
+                </div>
+            </div>
+
+            <!-- Difficulty Level -->
+            <div class="mb-8">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-400 rounded-xl flex items-center justify-center">
+                        <i data-lucide="bar-chart-3" class="w-5 h-5 text-white icon-glow"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white text-glow">Difficulty Level</h3>
+                        <p class="text-sm text-gray-400">Choose your challenge level</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3">
+                    <button class="btn-glass" onclick="selectDifficulty('easy', this)">
+                        <span class="text-xl mr-2">🟢</span>
+                        Easy
+                    </button>
+                    <button class="btn-glass active" onclick="selectDifficulty('medium', this)">
+                        <span class="text-xl mr-2">🟡</span>
+                        Medium
+                    </button>
+                    <button class="btn-glass" onclick="selectDifficulty('hard', this)">
+                        <span class="text-xl mr-2">🔴</span>
+                        Hard
+                    </button>
+                </div>
+            </div>
+
+            <!-- Focus Areas -->
+            <div>
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-400 rounded-xl flex items-center justify-center">
+                        <i data-lucide="target" class="w-5 h-5 text-white icon-glow"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-bold text-white text-glow">Focus Areas</h3>
+                        <p class="text-sm text-gray-400">Select topics to concentrate on</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-2">
+                    <span class="badge active" onclick="toggleBadge(this)">Algorithms</span>
+                    <span class="badge active" onclick="toggleBadge(this)">Data Structures</span>
+                    <span class="badge" onclick="toggleBadge(this)">System Design</span>
+                    <span class="badge" onclick="toggleBadge(this)">API Design</span>
+                    <span class="badge" onclick="toggleBadge(this)">Database</span>
+                    <span class="badge" onclick="toggleBadge(this)">Security</span>
+                    <span class="badge" onclick="toggleBadge(this)">Performance</span>
+                    <span class="badge" onclick="toggleBadge(this)">Testing</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technologies Card -->
+        <div class="glass-card rounded-3xl p-8 mb-8 fade-in fade-in-delay-2">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-400 rounded-xl flex items-center justify-center">
+                    <i data-lucide="code" class="w-5 h-5 text-white icon-glow"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white text-glow">Technologies</h3>
+                    <p class="text-sm text-gray-400">Select the technologies you want to practice</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-2" style="scrollbar-width: thin; scrollbar-color: rgba(120, 119, 198, 0.5) transparent;">
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" checked>
+                    <span class="text-sm text-gray-200 font-medium">JavaScript</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" checked>
+                    <span class="text-sm text-gray-200 font-medium">TypeScript</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox" checked>
+                    <span class="text-sm text-gray-200 font-medium">React</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">Node.js</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">Python</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">Java</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">Go</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">Rust</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">SQL</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">MongoDB</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">Docker</span>
+                </label>
+                <label class="checkbox-wrapper">
+                    <input type="checkbox">
+                    <span class="text-sm text-gray-200 font-medium">Kubernetes</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between items-center fade-in fade-in-delay-3">
+            <button class="btn-glass flex items-center gap-2">
+                <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                Back
+            </button>
+            <button class="btn-primary flex items-center gap-2">
+                Continue
+                <i data-lucide="chevron-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- Quick Stats Preview -->
+        <div class="grid grid-cols-3 gap-4 mt-8 fade-in fade-in-delay-3">
+            <div class="glass-card rounded-2xl p-4 text-center glass-card-hover">
+                <div class="text-2xl font-bold text-white text-glow mb-1" id="statsQuestions">5</div>
+                <div class="text-xs text-gray-400">Questions</div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 text-center glass-card-hover">
+                <div class="text-2xl font-bold text-white text-glow mb-1" id="statsDuration">30</div>
+                <div class="text-xs text-gray-400">Minutes</div>
+            </div>
+            <div class="glass-card rounded-2xl p-4 text-center glass-card-hover">
+                <div class="text-2xl font-bold text-white text-glow mb-1" id="statsTechs">3</div>
+                <div class="text-xs text-gray-400">Technologies</div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // State management
+        let state = {
+            duration: 30,
+            questions: 5,
+            difficulty: 'medium',
+            focusAreas: ['Algorithms', 'Data Structures'],
+            technologies: ['JavaScript', 'TypeScript', 'React']
+        };
+
+        // Selection handlers
+        function selectDuration(duration, button) {
+            state.duration = duration;
+            updateActiveButton(button);
+            updateStats();
+        }
+
+        function selectQuestions(count, button) {
+            state.questions = count;
+            updateActiveButton(button);
+            updateStats();
+        }
+
+        function selectDifficulty(level, button) {
+            state.difficulty = level;
+            updateActiveButton(button);
+        }
+
+        function updateActiveButton(button) {
+            const parent = button.parentElement;
+            parent.querySelectorAll('.btn-glass').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            button.classList.add('active');
+        }
+
+        function toggleBadge(badge) {
+            badge.classList.toggle('active');
+            updateFocusAreas();
+        }
+
+        function updateFocusAreas() {
+            state.focusAreas = Array.from(document.querySelectorAll('.badge.active'))
+                .map(badge => badge.textContent);
+        }
+
+        function updateStats() {
+            document.getElementById('statsQuestions').textContent = state.questions;
+            document.getElementById('statsDuration').textContent = state.duration;
+            updateTechCount();
+        }
+
+        function updateTechCount() {
+            const checkedCount = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            document.getElementById('statsTechs').textContent = checkedCount;
+        }
+
+        // Listen to checkbox changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateTechCount);
+            });
+
+            // Custom scrollbar styling
+            const style = document.createElement('style');
+            style.textContent = `
+                ::-webkit-scrollbar {
+                    width: 8px;
+                }
+                ::-webkit-scrollbar-track {
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 10px;
+                }
+                ::-webkit-scrollbar-thumb {
+                    background: rgba(120, 119, 198, 0.5);
+                    border-radius: 10px;
+                }
+                ::-webkit-scrollbar-thumb:hover {
+                    background: rgba(120, 119, 198, 0.7);
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

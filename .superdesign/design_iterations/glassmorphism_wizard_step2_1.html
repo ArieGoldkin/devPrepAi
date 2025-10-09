@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPrep AI - Profile Setup (Step 2)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="glassmorphism_dark_theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans) !important;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%) !important;
+            color: var(--foreground) !important;
+            line-height: 1.6 !important;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: gradientShift 20s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.9; transform: scale(1.05); }
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05) !important;
+            backdrop-filter: blur(20px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.03) !important;
+            backdrop-filter: blur(30px) !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(120, 119, 198, 0.5), 0 0 40px rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .icon-glow {
+            filter: drop-shadow(0 0 8px rgba(120, 119, 198, 0.6));
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.08) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            color: white !important;
+            transition: all 200ms ease-out !important;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-glass:hover {
+            transform: scale(1.02) !important;
+            background: rgba(255, 255, 255, 0.12) !important;
+            box-shadow: 0 8px 20px rgba(120, 119, 198, 0.3) !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.8) 0%, rgba(255, 119, 198, 0.8) 100%) !important;
+            backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            box-shadow: 0 8px 25px rgba(120, 119, 198, 0.5) !important;
+            color: white !important;
+            padding: 0.75rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms ease-out !important;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 1) 0%, rgba(255, 119, 198, 1) 100%) !important;
+            box-shadow: 0 12px 35px rgba(120, 119, 198, 0.7) !important;
+            transform: scale(1.05) !important;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Custom Select Dropdown */
+        .custom-select {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            width: 100%;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.25rem;
+            padding-right: 2.5rem;
+        }
+
+        .custom-select:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .custom-select:focus {
+            outline: none;
+            border-color: rgba(120, 119, 198, 0.8);
+            box-shadow: 0 0 0 3px rgba(120, 119, 198, 0.2);
+        }
+
+        .custom-select option {
+            background: #1a1a2e;
+            color: white;
+            padding: 0.5rem;
+        }
+
+        /* Number Input */
+        .custom-input {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: white;
+            padding: 0.875rem 1rem;
+            border-radius: 0.75rem;
+            width: 100%;
+            transition: all 200ms ease-out;
+        }
+
+        .custom-input:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.25);
+        }
+
+        .custom-input:focus {
+            outline: none;
+            border-color: rgba(120, 119, 198, 0.8);
+            box-shadow: 0 0 0 3px rgba(120, 119, 198, 0.2);
+        }
+
+        .custom-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .step-indicator {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .step-dot {
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transition: all 300ms ease-out;
+        }
+
+        .step-dot.active {
+            width: 2rem;
+            background: linear-gradient(90deg, rgba(120, 119, 198, 1), rgba(255, 119, 198, 1));
+            box-shadow: 0 0 10px rgba(120, 119, 198, 0.8);
+        }
+
+        .progress-bar {
+            height: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, rgba(120, 119, 198, 1), rgba(255, 119, 198, 1), rgba(120, 219, 255, 1));
+            border-radius: 1rem;
+            transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 15px rgba(120, 119, 198, 0.8);
+        }
+
+        .fade-in {
+            animation: fadeIn 600ms ease-out forwards;
+            opacity: 0;
+        }
+
+        .fade-in-delay-1 { animation-delay: 150ms; }
+        .fade-in-delay-2 { animation-delay: 300ms; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Header -->
+    <header class="glass-header px-6 py-4 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-blue-500 rounded-2xl flex items-center justify-center neon-glow">
+                    <i data-lucide="brain-circuit" class="w-6 h-6 text-white icon-glow"></i>
+                </div>
+                <h1 class="text-2xl font-bold text-white text-glow">DevPrep AI</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="step-indicator">
+                    <div class="step-dot"></div>
+                    <div class="step-dot active"></div>
+                    <div class="step-dot"></div>
+                    <span class="text-sm text-gray-300 font-medium">Step 2 of 3</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Progress Bar -->
+    <div class="max-w-7xl mx-auto px-6 py-4">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 66%"></div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-6 py-12">
+        <div class="glass-card rounded-3xl p-8 md:p-10 fade-in">
+            <!-- Header -->
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-400 rounded-xl flex items-center justify-center">
+                    <i data-lucide="user" class="w-6 h-6 text-white icon-glow"></i>
+                </div>
+                <div>
+                    <h2 class="text-3xl font-black text-white text-glow">Setup Your Profile</h2>
+                    <p class="text-gray-400 text-sm">Tell us about your background to personalize your practice</p>
+                </div>
+            </div>
+
+            <form class="space-y-6 mt-8" onsubmit="handleSubmit(event)">
+                <!-- Experience Level & Years -->
+                <div class="grid md:grid-cols-2 gap-6 fade-in fade-in-delay-1">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Experience Level
+                        </label>
+                        <select class="custom-select" id="experienceLevel" required>
+                            <option value="">Select experience level</option>
+                            <option value="junior">Junior (0-2 years)</option>
+                            <option value="mid">Mid-Level (2-5 years)</option>
+                            <option value="senior">Senior (5+ years)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Years of Experience
+                        </label>
+                        <input
+                            type="number"
+                            class="custom-input"
+                            id="yearsExperience"
+                            placeholder="e.g., 3"
+                            min="0"
+                            max="50"
+                            required
+                        />
+                    </div>
+                </div>
+
+                <!-- Role Focus & Company Size -->
+                <div class="grid md:grid-cols-2 gap-6 fade-in fade-in-delay-2">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Role Focus
+                        </label>
+                        <select class="custom-select" id="roleFocus" required>
+                            <option value="">Select role focus</option>
+                            <option value="frontend">Frontend Development</option>
+                            <option value="backend">Backend Development</option>
+                            <option value="fullstack">Full Stack Development</option>
+                            <option value="mobile">Mobile Development</option>
+                            <option value="devops">DevOps/Infrastructure</option>
+                            <option value="data">Data Engineering</option>
+                            <option value="ml">Machine Learning</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">
+                            Company Size Preference
+                        </label>
+                        <select class="custom-select" id="companySize" required>
+                            <option value="">Select company size</option>
+                            <option value="startup">Startup (1-50)</option>
+                            <option value="small">Small (51-200)</option>
+                            <option value="medium">Medium (201-1000)</option>
+                            <option value="large">Large (1000+)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Interview Experience -->
+                <div class="fade-in fade-in-delay-2">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">
+                        Previous Interview Experience
+                    </label>
+                    <select class="custom-select" id="interviewExperience" required>
+                        <option value="">Select your experience</option>
+                        <option value="none">None - This is my first time</option>
+                        <option value="some">Some - I've done a few interviews</option>
+                        <option value="extensive">Extensive - I've interviewed many times</option>
+                    </select>
+                </div>
+
+                <!-- Navigation -->
+                <div class="flex justify-between items-center pt-6">
+                    <button type="button" class="btn-glass flex items-center gap-2" onclick="window.history.back()">
+                        <i data-lucide="chevron-left" class="w-5 h-5"></i>
+                        Back
+                    </button>
+                    <button type="submit" class="btn-primary flex items-center gap-2" id="submitBtn">
+                        Continue
+                        <i data-lucide="chevron-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const profile = {
+                experienceLevel: document.getElementById('experienceLevel').value,
+                yearsExperience: document.getElementById('yearsExperience').value,
+                roleFocus: document.getElementById('roleFocus').value,
+                companySize: document.getElementById('companySize').value,
+                interviewExperience: document.getElementById('interviewExperience').value
+            };
+
+            console.log('Profile submitted:', profile);
+            alert('Profile saved! Proceeding to next step...');
+            // Navigate to next step
+        }
+
+        // Form validation visual feedback
+        document.querySelectorAll('select, input').forEach(field => {
+            field.addEventListener('change', () => {
+                if (field.value) {
+                    field.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+                } else {
+                    field.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
