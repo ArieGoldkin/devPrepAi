@@ -26,6 +26,17 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
+/* Static variant - no hover effects for containers and forms */
+.glass-card-static {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
 .glass-header {
   background: rgba(30, 41, 89, 0.7);
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -119,13 +130,18 @@
 }
 
 .btn-glass::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
   transition: left 500ms ease-out;
 }
 
@@ -187,10 +203,18 @@
   opacity: 0;
 }
 
-.fade-in-delay-1 { animation-delay: 200ms; }
-.fade-in-delay-2 { animation-delay: 400ms; }
-.fade-in-delay-3 { animation-delay: 600ms; }
-.fade-in-delay-4 { animation-delay: 800ms; }
+.fade-in-delay-1 {
+  animation-delay: 200ms;
+}
+.fade-in-delay-2 {
+  animation-delay: 400ms;
+}
+.fade-in-delay-3 {
+  animation-delay: 600ms;
+}
+.fade-in-delay-4 {
+  animation-delay: 800ms;
+}
 
 @keyframes fadeInGlass {
   from {
@@ -208,7 +232,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -221,7 +246,8 @@
 }
 
 @keyframes pulseGlow {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 10px hsl(var(--brand-success) / 0.5);
   }
   50% {

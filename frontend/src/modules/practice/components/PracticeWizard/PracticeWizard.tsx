@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import type { InterviewType } from "@/types/ai";
 import { getStepNumber } from "@modules/practice/utils";
@@ -7,6 +7,7 @@ import { WizardNav } from "./components/WizardNav";
 import { WizardNavigation } from "./components/WizardNavigation";
 import type { WizardStep, PracticeSettings } from "./constants";
 import { TOTAL_STEPS } from "./constants";
+import { CompleteSetupStep } from "./steps/CompleteSetupStep";
 import { ProfileStep } from "./steps/ProfileStep";
 import { ReadyStep } from "./steps/ReadyStep";
 import { WelcomeStep } from "./steps/WelcomeStep";
@@ -30,10 +31,14 @@ export function PracticeWizard({
   selectedInterviewType,
   loading,
   onStepChange,
-  onSettingsChange: _onSettingsChange,
+  onSettingsChange,
   onInterviewTypeSelect,
   onStart,
 }: IPracticeWizardProps): React.JSX.Element {
+  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
+    [],
+  );
+
   const { handleNext, handleBack } = WizardNavigation({
     currentStep,
     onStepChange,
@@ -42,6 +47,10 @@ export function PracticeWizard({
   const handleInterviewTypeSelect = (type: InterviewType): void => {
     onInterviewTypeSelect(type);
     handleNext(); // Automatically proceed to profile step
+  };
+
+  const handleTechnologiesChange = (technologies: string[]): void => {
+    setSelectedTechnologies(technologies);
   };
 
   const currentStepNumber = getStepNumber(currentStep);
@@ -71,14 +80,13 @@ export function PracticeWizard({
           />
         )}
         {currentStep === "setup" && (
-          <div className="glass-card p-8 max-w-2xl mx-auto">
-            <h2 className="gradient-text text-2xl font-bold mb-4">
-              Complete Setup (Coming Soon)
-            </h2>
-            <p className="text-gray-300">
-              This step will consolidate focus areas and settings configuration.
-            </p>
-          </div>
+          <CompleteSetupStep
+            settings={practiceSettings}
+            onSettingsChange={onSettingsChange}
+            selectedInterviewType={selectedInterviewType}
+            selectedTechnologies={selectedTechnologies}
+            onTechnologiesChange={handleTechnologiesChange}
+          />
         )}
         {currentStep === "ready" && (
           <ReadyStep

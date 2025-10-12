@@ -105,7 +105,7 @@ export function FocusAreaSettings({
             <Badge
               key={area}
               variant={isSelected === true ? "default" : "outline"}
-              className="cursor-pointer hover:bg-primary/10"
+              className="cursor-pointer"
               onClick={() => {
                 const newFocusAreas =
                   isSelected === true
