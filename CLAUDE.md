@@ -17,7 +17,7 @@ version: 2.0.0
 DevPrep AI helps developers prepare for technical interviews with:
 - **AI-Generated Questions**: Personalized based on role & experience
 - **Real-time Evaluation**: Claude AI provides instant feedback with code execution
-- **5-Step Practice Wizard**: Guided practice flow with Focus, Configure, Practice, Review, and Summary steps
+- **Practice Wizard**: 4-step guided flow (🔄 Refactoring to glassmorphism design - see `Docs/design-transition/wizard-refactor.md`)
 - **Multiple Practice Modes**: Quick Practice, Assessment Mode, Mock Interview
 - **Progress Tracking**: Comprehensive analytics and performance metrics
 - **Responsive Design**: Mobile-first approach with adaptive layouts
@@ -57,9 +57,20 @@ This project uses a modular instruction system to optimize token usage.
 - `design-system.md` - Component library & styling guide (v2.0.0)
 - `api-design.md` - Claude AI integration & API endpoints (v2.0.0)
 - `code-standards.md` - ESLint rules & development guidelines (v2.0.0)
-- `user-flows.md` - User journey maps & 5-step wizard flow (v2.0.0)
+- `user-flows.md` - User journey maps & wizard flow (v2.0.0)
 - `future-enhancements.md` - Completed features & roadmap (v2.0.0)
 - `README.md` - Documentation overview
+
+### Design Transitions (`/Docs/design-transition/`) - 🔄 Active
+- `wizard-refactor.md` - Practice Wizard 5→4 step glassmorphism refactor (30 hrs, 13 tasks)
+  - **Status**: Planning complete, ready for Phase 1 implementation
+  - **Notion**: All tasks tracked with dependencies and agent assignments
+
+### Task Tracking (Notion) - 🔗 Connected
+- **Main Hub**: [DevPrepAI Workspace](https://www.notion.so/DevPrepAI-2874489affb980fab76afc9789d813bd)
+  - 🎨 Home Page Glassmorphism - Implementation Tracker
+  - 🧙‍♂️ Practice Wizard Glassmorphism Refactor (13 tasks, 6 phases, 30 hrs)
+  - 📝 Phase 1: Immediate Evaluation - Task Tracker
 
 **All docs synchronized to v2.0.0 reflecting Phase 4 completion**
 
@@ -126,9 +137,10 @@ frontend/src/
 │   └── index.ts    # Main export
 │
 ├── styles/         # Design system foundation
-│   ├── globals.css # Global CSS
-│   ├── tokens.ts   # Design tokens
-│   └── variants.ts # Component variants
+│   ├── globals.css       # Global CSS
+│   ├── glassmorphism.css # Glassmorphism utilities (284 lines)
+│   ├── tokens.ts         # Design tokens
+│   └── variants.ts       # Component variants
 │
 └── types/          # TypeScript definitions
     └── ai/         # AI-related types only
