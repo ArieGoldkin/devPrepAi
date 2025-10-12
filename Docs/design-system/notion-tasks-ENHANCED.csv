@@ -1,0 +1,196 @@
+Task ID,Task Name,Phase,Status,Priority,Estimate (hrs),Dependencies,Implementation Steps,Commands,File Paths,Verification,Documentation Links,Notes
+DS-001,Install pnpm globally if not installed,Phase 1,Not Started,P0,0.1,None,"1. Check if pnpm is installed: `pnpm --version`
+2. If not installed, install globally: `npm install -g pnpm`
+3. Verify installation and version: `pnpm --version`",npm install -g pnpm,None,Check pnpm --version returns 8.0.0+,Docs/design-system/02-monorepo-setup.md#prerequisites,"Install pnpm package manager globally. Required for monorepo workspace management. Minimum version: 8.0.0"
+DS-002,Create pnpm-workspace.yaml at root,Phase 1,Not Started,P0,0.1,DS-001,"1. Create file at project root: `touch pnpm-workspace.yaml`
+2. Add workspace package patterns
+3. Save file","touch pnpm-workspace.yaml
+cat > pnpm-workspace.yaml <<EOF
+packages:
+  - 'packages/*'
+EOF",pnpm-workspace.yaml (create at root),"File exists at root, contains packages: ['packages/*']",Docs/design-system/02-monorepo-setup.md#workspace-config,"Define workspace structure for monorepo. This tells pnpm which directories contain packages."
+DS-003,Create root package.json with workspace config,Phase 1,Not Started,P0,0.2,DS-002,"1. Create package.json at root if doesn't exist
+2. Add name, private: true, workspaces reference
+3. Add devDependencies for turbo
+4. Add scripts for workspace commands","cat > package.json <<EOF
+{
+  ""name"": ""devprep-monorepo"",
+  ""version"": ""1.0.0"",
+  ""private"": true,
+  ""workspaces"": [""packages/*""],
+  ""scripts"": {},
+  ""devDependencies"": {}
+}
+EOF",package.json (create at root),"File exists, private: true, workspaces defined",Docs/design-system/02-monorepo-setup.md#root-package,"Root package.json coordinates the monorepo. Must be private: true to prevent accidental publishing."
+DS-014,Create design system package.json,Phase 2,Not Started,P0,0.4,DS-008 (packages/ directory created),"1. Create package.json in packages/design-system/
+2. Set name to @devprep/design-system
+3. Define exports for components and styles
+4. Add build/dev/storybook scripts
+5. Add dependencies: react, class-variance-authority, clsx","cat > packages/design-system/package.json <<EOF
+{
+  ""name"": ""@devprep/design-system"",
+  ""version"": ""0.0.0"",
+  ""type"": ""module"",
+  ""exports"": {
+    ""."": ""./src/index.ts"",
+    ""./styles"": ""./src/styles/index.css""
+  },
+  ""scripts"": {
+    ""dev"": ""tsup --watch"",
+    ""build"": ""tsup"",
+    ""lint"": ""eslint src"",
+    ""storybook"": ""storybook dev -p 6006""
+  },
+  ""peerDependencies"": {
+    ""react"": ""^18.0.0""
+  },
+  ""dependencies"": {
+    ""class-variance-authority"": ""^0.7.0"",
+    ""clsx"": ""^2.0.0""
+  }
+}
+EOF",packages/design-system/package.json (create),"File exists, exports defined, scripts work: pnpm dev, pnpm build",Docs/design-system/02-monorepo-setup.md#design-system-package,"Setup @devprep/design-system package with proper exports for components and styles. This is the main package consumers will install."
+DS-030,Create component.ts - define glass component tokens,Phase 3,Not Started,P0,0.5,DS-017 (src/tokens/ directory),"1. Read .superdesign/design_iterations/themes/glassmorphism.css
+2. Extract backdrop-filter blur values (10px, 20px, 30px)
+3. Extract rgba background values
+4. Extract border gradient values
+5. Create TypeScript token object
+6. Export from component.ts","# Extract values from source
+cat .superdesign/design_iterations/themes/glassmorphism.css | grep 'backdrop-filter\\|rgba'
+
+# Create component.ts
+cat > packages/design-system/src/tokens/component.ts <<EOF
+export const glass = {
+  blur: {
+    light: '10px',
+    medium: '20px',
+    heavy: '30px'
+  },
+  background: {
+    light: 'rgba(255, 255, 255, 0.05)',
+    medium: 'rgba(255, 255, 255, 0.1)',
+    heavy: 'rgba(255, 255, 255, 0.15)'
+  },
+  border: {
+    gradient: 'linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05))'
+  }
+};
+EOF","Source: .superdesign/design_iterations/themes/glassmorphism.css (lines 1-53)
+Target: packages/design-system/src/tokens/component.ts (create)","Tokens export successfully, can import: import { glass } from '@devprep/design-system/tokens'",Docs/design-system/03-token-system.md#glass-tokens,"Extract glass effect tokens from SuperDesign prototypes. These define the blur, opacity, and border values for glassmorphism components."
+DS-056,Copy Button component to design system,Phase 5,Not Started,P0,0.3,"DS-017 (components/ dir), DS-035 (button tokens)","1. Copy Button.tsx from frontend to design system
+2. Update imports to use new token paths
+3. Add to design system index.ts exports
+4. Verify no TypeScript errors","cp frontend/src/shared/ui/button/Button.tsx packages/design-system/src/components/Button.tsx
+
+# Update imports in Button.tsx manually
+# Then add export
+echo ""export { Button } from './components/Button';"" >> packages/design-system/src/index.ts","Source: frontend/src/shared/ui/button/Button.tsx
+Target: packages/design-system/src/components/Button.tsx
+Update: packages/design-system/src/index.ts (add export)","File exists at target, exports from index.ts, no TS errors in design system package",Docs/design-system/04-component-migration.md#button,"Move Button component from frontend to design system package. First step in component migration - must update imports to use design system tokens."
+DS-063,Create Button.stories.tsx with all 11 variants,Phase 5,Not Started,P0,1.0,DS-056 (Button copied),"1. Create Button.stories.tsx in same directory as Button.tsx
+2. Import Meta and StoryObj from @storybook/react
+3. Import Button component
+4. Define meta with title, component, argTypes
+5. Create stories for all 11 variants: default, primary, accent, ghost, outline, brand, success, warning, error, destructive, link
+6. Add interactive controls for size (sm, md, lg)","cat > packages/design-system/src/components/Button.stories.tsx <<EOF
+import type { Meta, StoryObj } from '@storybook/react';
+import { Button } from './Button';
+
+const meta: Meta<typeof Button> = {
+  title: 'Components/Button',
+  component: Button,
+  tags: ['autodocs'],
+  argTypes: {
+    variant: {
+      control: 'select',
+      options: ['default', 'primary', 'accent', 'ghost', 'outline', 'brand', 'success', 'warning', 'error', 'destructive', 'link']
+    },
+    size: { control: 'select', options: ['sm', 'md', 'lg'] }
+  }
+};
+export default meta;
+type Story = StoryObj<typeof Button>;
+
+export const Default: Story = { args: { children: 'Button' } };
+export const Primary: Story = { args: { variant: 'primary', children: 'Primary' } };
+// ... (add all 11 variants)
+EOF",packages/design-system/src/components/Button.stories.tsx (create),"Story appears in Storybook, all 11 variants render, interactive controls work",Docs/design-system/05-storybook-guide.md#button-story,"Document all Button variants in Storybook. Shows default, primary, accent, ghost, outline, brand, success, warning, error, destructive, link with interactive size controls."
+DS-106,Update all Button imports in frontend to use design system,Phase 6,Not Started,P1,0.6,DS-056 (Button in design system),"1. Search for all Button imports from @shared/ui/button
+2. Replace with imports from @devprep/design-system
+3. Run typecheck to verify
+4. Run build to ensure no runtime errors","# Find all files importing Button
+grep -r ""from '@shared/ui/button'"" frontend/src --include='*.tsx' --include='*.ts' -l
+
+# For each file, replace import (example with sed)
+find frontend/src -type f \( -name '*.tsx' -o -name '*.ts' \) -exec sed -i '' ""s/@shared\\/ui\\/button/@devprep\\/design-system/g"" {} +
+
+# Verify
+pnpm --filter @devprep/frontend typecheck
+pnpm --filter @devprep/frontend build","Files to update: All files in frontend/src importing Button
+Search pattern: from '@shared/ui/button'
+Replace with: from '@devprep/design-system'","No import errors, pnpm typecheck passes, pnpm build succeeds, Button still renders correctly in frontend",Docs/design-system/04-component-migration.md#frontend-updates,"Update all Button imports in frontend app to use design system package instead of local @shared/ui. Critical step to complete Button migration."
+DS-121,Create GlassCard component using glass tokens,Phase 7,Not Started,P1,0.6,DS-030 (glass tokens defined),"1. Create GlassCard.tsx component
+2. Import glass tokens from component.ts
+3. Define GlassCardProps interface with blur, opacity, border props
+4. Create CVA variants using glass tokens
+5. Build component using backdrop-filter CSS
+6. Export from index.ts","cat > packages/design-system/src/components/GlassCard.tsx <<EOF
+import { cva, type VariantProps } from 'class-variance-authority';
+import { glass } from '../tokens/component';
+
+const glassCardVariants = cva('rounded-xl border', {
+  variants: {
+    blur: {
+      light: 'backdrop-blur-[10px]',
+      medium: 'backdrop-blur-[20px]',
+      heavy: 'backdrop-blur-[30px]'
+    },
+    opacity: {
+      low: 'bg-white/5',
+      medium: 'bg-white/10',
+      high: 'bg-white/15'
+    }
+  },
+  defaultVariants: { blur: 'medium', opacity: 'medium' }
+});
+
+export interface GlassCardProps extends VariantProps<typeof glassCardVariants> {
+  children: React.ReactNode;
+}
+
+export function GlassCard({ blur, opacity, children }: GlassCardProps) {
+  return <div className={glassCardVariants({ blur, opacity })}>{children}</div>;
+}
+EOF
+
+echo ""export { GlassCard } from './components/GlassCard';"" >> packages/design-system/src/index.ts",packages/design-system/src/components/GlassCard.tsx (create),"Component renders with glass effect, blur/opacity variants work, visual inspection matches .superdesign prototypes","Docs/design-system/03-token-system.md#glass-tokens
+.superdesign/design_iterations/glassmorphism_session_split_1.html (visual reference)","Build glassmorphism card component using extracted glass tokens. Implements backdrop-blur with three intensity levels and adjustable opacity."
+DS-131,Create 01-implementation-plan.md,Phase 8,Not Started,P0,0.4,None (file already exists from previous session),"NOTE: This file already exists at Docs/design-system/01-implementation-plan.md
+1. Review existing content for accuracy
+2. Update any outdated information
+3. Add lessons learned section
+4. Add troubleshooting section
+5. Include actual vs estimated time tracking",None - review and update existing file,Docs/design-system/01-implementation-plan.md (review/update),"File reviewed, updated with actuals, includes lessons learned section",None (meta-documentation),"IMPORTANT: File already created in previous session. Task should be 'Review and Update' not 'Create'. Contains full 150-task breakdown with phase descriptions."
+DS-141,Configure Changesets with .changeset/config.json,Phase 9,Not Started,P1,0.3,All previous phases complete,"1. Initialize Changesets in design system package
+2. Create .changeset/config.json
+3. Configure for public npm publishing
+4. Set baseBranch to main
+5. Add changeset scripts to package.json","cd packages/design-system
+npx changeset init
+
+cat > .changeset/config.json <<EOF
+{
+  ""$$schema"": ""https://unpkg.com/@changesets/config@2.0.0/schema.json"",
+  ""changelog"": ""@changesets/cli/changelog"",
+  ""commit"": false,
+  ""linked"": [],
+  ""access"": ""public"",
+  ""baseBranch"": ""main"",
+  ""updateInternalDependencies"": ""patch""
+}
+EOF
+
+# Add scripts to package.json
+npm pkg set scripts.changeset=""changeset""
+npm pkg set scripts.version=""changeset version""
+npm pkg set scripts.release=""changeset publish""",packages/design-system/.changeset/config.json (create),"Config file exists, npx changeset add works, can create changelog entries",Docs/design-system/02-monorepo-setup.md#changesets,"Setup Changesets for semantic versioning and changelog generation. Enables automatic version bumps and CHANGELOG.md updates when publishing to npm."

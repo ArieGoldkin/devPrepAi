@@ -7,16 +7,12 @@ import type { InterviewType } from "@/types/ai";
 import { generatePracticeQuestions } from "@lib/claude/services/ai";
 import {
   PracticeWizard,
-  TOTAL_STEPS,
-  PROGRESS_MULTIPLIER,
   type WizardStep,
   type PracticeSettings,
 } from "@modules/practice/components/PracticeWizard";
-import { getStepNumber } from "@modules/practice/utils";
 import { AppLayout } from "@shared/components/layout/AppLayout";
 import { ErrorBoundary } from "@shared/ui";
 import { ErrorMessage } from "@shared/ui/ErrorMessage";
-import { Progress } from "@shared/ui/progress";
 import { useAppStore } from "@store";
 
 export default function PracticePage(): React.JSX.Element {
@@ -79,16 +75,6 @@ export default function PracticePage(): React.JSX.Element {
   return (
     <AppLayout>
       <div className="container-xl py-8">
-        {/* Progress Indicator */}
-        <div className="mb-8">
-          <Progress
-            value={
-              (getStepNumber(currentStep) / TOTAL_STEPS) * PROGRESS_MULTIPLIER
-            }
-            className="h-1 max-w-2xl mx-auto"
-          />
-        </div>
-
         {/* Error Message */}
         {error && (
           <div className="max-w-2xl mx-auto mb-6">

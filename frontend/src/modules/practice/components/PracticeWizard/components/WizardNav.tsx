@@ -50,6 +50,7 @@ export function WizardNav({
             <Progress
               value={progressPercentage}
               className="h-2 bg-glass-surface backdrop-blur-xl"
+              indicatorClassName="wizard-progress-bar"
             />
             <div className="absolute inset-0 rounded-full neon-glow pointer-events-none opacity-50" />
           </div>

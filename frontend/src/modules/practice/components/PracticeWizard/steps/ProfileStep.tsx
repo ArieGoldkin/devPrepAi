@@ -24,8 +24,8 @@ export function ProfileStep({
   return (
     <Card className="glass-card fade-in max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-glow">
-          <User className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 gradient-text">
+          <User className="h-5 w-5 icon-glow" />
           Setup Your Profile
         </CardTitle>
         <CardDescription>
