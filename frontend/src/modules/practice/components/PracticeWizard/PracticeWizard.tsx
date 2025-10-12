@@ -36,7 +36,7 @@ export function PracticeWizard({
   onStart,
 }: IPracticeWizardProps): React.JSX.Element {
   const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
-    [],
+    []
   );
 
   const { handleNext, handleBack } = WizardNavigation({
