@@ -68,7 +68,7 @@ export function PracticeWizard({
         isLastStep={currentStep === "ready"}
       />
 
-      <div className="animate-fade-in">
+      <div className="wizard-container fade-in">
         {currentStep === "welcome" && (
           <WelcomeStep onNext={handleInterviewTypeSelect} />
         )}
