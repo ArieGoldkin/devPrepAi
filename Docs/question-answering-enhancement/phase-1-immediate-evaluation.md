@@ -37,35 +37,34 @@ User types answer → Click "Submit Answer" → Immediate AI evaluation
 
 #### Modify Existing Evaluation Endpoint
 ```typescript
-// File: frontend/src/app/api/claude/evaluate/route.ts
+// File: src/app/api/ai/evaluate-answer/route.ts
 
-// BEFORE: Batch evaluation
-POST /api/claude/evaluate
-Request: {
-  questions: IQuestion[],
-  answers: Array<{ questionId: string, answer: string }>
-}
-
-// AFTER: Single answer evaluation
-POST /api/claude/evaluate
+// CURRENT: Already supports single answer evaluation ✅
+POST /api/ai/evaluate-answer
 Request: {
   question: IQuestion,
   answer: string,
-  attemptNumber?: number  // Track revision attempts
+  attemptNumber?: number  // Track revision attempts (NEW)
 }
 Response: {
-  success: boolean,
-  evaluation: {
-    score: number,          // 0-100
-    strengths: string[],    // What worked well
-    improvements: string[], // Specific areas to improve
-    suggestions: string[],  // Actionable next steps
-    detailedFeedback: string, // Comprehensive analysis
-    timestamp: Date
+  data: {
+    feedback: {
+      score: number,          // 0-100
+      strengths: string[],    // What worked well
+      improvements: string[], // Specific areas to improve
+      suggestions: string[],  // Actionable next steps
+      overallFeedback: string, // Comprehensive analysis
+    },
+    success: boolean
   },
+  success: boolean,
   error?: string
 }
 ```
+
+**Changes needed:**
+- Add `attemptNumber` parameter to track revision attempts
+- Return revision-specific feedback when applicable
 
 #### Claude Prompt for Evaluation
 ```typescript
@@ -336,48 +335,47 @@ export function AssessmentLayout() {
 
 ### 4. Hook Updates
 
-#### Enhanced useAssessment Hook
+#### Enhanced useAssessment Hook with TanStack Query
 ```typescript
-// File: frontend/src/modules/assessment/hooks/useAssessment.ts
+// File: src/modules/assessment/hooks/useAssessment.ts
+
+import { useEvaluateAnswer } from "@lib/claude/hooks/useAnswerEvaluation";
 
 export function useAssessment() {
-  const [isEvaluating, setIsEvaluating] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentEvaluation, setCurrentEvaluation] = useState(null);
 
+  // Use existing TanStack Query mutation hook
+  const { mutate: evaluateAnswer, isPending: isEvaluating } = useEvaluateAnswer();
+
   // NEW: Submit answer for evaluation
-  const handleSubmitAnswer = useCallback(async () => {
+  const handleSubmitAnswer = useCallback(() => {
     if (!currentQuestion || !currentAnswer.trim()) return;
 
-    setIsEvaluating(true);
+    evaluateAnswer(
+      {
+        question: currentQuestion,
+        answer: currentAnswer,
+        attemptNumber: currentAttemptNumber + 1,
+      },
+      {
+        onSuccess: (response) => {
+          if (response.success && response.data.feedback) {
+            // Store evaluation
+            setCurrentEvaluation(response.data.feedback);
+            saveEvaluation(currentQuestion.id, response.data.feedback);
 
-    try {
-      const response = await fetch('/api/claude/evaluate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          question: currentQuestion,
-          answer: currentAnswer,
-          attemptNumber: currentAttemptNumber + 1
-        })
-      });
-
-      const { evaluation } = await response.json();
-
-      // Store evaluation
-      setCurrentEvaluation(evaluation);
-      saveEvaluation(currentQuestion.id, evaluation);
-
-      // Show feedback modal
-      setShowFeedback(true);
-
-    } catch (error) {
-      console.error('Evaluation failed:', error);
-      // Show error toast
-    } finally {
-      setIsEvaluating(false);
-    }
-  }, [currentQuestion, currentAnswer, currentAttemptNumber]);
+            // Show feedback modal
+            setShowFeedback(true);
+          }
+        },
+        onError: (error) => {
+          console.error('Evaluation failed:', error);
+          // Show error toast
+        },
+      }
+    );
+  }, [currentQuestion, currentAnswer, currentAttemptNumber, evaluateAnswer]);
 
   // NEW: Revise answer
   const handleReviseAnswer = useCallback(() => {
@@ -405,6 +403,13 @@ export function useAssessment() {
   };
 }
 ```
+
+**Benefits of TanStack Query:**
+- ✅ Built-in loading, error, and success states
+- ✅ Automatic request deduplication
+- ✅ Retry logic on failures
+- ✅ Request cancellation support
+- ✅ DevTools integration for debugging
 
 ## 🎨 UI/UX Specifications
 
@@ -447,59 +452,57 @@ export function useAssessment() {
 ## ⚙️ Configuration
 
 ```typescript
-// File: frontend/src/modules/assessment/constants.ts
+// File: src/shared/constants/evaluation.ts
 
-export const EVALUATION_CONFIG = {
-  // Maximum revision attempts per question
-  MAX_REVISIONS: 2,
+/**
+ * Evaluation & Feedback Constants
+ * Centralized configuration for immediate answer evaluation
+ */
 
-  // Minimum answer length to submit (prevent empty submissions)
-  MIN_ANSWER_LENGTH: 10,
+// Revision Limits
+export const MAX_REVISIONS = 2;
+export const MIN_ANSWER_LENGTH = 10;
 
-  // Evaluation timeout (30 seconds)
-  EVALUATION_TIMEOUT: 30000,
+// Timeouts
+export const EVALUATION_TIMEOUT = 30000; // 30 seconds
 
-  // Score thresholds
-  SCORE_EXCELLENT: 90,
-  SCORE_GOOD: 75,
-  SCORE_FAIR: 60,
+// Score Thresholds (0-100 scale)
+export const SCORE_THRESHOLDS = {
+  EXCELLENT: 90,
+  GOOD: 75,
+  FAIR: 60,
+  PASS: 50,
+} as const;
 
-  // Feedback modal animation durations
-  MODAL_ANIMATION_DURATION: 300,
+// Animation Durations (milliseconds)
+export const FEEDBACK_ANIMATIONS = {
+  MODAL_DURATION: 300,
   SCORE_COUNT_DURATION: 800,
-  SECTION_STAGGER_DELAY: 150
-};
+  SECTION_STAGGER: 150,
+} as const;
+
+// Score Color Mapping
+export const SCORE_COLORS = {
+  EXCELLENT: 'gradient-green-glow',  // 90-100
+  GOOD: 'gradient-blue-glow',        // 75-89
+  FAIR: 'gradient-orange-glow',      // 60-74
+  POOR: 'gradient-red-glow',         // 0-59
+} as const;
+
+// Helper function
+export function getScoreColor(score: number): string {
+  if (score >= SCORE_THRESHOLDS.EXCELLENT) return SCORE_COLORS.EXCELLENT;
+  if (score >= SCORE_THRESHOLDS.GOOD) return SCORE_COLORS.GOOD;
+  if (score >= SCORE_THRESHOLDS.FAIR) return SCORE_COLORS.FAIR;
+  return SCORE_COLORS.POOR;
+}
 ```
 
-## 🧪 Testing Checklist
-
-### Unit Tests
-- [ ] FeedbackModal renders correctly with evaluation data
-- [ ] Score color coding works for all ranges
-- [ ] Revision limit enforced correctly
-- [ ] Button states update based on props
-- [ ] Modal animations trigger properly
-
-### Integration Tests
-- [ ] Submit answer triggers evaluation API call
-- [ ] Evaluation response updates UI correctly
-- [ ] Revise flow maintains answer in editor
-- [ ] Next question clears state properly
-- [ ] Error handling shows appropriate messages
-
-### E2E Tests
-- [ ] Complete flow: Answer → Submit → Review → Revise → Submit → Next
-- [ ] Max revisions reached shows correct UI
-- [ ] Multiple questions in sequence work properly
-- [ ] Loading states prevent duplicate submissions
-- [ ] Network errors handled gracefully
-
-### Accessibility Tests
-- [ ] Modal keyboard navigation (Tab, Escape)
-- [ ] Screen reader announcements for score
-- [ ] Focus management (trap in modal, return on close)
-- [ ] ARIA labels for all interactive elements
-- [ ] Color contrast meets WCAG AA standards
+**Why centralized?**
+- ✅ Single source of truth for all evaluation settings
+- ✅ Easy to find and update configuration
+- ✅ Prevents duplicate constants across modules
+- ✅ Type-safe with const assertions
 
 ## 📊 Success Metrics
 
@@ -510,22 +513,28 @@ export const EVALUATION_CONFIG = {
 | **Time to Completion** | -10-15% | Faster with immediate feedback |
 | **User Satisfaction** | 4.5/5 | Post-session survey rating |
 
-## 🚀 Rollout Plan
+## 🚀 Implementation Plan
 
-### Week 1: Development
-- **Days 1-2:** API endpoint and evaluation logic
-- **Days 3-4:** FeedbackModal component
-- **Day 5:** Integration and state management
+### Incremental Development Approach
+Build and deploy in small, testable increments without upfront test infrastructure.
 
-### Week 2: Testing & Refinement
-- **Days 1-2:** Unit and integration tests
-- **Days 3-4:** E2E tests and bug fixes
-- **Day 5:** Performance optimization
+**Week 1: Core Implementation**
+- **Task 1 (4h):** Update API endpoint with attemptNumber support
+- **Task 2 (2h):** Create centralized evaluation constants
+- **Task 3 (4h):** Extend practice store with evaluation state
+- **Task 4 (6h):** Build FeedbackModal component
+- **Task 5 (4h):** Integrate with AssessmentLayout
+- **Task 6 (4h):** Update useAssessment hook with TanStack Query
+- **Task 7 (4h):** Add revision tracking and limits
+- **Task 8 (4h):** Polish UI/UX and animations
 
-### Week 3: Deployment
-- **Days 1-2:** Staging deployment and QA
-- **Day 3:** Production deployment (gradual rollout)
-- **Days 4-5:** Monitor metrics and gather feedback
+**Week 2: Deployment & Iteration**
+- **Days 1-2:** Manual testing and bug fixes
+- **Day 3:** Staging deployment
+- **Day 4:** Production deployment (feature flag)
+- **Day 5:** Monitor metrics and gather user feedback
+
+**Total Effort:** ~32 hours (1.5 weeks)
 
 ## 🔗 Dependencies
 
@@ -543,5 +552,6 @@ export const EVALUATION_CONFIG = {
 ---
 
 **Status:** 📋 Ready for Implementation
-**Estimated Effort:** 1 week (5 days)
+**Estimated Effort:** 32 hours (~1.5 weeks)
 **Priority:** High (Core feature)
+**Approach:** Incremental development without upfront testing infrastructure

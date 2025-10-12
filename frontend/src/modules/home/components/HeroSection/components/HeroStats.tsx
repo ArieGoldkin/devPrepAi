@@ -1,50 +1,31 @@
-import { Brain, Code2, Target, Users } from "lucide-react";
 import type { ReactElement } from "react";
-
-import { StatCard } from "./StatCard";
 
 const STATS_DATA = [
   {
-    icon: <Code2 className="h-8 w-8 text-primary mb-2" />,
-    value: "500+",
-    label: "Practice Questions",
+    value: "5K+",
+    label: "Questions",
   },
   {
-    icon: <Brain className="h-8 w-8 text-accent mb-2" />,
-    value: "AI",
-    label: "Powered Analysis",
-  },
-  {
-    icon: <Target className="h-8 w-8 text-secondary mb-2" />,
-    value: "95%",
+    value: "98%",
     label: "Success Rate",
   },
   {
-    icon: <Users className="h-8 w-8 text-brand-success mb-2" />,
-    value: "10k+",
-    label: "Active Users",
+    value: "24/7",
+    label: "AI Support",
   },
 ];
 
 export function HeroStats(): ReactElement {
   return (
-    <div className="relative animate-scale-in">
-      <div className="relative rounded-2xl bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/10 p-8">
-        <div className="grid grid-cols-2 gap-4">
-          {STATS_DATA.map((stat) => (
-            <StatCard
-              key={stat.label}
-              icon={stat.icon}
-              value={stat.value}
-              label={stat.label}
-            />
-          ))}
+    <div className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto animate-fade-in">
+      {STATS_DATA.map((stat) => (
+        <div key={stat.label} className="text-center">
+          <div className="text-4xl font-black text-foreground text-glow mb-2">
+            {stat.value}
+          </div>
+          <div className="text-sm text-muted-foreground">{stat.label}</div>
         </div>
-      </div>
-
-      {/* Decorative elements */}
-      <div className="absolute -top-4 -right-4 h-24 w-24 rounded-full bg-gradient-to-br from-primary/20 to-accent/20 blur-2xl" />
-      <div className="absolute -bottom-4 -left-4 h-32 w-32 rounded-full bg-gradient-to-tr from-secondary/20 to-primary/20 blur-2xl" />
+      ))}
     </div>
   );
 }

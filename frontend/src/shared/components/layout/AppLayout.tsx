@@ -4,6 +4,7 @@ import { usePathname } from "next/navigation";
 import type { ReactElement, ReactNode } from "react";
 
 import { NavigationHeader } from "@modules/home/components/NavigationHeader";
+import { Footer } from "@shared/components/layout/Footer";
 
 export interface IAppLayoutProps {
   children: ReactNode;
@@ -27,9 +28,10 @@ export function AppLayout({ children }: IAppLayoutProps): ReactElement {
   const navigationMode = getNavigationMode();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen">
       <NavigationHeader mode={navigationMode} />
       <main>{children}</main>
+      <Footer />
     </div>
   );
 }

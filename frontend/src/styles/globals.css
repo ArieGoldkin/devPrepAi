@@ -1,55 +1,56 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
+@import "./glassmorphism.css";
 
 :root {
-  /* DevPrep AI Brand Colors - Blue/Purple Theme */
-  --brand-primary: 236 86% 63%;        /* #5b6cf8 - Main brand blue */
-  --brand-secondary: 259 100% 71%;     /* #8b5cf6 - Purple accent */
-  --brand-accent: 200 98% 39%;         /* #0ea5e9 - Bright blue */
+  /* DevPrep AI Brand Colors - Glassmorphism Theme (matches prototype) */
+  --brand-primary: 243 27% 62%;        /* #7877c6 - Purple glow */
+  --brand-secondary: 320 100% 73%;     /* #ff77c6 - Pink accent */
+  --brand-accent: 196 100% 73%;        /* #78dbff - Cyan blue */
   --brand-success: 142 76% 36%;        /* #16a34a - Success green */
   --brand-warning: 45 93% 47%;         /* #f59e0b - Warning amber */
   --brand-error: 0 84% 60%;            /* #ef4444 - Error red */
 
-  /* Semantic Colors - Light Mode */
-  --background: 0 0% 100%;             /* #ffffff */
-  --foreground: 222 84% 5%;            /* #0f172a - Slate 900 */
+  /* Semantic Colors - Dark Glassmorphism Theme (always dark) */
+  --background: 222 84% 5%;             /* #0f172a - Dark slate */
+  --foreground: 210 40% 98%;            /* #f8fafc - Light text */
 
-  --card: 0 0% 100%;                  /* #ffffff */
-  --card-foreground: 222 84% 5%;      /* #0f172a */
+  --card: 217 33% 17%;                 /* #1e293b - Dark card */
+  --card-foreground: 210 40% 98%;      /* #f8fafc - Light text */
 
-  --popover: 0 0% 100%;               /* #ffffff */
-  --popover-foreground: 222 84% 5%;   /* #0f172a */
+  --popover: 217 33% 17%;              /* #1e293b - Dark popover */
+  --popover-foreground: 210 40% 98%;   /* #f8fafc - Light text */
 
-  --primary: 236 86% 63%;             /* Brand primary */
-  --primary-foreground: 0 0% 98%;     /* #fafafa */
+  --primary: 243 27% 62%;              /* #7877c6 - Purple (brand primary) */
+  --primary-foreground: 210 40% 98%;   /* #f8fafc - Light text */
 
-  --secondary: 210 40% 98%;           /* #f8fafc - Slate 50 */
-  --secondary-foreground: 222 84% 5%; /* #0f172a */
+  --secondary: 215 28% 17%;            /* #334155 - Dark slate */
+  --secondary-foreground: 210 40% 98%; /* #f8fafc - Light text */
 
-  --muted: 210 40% 96%;               /* #f1f5f9 - Slate 100 */
-  --muted-foreground: 215 16% 47%;    /* #64748b - Slate 500 */
+  --muted: 215 28% 17%;                /* #334155 - Muted dark */
+  --muted-foreground: 215 20% 65%;     /* #94a3b8 - Muted light */
 
-  --accent: 259 100% 71%;             /* Brand secondary */
-  --accent-foreground: 0 0% 98%;      /* #fafafa */
+  --accent: 320 100% 73%;              /* #ff77c6 - Pink (brand secondary) */
+  --accent-foreground: 210 40% 98%;    /* #f8fafc - Light text */
 
-  --destructive: 0 84% 60%;           /* Brand error */
-  --destructive-foreground: 0 0% 98%; /* #fafafa */
+  --destructive: 0 84% 60%;            /* #ef4444 - Error red */
+  --destructive-foreground: 210 40% 98%; /* #f8fafc - Light text */
 
-  --border: 214 32% 91%;              /* #e2e8f0 - Slate 200 */
-  --input: 214 32% 91%;               /* #e2e8f0 */
-  --ring: 236 86% 63%;                /* Brand primary */
+  --border: 215 28% 17%;               /* #334155 - Dark border */
+  --input: 215 28% 17%;                /* #334155 - Dark input */
+  --ring: 243 27% 62%;                 /* #7877c6 - Purple ring */
 
   /* Gradients */
   --gradient-primary: linear-gradient(135deg, hsl(var(--brand-primary)) 0%, hsl(var(--brand-secondary)) 100%);
   --gradient-accent: linear-gradient(135deg, hsl(var(--brand-accent)) 0%, hsl(var(--brand-primary)) 100%);
   --gradient-subtle: linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--secondary)) 100%);
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-brand: 0 10px 25px -5px hsl(var(--brand-primary) / 0.3);
+  /* Shadows - Dark theme optimized */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+  --shadow-brand: 0 10px 25px -5px hsl(var(--brand-primary) / 0.4);
 
   /* Border Radius */
   --radius: 0.5rem;
@@ -67,43 +68,6 @@
   --space-3xl: 4rem;    /* 64px */
 }
 
-.dark {
-  /* Semantic Colors - Dark Mode */
-  --background: 222 84% 5%;             /* #0f172a - Slate 900 */
-  --foreground: 210 40% 98%;            /* #f8fafc - Slate 50 */
-
-  --card: 217 33% 17%;                 /* #1e293b - Slate 800 */
-  --card-foreground: 210 40% 98%;      /* #f8fafc */
-
-  --popover: 217 33% 17%;              /* #1e293b */
-  --popover-foreground: 210 40% 98%;   /* #f8fafc */
-
-  --primary: 236 86% 63%;              /* Brand primary - same in dark */
-  --primary-foreground: 222 84% 5%;    /* #0f172a */
-
-  --secondary: 215 28% 17%;            /* #334155 - Slate 700 */
-  --secondary-foreground: 210 40% 98%; /* #f8fafc */
-
-  --muted: 215 28% 17%;                /* #334155 */
-  --muted-foreground: 215 20% 65%;     /* #94a3b8 - Slate 400 */
-
-  --accent: 259 100% 71%;              /* Brand secondary - same in dark */
-  --accent-foreground: 222 84% 5%;     /* #0f172a */
-
-  --destructive: 0 84% 60%;            /* Brand error - same in dark */
-  --destructive-foreground: 210 40% 98%; /* #f8fafc */
-
-  --border: 215 28% 17%;               /* #334155 - Slate 700 */
-  --input: 215 28% 17%;                /* #334155 */
-  --ring: 236 86% 63%;                 /* Brand primary */
-
-  /* Dark mode shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.3);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.3);
-  --shadow-brand: 0 10px 25px -5px hsl(var(--brand-primary) / 0.4);
-}
 
 @theme inline {
   /* Color System */
@@ -158,12 +122,42 @@
 }
 
 body {
-  background-color: hsl(var(--background));
+  background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
   color: hsl(var(--foreground));
   font-family: var(--font-sans);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  position: relative;
+  min-height: 100vh;
+}
+
+/* Animated gradient background for glassmorphism */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 80%, hsl(var(--brand-primary) / 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, hsl(var(--brand-secondary) / 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, hsl(var(--brand-accent) / 0.1) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: -1;
+  animation: gradientShift 15s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.05);
+  }
 }
 
 /* Utility Classes */
@@ -390,15 +384,15 @@ body {
   }
 }
 
-/* Dark mode adjustments */
-.dark .card-feature:hover,
-.dark .card-interactive:hover {
+/* Glassmorphism theme adjustments */
+.card-feature:hover,
+.card-interactive:hover {
   border-color: hsl(var(--primary) / 0.5);
 }
 
-.dark .btn-accent {
+.btn-accent {
   background: var(--gradient-primary);
-  color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
 
 /* High contrast mode support */
@@ -467,19 +461,19 @@ body {
 }
 
 .hint-penalty-low {
-  @apply bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400;
+  @apply bg-blue-900/30 text-blue-400;
 }
 
 .hint-penalty-medium {
-  @apply bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400;
+  @apply bg-yellow-900/30 text-yellow-400;
 }
 
 .hint-penalty-high {
-  @apply bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400;
+  @apply bg-orange-900/30 text-orange-400;
 }
 
 .hint-penalty-severe {
-  @apply bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400;
+  @apply bg-red-900/30 text-red-400;
 }
 
 /* Status Bar Styles */
@@ -496,15 +490,15 @@ body {
 }
 
 .auto-save-saving {
-  @apply text-blue-600 dark:text-blue-400;
+  @apply text-blue-400;
 }
 
 .auto-save-saved {
-  @apply text-green-600 dark:text-green-400;
+  @apply text-green-400;
 }
 
 .auto-save-error {
-  @apply text-red-600 dark:text-red-400;
+  @apply text-red-400;
 }
 
 /* Progress Ring */

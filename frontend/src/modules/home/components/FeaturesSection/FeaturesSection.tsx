@@ -1,74 +1,90 @@
-import { Brain, Code2, Target } from "lucide-react";
+import {
+  Brain,
+  Layers,
+  Smartphone,
+  Target,
+  TrendingUp,
+  Zap,
+} from "lucide-react";
 import type { ReactElement } from "react";
 
 import { FeatureCard } from "./components/FeatureCard";
 
 const FEATURES_DATA = [
   {
-    icon: <Code2 className="h-6 w-6 text-primary" />,
-    iconColorClass: "from-primary/20 to-primary/10",
+    icon: <Brain className="h-8 w-8 text-white" />,
+    iconColorClass: "from-blue-500 to-cyan-400",
+    neonGlowClass: "neon-glow-blue",
     title: "AI-Generated Questions",
     description:
-      "Practice with questions tailored to your experience level and target role",
-    features: [
-      "Role-specific scenarios",
-      "Adaptive difficulty",
-      "Real interview formats",
-    ],
+      "Personalized questions tailored to your role, experience level, and learning goals. Claude AI adapts to your progress in real-time.",
   },
   {
-    icon: <Brain className="h-6 w-6 text-accent" />,
-    iconColorClass: "from-accent/20 to-accent/10",
+    icon: <Zap className="h-8 w-8 text-white" />,
+    iconColorClass: "from-purple-500 to-pink-400",
+    neonGlowClass: "neon-glow",
     title: "Instant Feedback",
     description:
-      "Get detailed analysis and improvement suggestions for every answer",
-    features: [
-      "Code quality review",
-      "Best practices tips",
-      "Performance insights",
-    ],
+      "Get immediate, detailed feedback on your answers with code execution results, best practices, and optimization suggestions.",
   },
   {
-    icon: <Target className="h-6 w-6 text-secondary" />,
-    iconColorClass: "from-secondary/20 to-secondary/10",
-    title: "Progress Tracking",
+    icon: <Target className="h-8 w-8 text-white" />,
+    iconColorClass: "from-green-500 to-emerald-400",
+    neonGlowClass: "neon-glow",
+    title: "5-Step Practice Wizard",
     description:
-      "Monitor your improvement with detailed analytics and insights",
-    features: [
-      "Performance metrics",
-      "Skill assessment",
-      "Preparation timeline",
-    ],
+      "Guided practice flow with Focus, Configure, Practice, Review, and Summary steps for structured learning.",
+  },
+  {
+    icon: <TrendingUp className="h-8 w-8 text-white" />,
+    iconColorClass: "from-orange-500 to-red-400",
+    neonGlowClass: "neon-glow",
+    title: "Progress Analytics",
+    description:
+      "Track your performance with comprehensive analytics, streak tracking, and personalized insights to improve faster.",
+  },
+  {
+    icon: <Layers className="h-8 w-8 text-white" />,
+    iconColorClass: "from-yellow-500 to-amber-400",
+    neonGlowClass: "neon-glow",
+    title: "Multiple Practice Modes",
+    description:
+      "Choose from Quick Practice, Assessment Mode, or Mock Interview formats to match your preparation style.",
+  },
+  {
+    icon: <Smartphone className="h-8 w-8 text-white" />,
+    iconColorClass: "from-indigo-500 to-purple-400",
+    neonGlowClass: "neon-glow",
+    title: "Mobile-First Design",
+    description:
+      "Practice anywhere with our responsive, mobile-optimized interface. Seamless experience across all devices.",
   },
 ];
 
 export function FeaturesSection(): ReactElement {
   return (
-    <section className="py-20 border-t">
-      <div className="container-xl">
-        <div className="text-center space-y-4 mb-12">
-          <h2 className="text-headline">
-            Everything You Need to{" "}
-            <span className="text-gradient">Succeed</span>
-          </h2>
-          <p className="text-subtitle text-muted-foreground max-w-2xl mx-auto">
-            Comprehensive preparation tools designed by engineers who&apos;ve
-            been through the process
-          </p>
-        </div>
+    <section id="features" className="max-w-7xl mx-auto px-6 py-20">
+      <div className="text-center mb-16">
+        <h2 className="text-4xl md:text-5xl font-black text-white text-glow mb-4">
+          Why Choose DevPrep AI?
+        </h2>
+        <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+          Everything you need to ace your technical interviews, powered by
+          cutting-edge AI
+        </p>
+      </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {FEATURES_DATA.map((feature) => (
-            <FeatureCard
-              key={feature.title}
-              icon={feature.icon}
-              iconColorClass={feature.iconColorClass}
-              title={feature.title}
-              description={feature.description}
-              features={feature.features}
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {FEATURES_DATA.map((feature) => (
+          <FeatureCard
+            key={feature.title}
+            icon={feature.icon}
+            iconColorClass={feature.iconColorClass}
+            neonGlowClass={feature.neonGlowClass}
+            title={feature.title}
+            description={feature.description}
+          />
+        ))}
       </div>
     </section>
   );

@@ -265,7 +265,7 @@ shared/dist/
 **/*.key
 **/secrets/
 
-# MCP Configuration with secrets
+# MCP Configuration (contains Notion token)
 .mcp.json
 
 # Development databases

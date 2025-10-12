@@ -39,9 +39,31 @@ export function StepIndicator({
     return stepNumber;
   };
 
-  const getStepClasses = (isActive: boolean, isCompleted: boolean): string => {
+  const getStepGlowClass = (stepNumber: number): string => {
+    switch (stepNumber) {
+      case 1:
+        return "neon-glow"; // Purple
+      case 2:
+        return "neon-glow-pink"; // Pink
+      case 3:
+        return "neon-glow-blue"; // Cyan
+      case 4:
+        return "neon-glow-orange"; // Orange
+      case 5:
+        return "neon-glow-green"; // Green
+      default:
+        return "neon-glow";
+    }
+  };
+
+  const getStepClasses = (
+    stepNumber: number,
+    isActive: boolean,
+    isCompleted: boolean,
+  ): string => {
     if (isActive) {
-      return "bg-primary text-primary-foreground shadow-md";
+      const glowClass = getStepGlowClass(stepNumber);
+      return `bg-primary text-primary-foreground shadow-md ${glowClass}`;
     }
     if (isCompleted) {
       return "bg-brand-success text-white";
@@ -63,7 +85,7 @@ export function StepIndicator({
                 <div
                   className={`
                   w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-all
-                  ${getStepClasses(isActive, isCompleted)}
+                  ${getStepClasses(stepNumber, isActive, isCompleted)}
                 `}
                 >
                   {renderStepIcon(stepNumber, isActive, isCompleted)}

@@ -112,11 +112,11 @@ const Logo: React.FC<ILogoProps> = ({
   const getIconColor = (): string[] => {
     switch (variant) {
       case "dark":
-        return ["#5b6cf8", "#8b5cf6"];
+        return ["#7877c6", "#ff77c6"]; // Glassmorphism purple → pink
       case "light":
         return ["#ffffff", "#f0f0f0"];
       default:
-        return ["#5b6cf8", "#8b5cf6"];
+        return ["#7877c6", "#ff77c6"]; // Glassmorphism purple → pink
     }
   };
 
@@ -124,8 +124,8 @@ const Logo: React.FC<ILogoProps> = ({
   const textColor = getTextColor();
 
   // Ensure colors are never undefined
-  const safeColor1 = color1 || "#5b6cf8";
-  const safeColor2 = color2 || "#8b5cf6";
+  const safeColor1 = color1 || "#7877c6";
+  const safeColor2 = color2 || "#ff77c6";
 
   return (
     <div className={cn("flex items-center gap-2", className || "")}>

@@ -32,7 +32,7 @@
       "command": "npx",
       "args": ["-y", "@notionhq/notion-mcp-server"],
       "env": {
-        "NOTION_TOKEN": "YOUR_NOTION_INTEGRATION_TOKEN_HERE"
+        "NOTION_TOKEN": "ntn_YOUR_TOKEN_HERE"
       }
     }
   }

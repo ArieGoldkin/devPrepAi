@@ -28,9 +28,15 @@ All secrets should be stored in `.env` file (also gitignored):
 NOTION_INTEGRATION_TOKEN=ntn_YOUR_ACTUAL_TOKEN_HERE
 ```
 
-### 3. Update `.mcp.json`
+### 3. Configure MCP with Token
 
-Replace the placeholder in `.mcp.json` with your actual token:
+Copy the template and add your token:
+
+```bash
+cp .mcp.json.example .mcp.json
+```
+
+Then edit `.mcp.json` and replace the placeholder:
 
 ```json
 {
@@ -39,43 +45,64 @@ Replace the placeholder in `.mcp.json` with your actual token:
       "command": "npx",
       "args": ["-y", "@notionhq/notion-mcp-server"],
       "env": {
-        "NOTION_TOKEN": "ntn_YOUR_ACTUAL_TOKEN_HERE"
+        "NOTION_TOKEN": "ntn_YOUR_ACTUAL_TOKEN_HERE"  // ← Replace with your token
       }
     }
   }
 }
 ```
 
+⚠️ **IMPORTANT**: `.mcp.json` is in `.gitignore` so your token stays local and secure!
+
 ### 4. Restart Claude Code
 
-Completely quit and relaunch Claude Code for MCP servers to pick up the new configuration.
+Completely quit (Cmd+Q) and relaunch Claude Code for MCP servers to reload with the new token.
 
 ---
 
 ## Why This Approach?
 
-### Technical Constraint
+### Hardcoded Token with Gitignore (Recommended ✅)
 
-MCP servers **do not support** environment variable interpolation like `${VAR}`. Attempts to use:
+**Current Approach** (Pragmatic & Secure):
+- ✅ Token hardcoded in `.mcp.json` - works with any launch method
+- ✅ `.mcp.json` in `.gitignore` - never committed to version control
+- ✅ Template file (`.mcp.json.example`) for team sharing
+- ✅ Works whether you launch from Dock, Finder, or terminal
+- ✅ No complex shell configuration needed
 
+**How It Works:**
+1. Copy `.mcp.json.example` → `.mcp.json`
+2. Add your actual token to `.mcp.json`
+3. `.gitignore` prevents it from being committed
+4. MCP server reads token directly from config
+
+**Security:**
+- Token file is gitignored (never tracked in version control)
+- Each developer has their own local `.mcp.json`
+- Template file has placeholder, not real tokens
+
+### Why Not Shell Environment Variables?
+
+**Shell approach issues:**
+- ⚠️ Only works if Claude Code launched from terminal
+- ⚠️ Doesn't work with GUI launch (Dock/Finder/Spotlight)
+- ⚠️ macOS apps don't inherit shell profiles by default
+- ⚠️ Extra complexity for little benefit
+
+**Our approach is simpler:**
+- ✅ Works regardless of launch method
+- ✅ No shell profile configuration needed
+- ✅ Gitignore provides sufficient security
+
+### Why Not Variable Interpolation?
+
+**Doesn't work:**
 ```json
-"NOTION_TOKEN": "${NOTION_INTEGRATION_TOKEN}"  // ❌ Doesn't work
+"NOTION_TOKEN": "${NOTION_TOKEN}"  // ❌ Literal string passed
 ```
 
-Will fail because MCP passes the literal string to the server, not the variable value.
-
-### Security Trade-off
-
-**Current Approach** (Pragmatic):
-- ✅ Token in `.env` for documentation
-- ✅ Token in `.mcp.json` for functionality
-- ✅ Both files in `.gitignore`
-- ✅ Template file (`.mcp.json.example`) for sharing
-
-**Why Not Just Environment Variables?**
-- MCP servers need the actual token value at launch time
-- They don't have access to shell environment variable interpolation
-- This is a limitation of the MCP protocol, not our implementation
+MCP configuration is JSON - no variable substitution happens. The token must be the actual value in the JSON file.
 
 ---
 
