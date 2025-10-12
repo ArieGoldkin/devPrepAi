@@ -237,6 +237,22 @@ const eslintConfig = [
     rules: {
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/naming-convention": "off",
+      "max-lines-per-function": ["error", { max: 120, skipBlankLines: true, skipComments: true }],
+      "max-statements": ["error", 20],
+    },
+  },
+  {
+    files: ["**/store/**/*.ts", "**/hooks/**/*.ts"],
+    rules: {
+      "max-lines": ["error", { max: 250, skipBlankLines: true, skipComments: true }],
+      "max-lines-per-function": ["error", { max: 150, skipBlankLines: true, skipComments: true }],
+      "max-statements": ["error", 30],
+    },
+  },
+  {
+    files: ["**/services/**/*.ts"],
+    rules: {
+      "max-statements": ["error", 20],
     },
   },
   {
@@ -246,6 +262,7 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "dist/**",
+      "scripts/**",
       "next-env.d.ts",
       "next.config.ts",
       "postcss.config.mjs",

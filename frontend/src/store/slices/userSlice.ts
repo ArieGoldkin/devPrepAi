@@ -1,22 +1,13 @@
 import type { StateCreator } from "zustand";
 
 import type { IUserProfile } from "@/types/ai";
+import type { IUserState, IUserActions } from "@/types/store";
 
-export interface IUserState {
-  userProfile: IUserProfile | null;
-}
+type UserSlice = IUserState & IUserActions;
 
-export interface IUserActions {
-  setUserProfile: (profile: IUserProfile) => void;
-  clearUserProfile: () => void;
-}
-
-export const createUserSlice: StateCreator<
-  IUserState & IUserActions,
-  [],
-  [],
-  IUserState & IUserActions
-> = (set) => ({
+export const createUserSlice: StateCreator<UserSlice, [], [], UserSlice> = (
+  set,
+) => ({
   userProfile: null,
 
   setUserProfile: (profile: IUserProfile): void =>

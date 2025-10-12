@@ -1,7 +1,7 @@
 # API Design & Anthropic Integration
 ## DevPrep AI - Claude API Integration Specification
 
-### Version 1.0.0 | September 2025
+### Version 2.0.0 | October 2025
 
 ---
 
@@ -43,7 +43,9 @@ interface TokenOptimization {
 ### 2.1 AI Generation Endpoints
 
 #### Generate Questions
-**POST** `/api/ai/questions/generate`
+**POST** `/api/ai/generate-questions`
+
+**Note**: Actual Next.js App Router path is `/api/ai/generate-questions/route.ts`
 
 ```typescript
 // Request
@@ -53,11 +55,10 @@ interface GenerateQuestionsRequest {
     technologies: string[];
     yearsExperience: number;
   };
-  options?: {
-    category?: QuestionCategory;
+  settings?: {
+    focusAreas: string[];
     difficulty?: 1 | 2 | 3 | 4 | 5;
-    count?: number; // Default: 5, Max: 10
-    type?: 'conceptual' | 'coding' | 'debug' | 'design';
+    questionCount?: number; // Default: 5, Max: 10
   };
 }
 
@@ -87,7 +88,9 @@ interface GenerateQuestionsResponse {
 ```
 
 #### Evaluate Answer
-**POST** `/api/ai/assessment/evaluate`
+**POST** `/api/ai/evaluate-answer`
+
+**Note**: Actual Next.js App Router path is `/api/ai/evaluate-answer/route.ts`
 
 ```typescript
 // Request
@@ -95,12 +98,10 @@ interface EvaluateAnswerRequest {
   questionId: string;
   question: string;
   answer: string;
-  expectedTopics?: string[];
-  evaluationCriteria?: {
-    checkAccuracy: boolean;
-    checkCompleteness: boolean;
-    checkBestPractices: boolean;
-    checkPerformance: boolean;
+  context?: {
+    difficulty: number;
+    category: string;
+    technologies: string[];
   };
 }
 
@@ -124,17 +125,19 @@ interface EvaluateAnswerResponse {
 }
 ```
 
-#### Get Learning Explanation
-**POST** `/api/ai/learn/explain`
+#### Explain Concept
+**POST** `/api/ai/explain-concept`
+
+**Note**: Actual Next.js App Router path is `/api/ai/explain-concept/route.ts`
 
 ```typescript
 // Request
 interface ExplainConceptRequest {
-  topic: string;
-  level: 'beginner' | 'intermediate' | 'advanced';
-  context?: string;
-  includeExamples: boolean;
-  includePitfalls: boolean;
+  concept: string;
+  context?: {
+    level: 'beginner' | 'intermediate' | 'advanced';
+    relatedTechnologies?: string[];
+  };
 }
 
 // Response
@@ -154,49 +157,23 @@ interface ExplainConceptResponse {
 }
 ```
 
-### 2.2 Question Management Endpoints
+### 2.2 State Management & Caching
 
-#### List Questions
-**GET** `/api/questions`
+**Note**: Question management is handled client-side using Zustand + React Query
 
-```typescript
-// Query Parameters
-interface ListQuestionsQuery {
-  category?: string;
-  difficulty?: number;
-  technology?: string;
-  limit?: number;     // Default: 20, Max: 50
-  offset?: number;    // For pagination
-  sort?: 'difficulty' | 'popularity' | 'recent';
-}
+#### Client-Side State (Zustand)
+- Practice session state
+- User profile and preferences
+- Results history
+- Streak tracking
 
-// Response
-interface ListQuestionsResponse {
-  questions: Question[];
-  pagination: {
-    total: number;
-    limit: number;
-    offset: number;
-    hasMore: boolean;
-  };
-}
-```
+#### Server State (React Query)
+- API response caching (5-minute stale time)
+- Background refetching
+- Optimistic updates
+- Request deduplication
 
-#### Get Question by ID
-**GET** `/api/questions/:id`
-
-```typescript
-// Response
-interface GetQuestionResponse {
-  question: Question;
-  relatedQuestions?: Question[];
-  userProgress?: {
-    attempted: boolean;
-    completed: boolean;
-    lastAttempt?: Date;
-  };
-}
-```
+**No separate question database endpoints** - All questions are dynamically generated via Claude AI based on user profile and stored in Zustand store.
 
 ### 2.3 Assessment Endpoints
 
@@ -446,30 +423,44 @@ Format code examples with syntax highlighting markers.
 
 ### 5.1 API Client Setup
 
+**Actual Location**: `lib/claude/client.ts`
+
 ```typescript
-// services/anthropic/client.ts
+// lib/claude/client.ts
 import Anthropic from '@anthropic-ai/sdk';
 
-export class AnthropicClient {
-  private client: Anthropic;
-  private cache: Map<string, CachedResponse>;
+export const anthropic = new Anthropic({
+  apiKey: process.env.ANTHROPIC_API_KEY!,
+});
 
-  constructor() {
-    this.client = new Anthropic({
-      apiKey: process.env.ANTHROPIC_API_KEY,
-    });
-    this.cache = new Map();
-  }
+export const CLAUDE_CONFIG = {
+  model: 'claude-3-5-sonnet-20241022',
+  maxTokens: 4000,
+  temperature: 0.7,
+} as const;
+```
 
-  async generateCompletion(
-    prompt: string,
-    options: CompletionOptions
-  ): Promise<ClaudeResponse> {
-    const cacheKey = this.getCacheKey(prompt, options);
+**Caching**: Handled by React Query (see section 2.2)
+- 5-minute stale time
+- Automatic request deduplication
+- Background refetching
 
-    if (this.cache.has(cacheKey)) {
-      return this.cache.get(cacheKey)!;
-    }
+**API Routes**: Located in `app/api/ai/*/route.ts`
+```typescript
+// Example: app/api/ai/generate-questions/route.ts
+import { anthropic, CLAUDE_CONFIG } from '@lib/claude/client';
+
+export async function POST(request: Request) {
+  const body = await request.json();
+
+  const response = await anthropic.messages.create({
+    model: CLAUDE_CONFIG.model,
+    max_tokens: CLAUDE_CONFIG.maxTokens,
+    messages: [{ role: 'user', content: prompt }],
+  });
+
+  return NextResponse.json({ questions });
+}
 
     try {
       const response = await this.client.messages.create({
@@ -810,6 +801,30 @@ paths:
 
 ---
 
-*Last Updated: September 17, 2025*
-*Version: 1.0.0*
-*Status: Implementation Ready*
+## 7. Architecture Notes
+
+**Current Implementation** (Phase 4 Complete):
+- ✅ Claude API integration via `lib/claude/`
+- ✅ React Query for caching and state management
+- ✅ Zustand for client-side state
+- ✅ Next.js 15 App Router API routes
+- ✅ TypeScript strict mode throughout
+
+**API Endpoints Summary**:
+```
+/api/ai/
+├── generate-questions/  → Generate personalized questions
+├── evaluate-answer/     → Evaluate user's answer
+└── explain-concept/     → Explain technical concepts
+```
+
+**State Management**:
+- **Server State**: React Query (`lib/query/`, `lib/claude/hooks/`)
+- **Client State**: Zustand (`store/slices/`)
+- **Persistence**: LocalStorage for user data
+
+---
+
+*Last Updated: October 8, 2025*
+*Version: 2.0.0*
+*Status: MVP Complete - Phase 4*

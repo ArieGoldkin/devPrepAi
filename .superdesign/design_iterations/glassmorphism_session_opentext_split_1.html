@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPrep - Behavioral Question Session</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0118 0%, #1a0f2e 50%, #0f0a1e 100%);
+            color: #e5e5ff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 150%;
+            height: 150%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 119, 198, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            animation: backgroundFlow 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes backgroundFlow {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+            50% { transform: translate(-20px, 20px) scale(1.05); opacity: 0.95; }
+        }
+
+        /* Status Bar */
+        .status-bar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 1, 24, 0.95);
+            border-bottom: 1px solid rgba(120, 119, 198, 0.3);
+            padding: 16px 24px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .progress-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .progress-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(120, 119, 198, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.completed {
+            background: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .progress-dot.current {
+            background: #7877c6;
+            box-shadow: 0 0 15px rgba(120, 119, 198, 0.8);
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.8; }
+        }
+
+        .progress-text {
+            font-size: 14px;
+            color: rgba(229, 229, 255, 0.8);
+        }
+
+        .timer-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .timer {
+            font-size: 18px;
+            font-weight: 700;
+            color: #e5e5ff;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            min-height: calc(100vh - 100px);
+        }
+
+        /* Question Panel */
+        .question-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 140px);
+            padding-right: 8px;
+        }
+
+        .question-card, .hints-card {
+            background: rgba(20, 15, 40, 0.85);
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            border-radius: 20px;
+            padding: 32px;
+            backdrop-filter: blur(20px);
+            box-shadow:
+                0 0 60px rgba(120, 119, 198, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .hints-card {
+            padding: 24px;
+        }
+
+        /* Custom scrollbar */
+        .question-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .question-panel::-webkit-scrollbar-track {
+            background: rgba(120, 119, 198, 0.1);
+            border-radius: 4px;
+        }
+
+        .question-panel::-webkit-scrollbar-thumb {
+            background: rgba(120, 119, 198, 0.3);
+            border-radius: 4px;
+        }
+
+        .question-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(120, 119, 198, 0.5);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+
+        .question-number {
+            font-size: 14px;
+            color: rgba(229, 229, 255, 0.7);
+        }
+
+        .difficulty-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: rgba(120, 219, 255, 0.2);
+            border: 1px solid rgba(120, 219, 255, 0.4);
+            color: #78dbff;
+        }
+
+        .question-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #e5e5ff;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .question-content {
+            font-size: 15px;
+            line-height: 1.8;
+            color: rgba(229, 229, 255, 0.85);
+            margin-bottom: 24px;
+        }
+
+        .star-guide {
+            background: rgba(120, 119, 198, 0.08);
+            border: 1px solid rgba(120, 119, 198, 0.25);
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 24px;
+        }
+
+        .star-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(229, 229, 255, 0.9);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .star-items {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .star-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .star-letter {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.3), rgba(255, 119, 198, 0.2));
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: #e5e5ff;
+            flex-shrink: 0;
+        }
+
+        .star-content {
+            flex: 1;
+        }
+
+        .star-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(229, 229, 255, 0.9);
+            margin-bottom: 4px;
+        }
+
+        .star-description {
+            font-size: 12px;
+            color: rgba(229, 229, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        /* Hints Section */
+        .hints-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .hints-title {
+            font-size: 16px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #7877c6 0%, #ff77c6 50%, #78dbff 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientFlow 6s linear infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .hint-count {
+            padding: 4px 10px;
+            background: rgba(120, 119, 198, 0.3);
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .hint-btn {
+            width: 100%;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.2) 0%, rgba(255, 119, 198, 0.15) 100%);
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            border-radius: 12px;
+            color: #e5e5ff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .hint-btn:hover:not(:disabled) {
+            border-color: rgba(120, 119, 198, 0.6);
+            box-shadow: 0 4px 20px rgba(120, 119, 198, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .hint-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .hints-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .hint-card {
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid;
+            background: rgba(120, 119, 198, 0.05);
+            animation: fadeInUp 0.4s ease-out both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hint-card.level-1 {
+            border-color: rgba(120, 219, 255, 0.4);
+            box-shadow: 0 0 15px rgba(120, 219, 255, 0.1);
+        }
+
+        .hint-card.level-2 {
+            border-color: rgba(255, 119, 198, 0.4);
+            box-shadow: 0 0 15px rgba(255, 119, 198, 0.1);
+        }
+
+        .hint-card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .hint-level-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .level-1 .hint-level-badge {
+            background: rgba(120, 219, 255, 0.2);
+            color: #78dbff;
+            border: 1px solid rgba(120, 219, 255, 0.4);
+        }
+
+        .level-2 .hint-level-badge {
+            background: rgba(255, 119, 198, 0.2);
+            color: #ff77c6;
+            border: 1px solid rgba(255, 119, 198, 0.4);
+        }
+
+        .hint-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(229, 229, 255, 0.9);
+        }
+
+        .hint-encouragement {
+            text-align: center;
+            padding: 12px;
+            background: rgba(0, 255, 136, 0.05);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            border-radius: 8px;
+            font-size: 13px;
+            color: rgba(229, 229, 255, 0.8);
+            margin-top: 12px;
+        }
+
+        /* Answer Panel */
+        .answer-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            max-height: calc(100vh - 140px);
+            padding-right: 8px;
+        }
+
+        /* Custom scrollbar for answer panel */
+        .answer-panel::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .answer-panel::-webkit-scrollbar-track {
+            background: rgba(120, 119, 198, 0.1);
+            border-radius: 4px;
+        }
+
+        .answer-panel::-webkit-scrollbar-thumb {
+            background: rgba(120, 119, 198, 0.3);
+            border-radius: 4px;
+        }
+
+        .answer-panel::-webkit-scrollbar-thumb:hover {
+            background: rgba(120, 119, 198, 0.5);
+        }
+
+        .editor-card, .action-buttons {
+            background: rgba(20, 15, 40, 0.85);
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            border-radius: 20px;
+            padding: 24px;
+            backdrop-filter: blur(20px);
+            box-shadow:
+                0 0 60px rgba(120, 119, 198, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .editor-card {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .editor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .editor-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(229, 229, 255, 0.9);
+        }
+
+        .answer-textarea {
+            flex: 1;
+            min-height: 500px;
+            background: rgba(10, 1, 24, 0.6);
+            border: 1px solid rgba(120, 119, 198, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: #e5e5ff;
+            line-height: 1.8;
+            resize: vertical;
+        }
+
+        .answer-textarea:focus {
+            outline: none;
+            border-color: rgba(120, 119, 198, 0.5);
+            box-shadow: 0 0 20px rgba(120, 119, 198, 0.2);
+        }
+
+        .answer-textarea::placeholder {
+            color: rgba(229, 229, 255, 0.4);
+        }
+
+        .editor-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            font-size: 12px;
+            color: rgba(229, 229, 255, 0.6);
+        }
+
+        .word-count {
+            display: flex;
+            gap: 16px;
+        }
+
+        .count-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .count-item.good {
+            color: #00ff88;
+        }
+
+        .action-buttons {
+            padding: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-secondary {
+            background: rgba(120, 119, 198, 0.15);
+            border: 1px solid rgba(120, 119, 198, 0.4);
+            color: #e5e5ff;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(120, 119, 198, 0.25);
+            border-color: rgba(120, 119, 198, 0.6);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(120, 119, 198, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7877c6 0%, #ff77c6 100%);
+            color: #ffffff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 30px rgba(120, 119, 198, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 4px 30px rgba(120, 119, 198, 0.4),
+                0 0 40px rgba(255, 119, 198, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-content">
+            <div class="progress-section">
+                <div class="progress-dots">
+                    <div class="progress-dot completed"></div>
+                    <div class="progress-dot current"></div>
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                    <div class="progress-dot"></div>
+                </div>
+                <span class="progress-text">Question 2 of 5</span>
+            </div>
+
+            <div class="timer-section">
+                <span>⏱️</span>
+                <span class="timer" id="timer">28:45</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Panel: Question + Hints -->
+        <div class="question-panel">
+            <!-- Question Card -->
+            <div class="question-card">
+                <div class="question-header">
+                    <span class="question-number">Question 2 of 5</span>
+                    <span class="difficulty-badge">Easy</span>
+                </div>
+
+                <h1 class="question-title">Describe a Challenging Technical Problem</h1>
+
+                <div class="question-content">
+                    Tell me about a time when you faced a particularly challenging technical problem
+                    in your work or studies. How did you approach it, what obstacles did you encounter,
+                    and what was the outcome?
+                    <br><br>
+                    <strong>Use the STAR method to structure your response.</strong>
+                </div>
+
+                <!-- STAR Framework Guide -->
+                <div class="star-guide">
+                    <div class="star-title">
+                        <span>📋</span>
+                        <span>STAR Framework Guide</span>
+                    </div>
+                    <div class="star-items">
+                        <div class="star-item">
+                            <div class="star-letter">S</div>
+                            <div class="star-content">
+                                <div class="star-label">Situation</div>
+                                <div class="star-description">Set the context. Where were you? What was happening?</div>
+                            </div>
+                        </div>
+                        <div class="star-item">
+                            <div class="star-letter">T</div>
+                            <div class="star-content">
+                                <div class="star-label">Task</div>
+                                <div class="star-description">What was your responsibility or goal?</div>
+                            </div>
+                        </div>
+                        <div class="star-item">
+                            <div class="star-letter">A</div>
+                            <div class="star-content">
+                                <div class="star-label">Action</div>
+                                <div class="star-description">What specific steps did you take? Focus on YOUR actions.</div>
+                            </div>
+                        </div>
+                        <div class="star-item">
+                            <div class="star-letter">R</div>
+                            <div class="star-content">
+                                <div class="star-label">Result</div>
+                                <div class="star-description">What was the outcome? Include metrics if possible.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hints Card -->
+            <div class="hints-card">
+                <div class="hints-header">
+                    <h3 class="hints-title">💡 Smart Hints</h3>
+                    <span class="hint-count" id="hintCountDisplay">0/2 used</span>
+                </div>
+
+                <button class="hint-btn" id="getHintBtn" onclick="requestHint()">
+                    <span>💡</span>
+                    <span>Get Hint</span>
+                </button>
+
+                <div class="hints-list" id="hintsList" style="display: none;">
+                    <!-- Hints will be added here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Panel: Answer Editor -->
+        <div class="answer-panel">
+            <!-- Editor -->
+            <div class="editor-card">
+                <div class="editor-header">
+                    <span class="editor-label">Your Answer</span>
+                </div>
+
+                <textarea
+                    class="answer-textarea"
+                    id="answerEditor"
+                    placeholder="Start writing your answer using the STAR framework...
+
+Situation:
+Describe the context and background...
+
+Task:
+Explain your role and responsibility...
+
+Action:
+Detail the specific steps you took...
+
+Result:
+Share the outcome and what you learned..."
+                    oninput="updateWordCount()"
+                ></textarea>
+
+                <div class="editor-footer">
+                    <span>💡 Tip: Aim for 250-400 words for a complete answer</span>
+                    <div class="word-count">
+                        <div class="count-item" id="wordCount">
+                            <span>Words:</span>
+                            <strong>0</strong>
+                        </div>
+                        <div class="count-item" id="charCount">
+                            <span>Characters:</span>
+                            <strong>0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-secondary">
+                    ← Previous
+                </button>
+                <button class="btn btn-primary">
+                    Submit Answer →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Timer functionality
+        let timeLeft = 1725; // 28:45 in seconds
+        const timerEl = document.getElementById('timer');
+
+        function updateTimer() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft > 0) {
+                timeLeft--;
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+
+        // Word and character count
+        function updateWordCount() {
+            const text = document.getElementById('answerEditor').value;
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+            const chars = text.length;
+
+            const wordCountEl = document.getElementById('wordCount');
+            const charCountEl = document.getElementById('charCount');
+
+            wordCountEl.querySelector('strong').textContent = words;
+            charCountEl.querySelector('strong').textContent = chars;
+
+            // Highlight when word count is in target range
+            if (words >= 250 && words <= 400) {
+                wordCountEl.classList.add('good');
+            } else {
+                wordCountEl.classList.remove('good');
+            }
+
+            if (chars >= 1500) {
+                charCountEl.classList.add('good');
+            } else {
+                charCountEl.classList.remove('good');
+            }
+        }
+
+        // Hints functionality
+        let hintsUsed = 0;
+        const maxHints = 2;
+        const hints = [
+            {
+                level: 1,
+                title: "Structure Tip",
+                content: "Make sure to clearly label each section (Situation, Task, Action, Result) in your answer. This helps the interviewer follow your story and ensures you cover all key points."
+            },
+            {
+                level: 2,
+                title: "Content Focus",
+                content: "Spend most of your time on the 'Action' section - that's where you demonstrate your technical skills and problem-solving approach. Be specific about the technologies you used and the decisions you made."
+            }
+        ];
+
+        function requestHint() {
+            if (hintsUsed >= maxHints) return;
+
+            const hintBtn = document.getElementById('getHintBtn');
+            const hintsList = document.getElementById('hintsList');
+            const hintCountDisplay = document.getElementById('hintCountDisplay');
+
+            // Add loading state
+            hintBtn.disabled = true;
+            hintBtn.innerHTML = '<span>⏳</span><span>Loading hint...</span>';
+
+            // Simulate API call
+            setTimeout(() => {
+                // Add new hint
+                const hint = hints[hintsUsed];
+                const hintCard = document.createElement('div');
+                hintCard.className = `hint-card level-${hint.level}`;
+                hintCard.innerHTML = `
+                    <div class="hint-card-header">
+                        <span class="hint-level-badge">Level ${hint.level}: ${hint.title}</span>
+                    </div>
+                    <div class="hint-content">${hint.content}</div>
+                `;
+                hintsList.appendChild(hintCard);
+                hintsList.style.display = 'flex';
+
+                hintsUsed++;
+                hintCountDisplay.textContent = `${hintsUsed}/${maxHints} used`;
+
+                // Update button state
+                if (hintsUsed >= maxHints) {
+                    hintBtn.innerHTML = '<span>✓</span><span>All Hints Used</span>';
+                    hintBtn.disabled = true;
+
+                    // Add encouragement message
+                    const encouragement = document.createElement('div');
+                    encouragement.className = 'hint-encouragement';
+                    encouragement.innerHTML = '🌟 You\'ve got this! Use the STAR framework to structure your response.';
+                    hintsList.appendChild(encouragement);
+                } else {
+                    hintBtn.innerHTML = '<span>💡</span><span>Get Next Hint</span>';
+                    hintBtn.disabled = false;
+                }
+
+                // Scroll hints into view
+                hintCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            }, 800);
+        }
+    </script>
+</body>
+</html>

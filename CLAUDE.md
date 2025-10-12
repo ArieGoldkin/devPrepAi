@@ -1,22 +1,27 @@
 ---
 name: DevPrep AI
 description: AI-Powered Technical Interview Preparation Platform
-version: 1.0.0
+version: 2.0.0
 ---
 
 # 🎯 DevPrep AI - Interview Preparation Platform
 
 **Project**: AI-powered platform for developer interview preparation
-**Stack**: Next.js 15, TypeScript, Tailwind CSS, Claude AI
+**Stack**: Next.js 15, TypeScript, Tailwind CSS, Claude AI, Zustand, React Query
 **Mode**: ⚡ Squad (Parallel)
+**Status**: ✅ Phase 4 Complete - MVP Done (Oct 2025)
+**Documentation**: All core docs updated to v2.0.0
 
 ## 🎓 Project Overview
 
 DevPrep AI helps developers prepare for technical interviews with:
 - **AI-Generated Questions**: Personalized based on role & experience
-- **Real-time Evaluation**: Claude AI provides instant feedback
-- **Practice & Assessment**: Multiple modes for different learning styles
-- **Progress Tracking**: Monitor improvement over time
+- **Real-time Evaluation**: Claude AI provides instant feedback with code execution
+- **Practice Wizard**: 4-step guided flow (🔄 Refactoring to glassmorphism design - see `Docs/design-transition/wizard-refactor.md`)
+- **Multiple Practice Modes**: Quick Practice, Assessment Mode, Mock Interview
+- **Progress Tracking**: Comprehensive analytics and performance metrics
+- **Responsive Design**: Mobile-first approach with adaptive layouts
+- **State Management**: Zustand for global state, React Query for server state
 
 ## 📋 Dynamic Instruction Loading
 
@@ -33,6 +38,7 @@ This project uses a modular instruction system to optimize token usage.
 | `.claude/instructions/context.md` | Context system | Session continuity, handoffs |
 | `.claude/instructions/workflows.md` | Workflow patterns | Multi-step projects |
 | `.claude/instructions/cli-integration.md` | CLI auto-detection | Claude Code CLI interactions |
+| `.claude/instructions/superdesign.md` | UI/UX design workflow | UI design, mockups, HTML prototypes |
 
 ## 🎯 Quick Start
 
@@ -41,16 +47,39 @@ This project uses a modular instruction system to optimize token usage.
 3. **Complex projects**: Read `.claude/instructions/orchestration.md` for routing
 4. **Multi-session**: Read `.claude/instructions/context.md` for continuity
 5. **CLI usage**: Read `.claude/instructions/cli-integration.md` for auto-detection
+6. **UI/UX design**: Read `.claude/instructions/superdesign.md` for design workflow
 
 ## 📚 Project Documentation
 
-Essential project docs in `/Docs`:
-- `PRD.md` - Product requirements & features
-- `technical-architecture.md` - System design & architecture
-- `ux-ui-improvements.md` - UX/UI enhancement specifications
-- `design-system.md` - Component library & styling guide
-- `api-design.md` - Claude AI integration specs
-- `code-standards.md` - Development guidelines
+### Core Documentation (`/Docs`) - ✅ Updated Oct 2025
+- `PRD.md` - Product requirements & features (v2.0.0)
+- `technical-architecture.md` - System design & 6-folder architecture (v2.0.0)
+- `design-system.md` - Component library & styling guide (v2.0.0)
+- `api-design.md` - Claude AI integration & API endpoints (v2.0.0)
+- `code-standards.md` - ESLint rules & development guidelines (v2.0.0)
+- `user-flows.md` - User journey maps & wizard flow (v2.0.0)
+- `future-enhancements.md` - Completed features & roadmap (v2.0.0)
+- `README.md` - Documentation overview
+
+### Design Transitions (`/Docs/design-transition/`) - 🔄 Active
+- `wizard-refactor.md` - Practice Wizard 5→4 step glassmorphism refactor (30 hrs, 13 tasks)
+  - **Status**: Planning complete, ready for Phase 1 implementation
+  - **Notion**: All tasks tracked with dependencies and agent assignments
+
+### Task Tracking (Notion) - 🔗 Connected
+- **Main Hub**: [DevPrepAI Workspace](https://www.notion.so/DevPrepAI-2874489affb980fab76afc9789d813bd)
+  - 🎨 Home Page Glassmorphism - Implementation Tracker
+  - 🧙‍♂️ Practice Wizard Glassmorphism Refactor (13 tasks, 6 phases, 30 hrs)
+  - 📝 Phase 1: Immediate Evaluation - Task Tracker
+
+**All docs synchronized to v2.0.0 reflecting Phase 4 completion**
+
+### Design Prototypes (`.superdesign/design_iterations/`)
+- **Location**: All UI/UX design prototypes and iterations
+- **Naming**: `{design_name}_{version}.html` (e.g., `landing_1.html`, `landing_1_1.html`)
+- **Workflow**: Create → Review → Iterate → Finalize → Implement
+- **Files**: HTML prototypes, CSS themes, design assets
+- **Purpose**: Sandbox for design exploration before production implementation
 
 ## 🔍 Auto-Detection
 
@@ -69,6 +98,75 @@ For semantic routing beyond keywords, load `.claude/instructions/orchestration.m
 - **ux-researcher**
 - **whimsy-injector**
 
+
+## 📁 Architecture & Organization
+
+### Clean 6-Folder Structure (Final Architecture)
+
+The project uses a **simplified domain-driven architecture** with just 6 focused directories:
+
+```
+frontend/src/
+├── app/              # Next.js App Router (routes only)
+│   ├── api/         # API routes
+│   └── (pages)/     # Page components
+│
+├── modules/         # Feature-based business logic
+│   ├── assessment/  # Assessment module
+│   ├── practice/    # Practice module
+│   ├── results/     # Results module
+│   ├── profile/     # Profile module
+│   ├── questions/   # Questions module
+│   └── home/       # Home page module
+│
+├── shared/          # Cross-cutting concerns
+│   ├── ui/         # Design system components
+│   ├── components/ # Shared layouts
+│   ├── hooks/      # Reusable React hooks
+│   ├── utils/      # Utility functions
+│   ├── constants/  # App constants
+│   └── mocks/      # Sample data
+│
+├── lib/            # External integrations
+│   ├── claude/     # Claude AI service
+│   └── query/      # React Query setup
+│
+├── store/          # Global state (Zustand) - Root level!
+│   ├── slices/     # State slices (practice, user, results, streak)
+│   ├── hooks.ts    # Typed selectors
+│   └── index.ts    # Main export
+│
+├── styles/         # Design system foundation
+│   ├── globals.css       # Global CSS
+│   ├── glassmorphism.css # Glassmorphism utilities (284 lines)
+│   ├── tokens.ts         # Design tokens
+│   └── variants.ts       # Component variants
+│
+└── types/          # TypeScript definitions
+    └── ai/         # AI-related types only
+```
+
+### Import Patterns (Clean & Intuitive):
+```typescript
+import { Button } from "@shared/ui/button"
+import { useAppStore } from "@store"
+import { AssessmentLayout } from "@modules/assessment/components"
+import type { IQuestion } from "@/types/ai"
+```
+
+### Architectural Benefits:
+- **6 folders instead of 17** - 65% reduction in complexity
+- **Single source of truth** - No duplicate files or overlapping concerns
+- **Clean imports** - Using @modules/, @shared/, @lib/ aliases
+- **Domain-driven** - Features organized by business logic
+- **Zero redundancy** - Each folder has one clear purpose
+
+### Module Structure:
+Each module is self-contained with:
+- `components/` - Module-specific components
+- `hooks/` - Module-specific hooks
+- `utils/` - Module utilities
+- `types.ts` - Module types
 
 ## 🧠 Context Awareness
 

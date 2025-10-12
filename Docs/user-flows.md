@@ -1,7 +1,8 @@
 # User Flows & Journey Maps
 ## DevPrep AI - User Experience Design
 
-### Version 1.0.0 | September 2025
+### Version 2.0.0 | October 2025
+**Status**: ✅ MVP Complete - Phase 4 Done
 
 ---
 
@@ -48,9 +49,143 @@ flowchart LR
 
 ---
 
-## 3. Detailed User Flows
+## 3. Practice Wizard Flow (Implemented - Phase 4)
 
-### 3.1 Onboarding Flow
+### 3.1 5-Step Practice Wizard
+
+The core practice experience uses a guided 5-step wizard that walks users through the entire practice session.
+
+```mermaid
+flowchart LR
+    A[Home Page] --> B[Click Start Practice]
+    B --> C[Step 1: Focus]
+    C --> D[Step 2: Configure]
+    D --> E[Step 3: Practice]
+    E --> F[Step 4: Review]
+    F --> G[Step 5: Summary]
+    G --> H{Next Action}
+    H -->|Practice Again| C
+    H -->|View Results| I[Results Page]
+    H -->|Home| A
+```
+
+#### Step 1: Focus
+```
+┌─────────────────────────────────┐
+│   What would you like to        │
+│   focus on today?               │
+│                                  │
+│   ☐ React Hooks                 │
+│   ☐ Performance                 │
+│   ☐ Testing                     │
+│   ☐ TypeScript                  │
+│   ☐ State Management            │
+│   ☐ Custom...                   │
+│                                  │
+│   [Continue →]                  │
+└─────────────────────────────────┘
+```
+**Interactions**:
+- Multi-select checkboxes
+- Minimum 1 focus area required
+- Can add custom focus areas
+- Validates selection before proceeding
+
+#### Step 2: Configure
+```
+┌─────────────────────────────────┐
+│   Configure Your Practice       │
+│                                  │
+│   Difficulty: ●●●○○ (3)        │
+│   [Slider: 1-5]                 │
+│                                  │
+│   Number of Questions: 5        │
+│   [Dropdown: 3, 5, 10, 15]     │
+│                                  │
+│   Technologies:                 │
+│   ☑ React  ☑ TypeScript        │
+│   ☐ Node.js  ☐ Next.js         │
+│                                  │
+│   [← Back] [Generate Questions →]│
+└─────────────────────────────────┘
+```
+**Interactions**:
+- Difficulty slider (1-5)
+- Question count dropdown
+- Technology multi-select
+- "Generate Questions" triggers Claude API call
+- Loading state with progress indicator
+
+#### Step 3: Practice
+```
+┌─────────────────────────────────┐
+│   Question 2 of 5               │
+│   ━━━━━━━━●●●●●━━              │
+│                                  │
+│   [Question Display]            │
+│   "Implement a debounced..."   │
+│                                  │
+│   [Code Editor with Syntax      │
+│    Highlighting]                │
+│   > function debounce...        │
+│                                  │
+│   [← Previous] [Skip] [Next →] │
+└─────────────────────────────────┘
+```
+**Interactions**:
+- CodeMirror editor for coding questions
+- Text area for conceptual questions
+- Navigation: Previous, Skip, Next
+- Auto-save answers to Zustand store
+- Progress indicator
+- Can skip questions (marked for review)
+
+#### Step 4: Review
+```
+┌─────────────────────────────────┐
+│   Review Your Answers           │
+│                                  │
+│   Question 1: ✓ Answered       │
+│   Question 2: ✓ Answered       │
+│   Question 3: ⚠ Skipped        │
+│   Question 4: ✓ Answered       │
+│   Question 5: ○ Not Answered   │
+│                                  │
+│   [Edit Answers] [Submit All →]│
+└─────────────────────────────────┘
+```
+**Interactions**:
+- Shows completion status for each question
+- Can click to edit specific answers
+- "Submit All" triggers batch evaluation
+- Confirm dialog before submission
+- Loading state during AI evaluation
+
+#### Step 5: Summary
+```
+┌─────────────────────────────────┐
+│   Practice Session Complete!    │
+│                                  │
+│   📊 Overall Score: Good        │
+│   ✓ 4/5 Questions Completed    │
+│   ⏱ Time: 23 minutes           │
+│                                  │
+│   [Detailed Results]            │
+│   [Practice Again] [Home]       │
+└─────────────────────────────────┘
+```
+**Interactions**:
+- Summary statistics
+- Option to view detailed feedback
+- Start new practice session
+- Return to home page
+- Save results to localStorage
+
+---
+
+## 4. Detailed User Flows
+
+### 4.1 Onboarding Flow (Legacy - Pre-Phase 4)
 
 #### Entry Point
 - **URL**: `/` or `/start`
@@ -548,6 +683,6 @@ interface FlowState {
 
 ---
 
-*Last Updated: September 17, 2025*
-*Version: 1.0.0*
-*Status: Design Complete*
+*Last Updated: October 8, 2025*
+*Version: 2.0.0*
+*Status: MVP Complete - Phase 4 Implementation Done*

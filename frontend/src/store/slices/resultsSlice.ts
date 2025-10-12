@@ -1,28 +1,22 @@
 import type { StateCreator } from "zustand";
 
 import type { IAssessmentResults } from "@/types/ai";
+import type { IResultsState, IResultsActions } from "@/types/store";
 
 import { RESULTS_LIMIT } from "../constants";
 
-export interface IResultsState {
-  assessmentResults: IAssessmentResults[];
-}
-
-export interface IResultsActions {
-  addResult: (result: IAssessmentResults) => void;
-  getRecentResults: (limit?: number) => IAssessmentResults[];
-}
+type ResultsSlice = IResultsState & IResultsActions;
 
 export const createResultsSlice: StateCreator<
-  IResultsState & IResultsActions,
+  ResultsSlice,
   [],
   [],
-  IResultsState & IResultsActions
+  ResultsSlice
 > = (set, get) => ({
   assessmentResults: [],
 
   addResult: (result: IAssessmentResults): void =>
-    set((state) => ({
+    set((state: ResultsSlice) => ({
       assessmentResults: [...state.assessmentResults, result],
     })),
 
@@ -30,7 +24,7 @@ export const createResultsSlice: StateCreator<
     const { assessmentResults } = get();
     return assessmentResults
       .sort(
-        (a, b) =>
+        (a: IAssessmentResults, b: IAssessmentResults) =>
           new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime(),
       )
       .slice(0, limit);

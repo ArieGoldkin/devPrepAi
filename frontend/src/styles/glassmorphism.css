@@ -1,0 +1,283 @@
+/**
+ * Glassmorphism Design System
+ *
+ * Glass effects, neon glows, and animations for DevPrep AI
+ * Uses existing CSS variables from globals.css for colors
+ */
+
+/* ===== GLASS EFFECTS ===== */
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow:
+    0 8px 32px 0 rgba(31, 38, 135, 0.37),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 20px 40px 0 rgba(31, 38, 135, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.glass-header {
+  background: rgba(30, 41, 89, 0.7);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 16px 0 rgba(31, 38, 135, 0.3);
+}
+
+/* ===== NEON GLOW EFFECTS ===== */
+
+.neon-glow {
+  box-shadow:
+    0 0 20px hsl(var(--brand-primary) / 0.5),
+    0 0 40px hsl(var(--brand-primary) / 0.3),
+    0 0 60px hsl(var(--brand-primary) / 0.1);
+}
+
+.neon-glow-pink {
+  box-shadow:
+    0 0 20px hsl(var(--brand-secondary) / 0.5),
+    0 0 40px hsl(var(--brand-secondary) / 0.3);
+}
+
+.neon-glow-blue {
+  box-shadow:
+    0 0 20px hsl(var(--brand-accent) / 0.5),
+    0 0 40px hsl(var(--brand-accent) / 0.3);
+}
+
+.neon-glow-green {
+  box-shadow:
+    0 0 20px hsl(var(--brand-success) / 0.5),
+    0 0 40px hsl(var(--brand-success) / 0.3);
+}
+
+.neon-glow-orange {
+  box-shadow:
+    0 0 20px hsl(var(--brand-warning) / 0.5),
+    0 0 40px hsl(var(--brand-warning) / 0.3);
+}
+
+.icon-glow {
+  filter: drop-shadow(0 0 8px hsl(var(--brand-primary) / 0.6));
+}
+
+/* ===== TEXT EFFECTS ===== */
+
+.text-glow {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.text-glow-strong {
+  text-shadow:
+    0 0 20px hsl(var(--brand-primary) / 0.6),
+    0 0 40px hsl(var(--brand-primary) / 0.4);
+}
+
+.gradient-text {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--brand-primary)) 0%,
+    hsl(var(--brand-secondary)) 25%,
+    hsl(var(--brand-accent)) 50%,
+    hsl(var(--brand-primary)) 75%,
+    hsl(var(--brand-secondary)) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientFlow 8s linear infinite;
+}
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* ===== BUTTON ENHANCEMENTS ===== */
+
+.btn-glass {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 200ms ease-out;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 500ms ease-out;
+}
+
+.btn-glass:hover::before {
+  left: 100%;
+}
+
+.btn-glass:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 25px hsl(var(--brand-primary) / 0.4);
+}
+
+.btn-glass:active {
+  transform: scale(0.98);
+}
+
+.btn-primary-glass {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--brand-primary) / 0.8) 0%,
+    hsl(var(--brand-secondary) / 0.8) 100%
+  );
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px hsl(var(--brand-primary) / 0.5);
+}
+
+.btn-primary-glass:hover {
+  background: linear-gradient(
+    135deg,
+    hsl(var(--brand-primary)) 0%,
+    hsl(var(--brand-secondary)) 100%
+  );
+  box-shadow: 0 12px 35px hsl(var(--brand-primary) / 0.7);
+}
+
+/* ===== TECH LOGO STYLES ===== */
+
+.tech-logo {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 300ms ease-out;
+}
+
+.tech-logo:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px) scale(1.1);
+  box-shadow: 0 10px 30px hsl(var(--brand-primary) / 0.4);
+}
+
+/* ===== ANIMATIONS ===== */
+
+.fade-in {
+  animation: fadeInGlass 800ms ease-out forwards;
+  opacity: 0;
+}
+
+.fade-in-delay-1 { animation-delay: 200ms; }
+.fade-in-delay-2 { animation-delay: 400ms; }
+.fade-in-delay-3 { animation-delay: 600ms; }
+.fade-in-delay-4 { animation-delay: 800ms; }
+
+@keyframes fadeInGlass {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.float-animation {
+  animation: float 4s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.pulse-glow {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px hsl(var(--brand-success) / 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px hsl(var(--brand-success) / 0.8);
+  }
+}
+
+/* ===== MOBILE OPTIMIZATIONS ===== */
+
+@media (max-width: 768px) {
+  .glass-card {
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .glass-header {
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+  }
+
+  .fade-in {
+    animation-duration: 400ms;
+  }
+}
+
+/* ===== PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Reduce blur on lower-end devices */
+@media (prefers-reduced-motion: reduce) {
+  .glass-card,
+  .glass-header,
+  .btn-glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: hsl(var(--card) / 0.95);
+  }
+
+  .fade-in,
+  .float-animation,
+  .pulse-glow {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Browser compatibility fallback */
+@supports not (backdrop-filter: blur(20px)) {
+  .glass-card {
+    background: hsl(var(--card) / 0.95);
+  }
+
+  .glass-header {
+    background: hsl(var(--background) / 0.95);
+  }
+
+  .btn-glass {
+    background: rgba(255, 255, 255, 0.15);
+  }
+}

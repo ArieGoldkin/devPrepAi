@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FeedbackModal - DevPrep AI (Glassmorphism)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="glassmorphism_dark_theme.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-sans), 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            color: var(--foreground, #ffffff);
+            line-height: 1.6;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+            animation: gradientShift 15s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.9;
+                transform: scale(1.05);
+            }
+        }
+
+        /* Modal overlay */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 50;
+            animation: fadeIn 300ms ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Modal container */
+        .modal-container {
+            position: fixed;
+            inset: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        /* Glass modal card */
+        .glass-modal {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow:
+                0 20px 60px 0 rgba(31, 38, 135, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUpFade 300ms ease-out;
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Score badge */
+        .score-badge {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 2px solid;
+            position: relative;
+            margin: 0 auto 2rem;
+        }
+
+        .score-badge::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.2));
+            z-index: -1;
+        }
+
+        /* Score colors */
+        .score-excellent {
+            border-color: rgba(34, 197, 94, 0.6);
+            box-shadow:
+                0 0 30px rgba(34, 197, 94, 0.5),
+                0 0 60px rgba(34, 197, 94, 0.3),
+                inset 0 0 20px rgba(34, 197, 94, 0.1);
+        }
+
+        .score-good {
+            border-color: rgba(59, 130, 246, 0.6);
+            box-shadow:
+                0 0 30px rgba(59, 130, 246, 0.5),
+                0 0 60px rgba(59, 130, 246, 0.3),
+                inset 0 0 20px rgba(59, 130, 246, 0.1);
+        }
+
+        .score-fair {
+            border-color: rgba(234, 179, 8, 0.6);
+            box-shadow:
+                0 0 30px rgba(234, 179, 8, 0.5),
+                0 0 60px rgba(234, 179, 8, 0.3),
+                inset 0 0 20px rgba(234, 179, 8, 0.1);
+        }
+
+        .score-poor {
+            border-color: rgba(239, 68, 68, 0.6);
+            box-shadow:
+                0 0 30px rgba(239, 68, 68, 0.5),
+                0 0 60px rgba(239, 68, 68, 0.3),
+                inset 0 0 20px rgba(239, 68, 68, 0.1);
+        }
+
+        .score-number {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1;
+            animation: countUp 800ms ease-out;
+        }
+
+        @keyframes countUp {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Feedback sections */
+        .feedback-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            animation: fadeInStagger 400ms ease-out backwards;
+        }
+
+        .feedback-section:nth-child(1) { animation-delay: 0ms; }
+        .feedback-section:nth-child(2) { animation-delay: 150ms; }
+        .feedback-section:nth-child(3) { animation-delay: 300ms; }
+
+        @keyframes fadeInStagger {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .icon-strength {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(34, 197, 94, 0.1));
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .icon-improvement {
+            background: linear-gradient(135deg, rgba(234, 179, 8, 0.2), rgba(234, 179, 8, 0.1));
+            border: 1px solid rgba(234, 179, 8, 0.3);
+        }
+
+        .icon-suggestion {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.2), rgba(120, 119, 198, 0.1));
+            border: 1px solid rgba(120, 119, 198, 0.3);
+        }
+
+        /* Buttons */
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 500ms ease-out;
+        }
+
+        .btn-glass:hover::before {
+            left: 100%;
+        }
+
+        .btn-glass:hover {
+            transform: scale(1.02);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 25px rgba(120, 119, 198, 0.4);
+        }
+
+        .btn-glass:active {
+            transform: scale(0.98);
+        }
+
+        .btn-glass:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.8) 0%, rgba(255, 119, 198, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 25px rgba(120, 119, 198, 0.5);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 1) 0%, rgba(255, 119, 198, 1) 100%);
+            box-shadow: 0 12px 35px rgba(120, 119, 198, 0.7);
+        }
+
+        /* Close button */
+        .close-btn {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 200ms ease-out;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(90deg);
+        }
+
+        /* List items */
+        .feedback-list {
+            list-style: none;
+            margin-top: 0.75rem;
+        }
+
+        .feedback-list li {
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .feedback-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: bold;
+        }
+
+        /* Scrollbar styling */
+        .glass-modal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .glass-modal::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .glass-modal::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .glass-modal::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .btn-group {
+                flex-direction: column-reverse;
+                gap: 0.75rem;
+            }
+
+            .btn-glass, .btn-primary {
+                width: 100%;
+            }
+
+            .score-badge {
+                width: 100px;
+                height: 100px;
+            }
+
+            .score-number {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Demo controls -->
+    <div style="position: fixed; top: 20px; left: 20px; z-index: 100; display: flex; gap: 10px; flex-wrap: wrap; max-width: 300px;">
+        <button onclick="showModal('excellent')" class="btn-glass" style="padding: 8px 16px; font-size: 0.875rem;">
+            Excellent (92)
+        </button>
+        <button onclick="showModal('good')" class="btn-glass" style="padding: 8px 16px; font-size: 0.875rem;">
+            Good (75)
+        </button>
+        <button onclick="showModal('fair')" class="btn-glass" style="padding: 8px 16px; font-size: 0.875rem;">
+            Fair (58)
+        </button>
+        <button onclick="showModal('poor')" class="btn-glass" style="padding: 8px 16px; font-size: 0.875rem;">
+            Poor (35)
+        </button>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modalOverlay" class="modal-overlay" style="display: none;" onclick="closeModal()"></div>
+
+    <!-- Modal Container -->
+    <div id="modalContainer" class="modal-container" style="display: none;">
+        <div class="glass-modal" onclick="event.stopPropagation()">
+            <!-- Close button -->
+            <button class="close-btn" onclick="closeModal()">
+                <i data-lucide="x" class="w-5 h-5 text-white"></i>
+            </button>
+
+            <!-- Modal content -->
+            <div style="padding: 3rem 2rem 2rem;">
+                <!-- Score Badge -->
+                <div id="scoreBadge" class="score-badge score-excellent">
+                    <span id="scoreNumber" class="score-number text-white">92</span>
+                    <span class="text-xs text-white/70 font-semibold">SCORE</span>
+                </div>
+
+                <!-- Title -->
+                <h2 class="text-2xl font-bold text-white text-center mb-1">
+                    <span id="feedbackTitle">Excellent Work!</span>
+                </h2>
+                <p class="text-center text-white/60 text-sm mb-6">
+                    Here's your detailed feedback
+                </p>
+
+                <!-- Feedback Sections -->
+                <div id="feedbackSections">
+                    <!-- Strengths -->
+                    <div class="feedback-section">
+                        <div class="section-icon icon-strength">
+                            <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Strengths</h3>
+                        <ul class="feedback-list">
+                            <li>Correctly identified the optimal time complexity O(n log n)</li>
+                            <li>Clean, readable code with proper variable naming</li>
+                            <li>Handled edge cases effectively (empty arrays, single elements)</li>
+                        </ul>
+                    </div>
+
+                    <!-- Areas for Improvement -->
+                    <div class="feedback-section">
+                        <div class="section-icon icon-improvement">
+                            <i data-lucide="alert-circle" class="w-5 h-5 text-yellow-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Areas for Improvement</h3>
+                        <ul class="feedback-list">
+                            <li>Could optimize space complexity from O(n) to O(1)</li>
+                            <li>Consider in-place sorting to reduce memory usage</li>
+                        </ul>
+                    </div>
+
+                    <!-- Suggestions -->
+                    <div class="feedback-section">
+                        <div class="section-icon icon-suggestion">
+                            <i data-lucide="lightbulb" class="w-5 h-5 text-purple-400"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Next Steps</h3>
+                        <ul class="feedback-list">
+                            <li>Practice more problems involving divide-and-conquer algorithms</li>
+                            <li>Review space-time tradeoffs in sorting algorithms</li>
+                            <li>Explore advanced sorting techniques like Quick Sort and Merge Sort</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Attempt Counter -->
+                <div style="text-align: center; margin-top: 1.5rem; margin-bottom: 1.5rem;">
+                    <span class="text-sm text-white/60">
+                        Attempt <span id="attemptNumber" class="font-semibold text-white">1</span> of 3
+                    </span>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="btn-group" style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button id="reviseBtn" class="btn-glass" onclick="handleRevise()" style="flex: 1;">
+                        <i data-lucide="refresh-cw" class="w-5 h-5"></i>
+                        Revise Answer
+                        <span id="attemptsLeft" class="text-xs ml-2">(2 left)</span>
+                    </button>
+                    <button class="btn-primary" onclick="handleNext()" style="flex: 1;">
+                        Next Question
+                        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Score configurations
+        const scoreConfigs = {
+            excellent: {
+                score: 92,
+                title: 'Excellent Work!',
+                class: 'score-excellent',
+                strengths: [
+                    'Correctly identified the optimal time complexity O(n log n)',
+                    'Clean, readable code with proper variable naming',
+                    'Handled edge cases effectively (empty arrays, single elements)'
+                ],
+                improvements: [
+                    'Could optimize space complexity from O(n) to O(1)',
+                    'Consider in-place sorting to reduce memory usage'
+                ],
+                suggestions: [
+                    'Practice more problems involving divide-and-conquer algorithms',
+                    'Review space-time tradeoffs in sorting algorithms',
+                    'Explore advanced sorting techniques like Quick Sort and Merge Sort'
+                ]
+            },
+            good: {
+                score: 75,
+                title: 'Good Job!',
+                class: 'score-good',
+                strengths: [
+                    'Correct understanding of the problem requirements',
+                    'Solution works for most test cases',
+                    'Good attempt at handling edge cases'
+                ],
+                improvements: [
+                    'Time complexity could be improved from O(n²) to O(n log n)',
+                    'Missing validation for null/undefined inputs',
+                    'Code readability could be enhanced with better variable names'
+                ],
+                suggestions: [
+                    'Study efficient sorting algorithms',
+                    'Practice input validation patterns',
+                    'Review clean code principles'
+                ]
+            },
+            fair: {
+                score: 58,
+                title: 'Room for Improvement',
+                class: 'score-fair',
+                strengths: [
+                    'Basic logic is correct',
+                    'Shows understanding of loops and conditionals'
+                ],
+                improvements: [
+                    'Algorithm efficiency needs significant improvement',
+                    'Several edge cases are not handled',
+                    'Code structure could be more organized',
+                    'Missing comments for complex logic'
+                ],
+                suggestions: [
+                    'Review fundamental algorithm patterns',
+                    'Practice more similar problems',
+                    'Study common edge cases in array problems',
+                    'Learn about code organization and documentation'
+                ]
+            },
+            poor: {
+                score: 35,
+                title: 'Needs Significant Work',
+                class: 'score-poor',
+                strengths: [
+                    'Attempted to solve the problem'
+                ],
+                improvements: [
+                    'Core logic has fundamental flaws',
+                    'Many test cases fail',
+                    'Does not handle edge cases',
+                    'Time complexity is far from optimal',
+                    'Code structure needs major refactoring'
+                ],
+                suggestions: [
+                    'Review the problem statement carefully',
+                    'Study basic data structure operations',
+                    'Practice with easier problems first',
+                    'Consider reviewing fundamental programming concepts',
+                    'Break down the problem into smaller steps'
+                ]
+            }
+        };
+
+        let currentAttempt = 1;
+        const maxAttempts = 3;
+
+        function showModal(type) {
+            const config = scoreConfigs[type];
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalContainer = document.getElementById('modalContainer');
+            const scoreBadge = document.getElementById('scoreBadge');
+            const scoreNumber = document.getElementById('scoreNumber');
+            const feedbackTitle = document.getElementById('feedbackTitle');
+
+            // Update score badge
+            scoreBadge.className = `score-badge ${config.class}`;
+            feedbackTitle.textContent = config.title;
+
+            // Animate score count-up
+            animateValue(scoreNumber, 0, config.score, 800);
+
+            // Update feedback sections
+            updateFeedbackSections(config);
+
+            // Update attempt counter
+            updateAttemptCounter();
+
+            // Show modal
+            modalOverlay.style.display = 'block';
+            modalContainer.style.display = 'flex';
+
+            // Re-initialize icons
+            setTimeout(() => lucide.createIcons(), 50);
+        }
+
+        function closeModal() {
+            const modalOverlay = document.getElementById('modalOverlay');
+            const modalContainer = document.getElementById('modalContainer');
+            modalOverlay.style.display = 'none';
+            modalContainer.style.display = 'none';
+        }
+
+        function animateValue(element, start, end, duration) {
+            const range = end - start;
+            const increment = range / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    current = end;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.round(current);
+            }, 16);
+        }
+
+        function updateFeedbackSections(config) {
+            const container = document.getElementById('feedbackSections');
+            container.innerHTML = `
+                <!-- Strengths -->
+                <div class="feedback-section">
+                    <div class="section-icon icon-strength">
+                        <i data-lucide="check-circle" class="w-5 h-5 text-green-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Strengths</h3>
+                    <ul class="feedback-list">
+                        ${config.strengths.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <!-- Areas for Improvement -->
+                <div class="feedback-section">
+                    <div class="section-icon icon-improvement">
+                        <i data-lucide="alert-circle" class="w-5 h-5 text-yellow-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Areas for Improvement</h3>
+                    <ul class="feedback-list">
+                        ${config.improvements.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+
+                <!-- Suggestions -->
+                <div class="feedback-section">
+                    <div class="section-icon icon-suggestion">
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-purple-400"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">Next Steps</h3>
+                    <ul class="feedback-list">
+                        ${config.suggestions.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+
+        function updateAttemptCounter() {
+            const attemptNumber = document.getElementById('attemptNumber');
+            const attemptsLeft = document.getElementById('attemptsLeft');
+            const reviseBtn = document.getElementById('reviseBtn');
+
+            attemptNumber.textContent = currentAttempt;
+            const remaining = maxAttempts - currentAttempt;
+
+            if (remaining > 0) {
+                attemptsLeft.textContent = `(${remaining} left)`;
+                reviseBtn.disabled = false;
+            } else {
+                attemptsLeft.textContent = '(No attempts left)';
+                reviseBtn.disabled = true;
+            }
+        }
+
+        function handleRevise() {
+            if (currentAttempt < maxAttempts) {
+                currentAttempt++;
+                updateAttemptCounter();
+                console.log('Revising answer... Attempt:', currentAttempt);
+                // In real implementation, this would close modal and re-enable answer input
+                closeModal();
+            }
+        }
+
+        function handleNext() {
+            console.log('Moving to next question...');
+            currentAttempt = 1; // Reset for next question
+            closeModal();
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            const modalContainer = document.getElementById('modalContainer');
+            if (modalContainer.style.display === 'flex') {
+                if (e.key === 'Escape') {
+                    closeModal();
+                } else if (e.key === 'Enter' && e.ctrlKey) {
+                    handleNext();
+                } else if (e.key === 'r' && e.ctrlKey && currentAttempt < maxAttempts) {
+                    e.preventDefault();
+                    handleRevise();
+                }
+            }
+        });
+
+        // Show initial modal
+        setTimeout(() => showModal('excellent'), 500);
+    </script>
+</body>
+</html>

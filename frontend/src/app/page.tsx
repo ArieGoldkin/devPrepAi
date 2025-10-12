@@ -1,18 +1,20 @@
 import type { ReactElement } from "react";
 
-import { CTASection } from "@components/home/CTASection";
-import { FeaturesSection } from "@components/home/FeaturesSection";
-import { HeroSection } from "@components/home/HeroSection";
-import { TechStackSection } from "@components/home/TechStackSection";
-import { AppLayout } from "@components/layout/AppLayout";
+import { CTASection } from "@modules/home/components/CTASection";
+import { FeaturesSection } from "@modules/home/components/FeaturesSection";
+import { HeroSection } from "@modules/home/components/HeroSection";
+import { HowItWorksSection } from "@modules/home/components/HowItWorksSection";
+import { TechStackSection } from "@modules/home/components/TechStackSection";
+import { AppLayout } from "@shared/components/layout/AppLayout";
 
 export default function Home(): ReactElement {
   return (
     <AppLayout>
       <HeroSection />
       <FeaturesSection />
-      <CTASection />
+      <HowItWorksSection />
       <TechStackSection />
+      <CTASection />
     </AppLayout>
   );
 }

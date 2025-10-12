@@ -1,94 +1,58 @@
 /**
  * API Route: Generate Questions
- * Server-side Claude API integration for question generation
+ * Simplified orchestration using extracted services
  */
 
-import Anthropic from '@anthropic-ai/sdk';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import type { NextResponse , NextRequest } from "next/server";
 
 import type {
   IGenerateQuestionsRequest,
   IGenerateQuestionsResponse,
-  IAPIResponse
-} from '@/types/ai';
-import { buildQuestionsPrompt } from '@services/ai-prompts';
+} from "@/types/ai";
+import { generateQuestions } from "@lib/claude/services/question-service";
+import { HTTP_BAD_REQUEST, HTTP_SERVER_ERROR } from "@shared/constants/http";
+import {
+  createErrorResponse,
+  createSuccessResponse,
+  validateRequestBody,
+} from "@shared/utils/api-errors";
 
-const GENERATION_MAX_TOKENS = 2000;
-const DEFAULT_TEMPERATURE = 0.7;
-
-// Initialize Claude client server-side
-const getClaudeClient = (): Anthropic => {
-  const apiKey = process.env['ANTHROPIC_API_KEY'];
-  if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY environment variable is required');
-  }
-  return new Anthropic({ apiKey });
-};
-
+/**
+ * POST /api/ai/generate-questions
+ * Generate interview questions based on user profile
+ */
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Parse request body
     const body: IGenerateQuestionsRequest = await request.json();
 
     // Validate required fields
-    if (body.profile === undefined || body.count === undefined || body.difficulty === undefined || body.type === undefined) {
-      return NextResponse.json(
-        {
-          data: { questions: [], totalGenerated: 0 },
-          success: false,
-          error: 'Missing required fields: profile, count, difficulty, or type'
-        } as IAPIResponse<IGenerateQuestionsResponse>,
-        { status: 400 }
+    const validation = validateRequestBody<IGenerateQuestionsRequest>(body, [
+      "profile",
+      "count",
+      "difficulty",
+      "type",
+    ]);
+
+    if (!validation.valid) {
+      return createErrorResponse(
+        new Error(validation.error),
+        HTTP_BAD_REQUEST,
+        { questions: [], totalGenerated: 0 }
       );
     }
 
-    // Initialize Claude client
-    const client = getClaudeClient();
+    // Generate questions using the service
+    const response = await generateQuestions(body);
 
-    // Build prompt
-    const prompt = buildQuestionsPrompt(body);
-
-    // Call Claude API
-    const response = await client.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
-      max_tokens: GENERATION_MAX_TOKENS,
-      temperature: DEFAULT_TEMPERATURE,
-      messages: [{ role: 'user', content: prompt }]
-    });
-
-    // Extract text content
-    const textContent = response.content[0]?.type === 'text'
-      ? response.content[0].text
-      : '';
-
-    if (!textContent) {
-      throw new Error('No text content received from Claude API');
-    }
-
-    // Parse Claude response
-    const parsedResponse = JSON.parse(textContent);
-
-    // Return successful response
-    return NextResponse.json({
-      data: {
-        questions: parsedResponse.questions,
-        totalGenerated: parsedResponse.questions.length
-      },
-      success: true
-    } as IAPIResponse<IGenerateQuestionsResponse>);
-
+    // Return success response
+    return createSuccessResponse<IGenerateQuestionsResponse>(response);
   } catch (error) {
-    console.error('Generate questions API error:', error);
-
     // Return error response
-    return NextResponse.json(
-      {
-        data: { questions: [], totalGenerated: 0 },
-        success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
-      } as IAPIResponse<IGenerateQuestionsResponse>,
-      { status: 500 }
+    return createErrorResponse<IGenerateQuestionsResponse>(
+      error,
+      HTTP_SERVER_ERROR,
+      { questions: [], totalGenerated: 0 }
     );
   }
 }

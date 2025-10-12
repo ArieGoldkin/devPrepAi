@@ -40,19 +40,17 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
 
-    // Paths
-    "baseUrl": ".",
+    // Paths (baseUrl deprecated in TS 6.0+, using rootDir approach)
     "paths": {
       "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@services/*": ["./src/services/*"],
+      "@app/*": ["./src/app/*"],
+      "@modules/*": ["./src/modules/*"],
+      "@shared/*": ["./src/shared/*"],
       "@lib/*": ["./src/lib/*"],
-      "@types/*": ["./src/types/*"],
+      "@store": ["./src/store"],
       "@store/*": ["./src/store/*"],
-      "@data/*": ["./src/data/*"],
-      "@constants/*": ["./src/constants/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@styles/*": ["./src/styles/*"],
+      "@types/*": ["./src/types/*"]
     },
 
     // Next.js

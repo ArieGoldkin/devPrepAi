@@ -3,25 +3,24 @@
  * Server-side Claude API integration for concept explanations
  */
 
-import Anthropic from '@anthropic-ai/sdk';
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import Anthropic from "@anthropic-ai/sdk";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 import type {
   IExplainConceptRequest,
   IExplainConceptResponse,
-  IAPIResponse
-} from '@/types/ai';
-import { buildConceptPrompt } from '@services/ai-prompts';
-
-const DEFAULT_MAX_TOKENS = 1000;
-const DEFAULT_TEMPERATURE = 0.7;
+  IAPIResponse,
+} from "@/types/ai";
+import { buildConceptPrompt } from "@lib/claude/services/ai-prompts";
+import { DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE } from "@shared/constants/ai";
+import { HTTP_BAD_REQUEST, HTTP_SERVER_ERROR } from "@shared/constants/http";
 
 // Initialize Claude client server-side
 const getClaudeClient = (): Anthropic => {
-  const apiKey = process.env['ANTHROPIC_API_KEY'];
+  const apiKey = process.env["ANTHROPIC_API_KEY"];
   if (!apiKey) {
-    throw new Error('ANTHROPIC_API_KEY environment variable is required');
+    throw new Error("ANTHROPIC_API_KEY environment variable is required");
   }
   return new Anthropic({ apiKey });
 };
@@ -39,18 +38,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         {
           data: {
             explanation: {
-              concept: body?.concept || 'Unknown concept',
-              explanation: 'Unable to generate explanation - missing required fields',
+              concept: body?.concept || "Unknown concept",
+              explanation:
+                "Unable to generate explanation - missing required fields",
               examples: [],
               keyPoints: [],
-              relatedConcepts: []
+              relatedConcepts: [],
             },
-            success: false
+            success: false,
           },
           success: false,
-          error: 'Missing required fields: concept or userLevel'
+          error: "Missing required fields: concept or userLevel",
         } as IAPIResponse<IExplainConceptResponse>,
-        { status: 400 }
+        { status: HTTP_BAD_REQUEST },
       );
     }
 
@@ -62,19 +62,20 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Call Claude API
     const response = await client.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+      model:
+        process.env["NEXT_PUBLIC_ANTHROPIC_MODEL"] ||
+        "claude-3-5-sonnet-latest",
       max_tokens: DEFAULT_MAX_TOKENS,
       temperature: DEFAULT_TEMPERATURE,
-      messages: [{ role: 'user', content: prompt }]
+      messages: [{ role: "user", content: prompt }],
     });
 
     // Extract text content
-    const textContent = response.content[0]?.type === 'text'
-      ? response.content[0].text
-      : '';
+    const textContent =
+      response.content[0]?.type === "text" ? response.content[0].text : "";
 
     if (!textContent) {
-      throw new Error('No text content received from Claude API');
+      throw new Error("No text content received from Claude API");
     }
 
     // Parse Claude response
@@ -84,31 +85,31 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({
       data: {
         explanation: parsedResponse.explanation,
-        success: true
+        success: true,
       },
-      success: true
+      success: true,
     } as IAPIResponse<IExplainConceptResponse>);
-
   } catch (error) {
-    console.error('Explain concept API error:', error);
+    console.error("Explain concept API error:", error);
 
     // Return error response
     return NextResponse.json(
       {
         data: {
           explanation: {
-            concept: body?.concept ?? 'Unknown concept',
-            explanation: 'Unable to generate explanation due to server error',
+            concept: body?.concept ?? "Unknown concept",
+            explanation: "Unable to generate explanation due to server error",
             examples: [],
             keyPoints: [],
-            relatedConcepts: []
+            relatedConcepts: [],
           },
-          success: false
+          success: false,
         },
         success: false,
-        error: error instanceof Error ? error.message : 'Unknown error occurred'
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
       } as IAPIResponse<IExplainConceptResponse>,
-      { status: 500 }
+      { status: HTTP_SERVER_ERROR },
     );
   }
 }

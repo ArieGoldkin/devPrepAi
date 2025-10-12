@@ -1,7 +1,8 @@
 # Code Standards & Configuration Guide
 ## DevPrep AI - ESLint, TypeScript & Development Standards
 
-### Version 1.0.0 | September 2025
+### Version 2.0.0 | October 2025
+**Status**: ✅ Enforced via ESLint & TypeScript
 
 ---
 
@@ -269,16 +270,16 @@ This document defines strict code quality standards to maintain a clean, modular
     "isolatedModules": true,
     "forceConsistentCasingInFileNames": true,
 
-    // Paths
+    // Paths - 6-Folder Architecture
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@components/*": ["./src/components/*"],
-      "@hooks/*": ["./src/hooks/*"],
-      "@services/*": ["./src/services/*"],
+      "@shared/*": ["./src/shared/*"],
+      "@modules/*": ["./src/modules/*"],
       "@lib/*": ["./src/lib/*"],
-      "@types/*": ["./src/types/*"],
-      "@stores/*": ["./src/stores/*"]
+      "@store": ["./src/store"],
+      "@store/*": ["./src/store/*"],
+      "@styles/*": ["./src/styles/*"]
     },
 
     // Next.js
@@ -638,19 +639,21 @@ module.exports = {
       lines: 85,
       statements: 85,
     },
-    './src/services/': {
+    './src/lib/': {
       branches: 90,
       functions: 90,
       lines: 90,
       statements: 90,
     },
-    './src/hooks/': {
+    './src/shared/hooks/': {
       branches: 85,
       functions: 85,
       lines: 85,
       statements: 85,
     },
   },
+
+  // Note: Testing infrastructure not yet implemented (planned for Phase 2)
 };
 ```
 
@@ -946,6 +949,33 @@ When complexity exceeds 15:
 
 ---
 
-*Last Updated: September 17, 2025*
-*Version: 1.0.0*
-*Status: Enforcement Ready*
+## 7. Architecture Notes
+
+**6-Folder Structure** (Implemented Phase 4):
+- `app/` - Next.js App Router pages and API routes
+- `modules/` - Domain-specific features (practice, assessment, results, profile, questions, home)
+- `shared/` - Cross-cutting concerns (ui, components, hooks, utils, constants, mocks)
+- `lib/` - External integrations (claude, query)
+- `store/` - Global state management with Zustand
+- `styles/` - Design system foundation
+
+**Path Aliases**:
+```typescript
+import { Button } from "@shared/ui/button"
+import { useAppStore } from "@store"
+import { PracticeWizard } from "@modules/practice/components"
+import { anthropic } from "@lib/claude/client"
+```
+
+**Code Quality Enforcement**:
+- ✅ ESLint with complexity rules (<15) and line limits (<180)
+- ✅ TypeScript strict mode throughout
+- ✅ Prettier for consistent formatting
+- ✅ Husky pre-commit hooks
+- 📋 Testing infrastructure (Vitest + Playwright) planned for Phase 2
+
+---
+
+*Last Updated: October 8, 2025*
+*Version: 2.0.0*
+*Status: Actively Enforced*

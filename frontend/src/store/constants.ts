@@ -1,28 +1,25 @@
 /**
- * Time constants to avoid magic numbers throughout the application
+ * Store Constants
+ * Centralized constants for state management
  */
-export const TIME_CONSTANTS = {
-  SECONDS_PER_MINUTE: 60,
-  MS_PER_SECOND: 1000,
-  HOURS_PER_DAY: 24,
-  MINUTES_PER_HOUR: 60
-} as const
 
-/**
- * Default assessment settings
- */
+// Results
+export const RESULTS_LIMIT = 10;
+
+// Practice Session
+export const DEFAULT_QUESTION_TIME = 30; // minutes
+export const MIN_QUESTION_TIME = 5; // minutes
+export const MAX_QUESTION_TIME = 60; // minutes
+
+// Assessment Defaults
 export const ASSESSMENT_DEFAULTS = {
-  duration: 30,
-  questionCount: 5,
-  autoSubmit: true
-} as const
+  duration: 30, // Default question time in minutes
+  difficulty: 5, // Default difficulty (1-10)
+};
 
-export const RESULTS_LIMIT = 10
+// Progress
+export const PROGRESS_UPDATE_INTERVAL = 1000; // ms
 
-/**
- * UI thresholds and percentages
- */
-export const UI_THRESHOLDS = {
-  TIME_WARNING_PERCENT: 25,
-  TIME_CRITICAL_PERCENT: 10
-} as const
+// Storage
+export const STORE_NAME = "devprep-app-store";
+export const STORE_VERSION = 1;

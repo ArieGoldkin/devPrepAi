@@ -4,18 +4,23 @@ import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 
 import type { InterviewType } from "@/types/ai";
-import { AppLayout } from "@components/layout/AppLayout";
-import { ErrorMessage } from "@components/practice/ErrorMessage";
-import { TOTAL_STEPS, PROGRESS_MULTIPLIER } from "@components/practice/wizard";
-import type { WizardStep, PracticeSettings } from "@components/practice/wizard";
-import { PracticeWizard } from "@components/practice/wizard/PracticeWizard";
-import { Progress } from "@components/ui/progress";
-import { generatePracticeQuestions } from "@services/ai";
-import { useAppStore } from "@store/useAppStore";
+import { generatePracticeQuestions } from "@lib/claude/services/ai";
+import {
+  PracticeWizard,
+  TOTAL_STEPS,
+  PROGRESS_MULTIPLIER,
+  type WizardStep,
+  type PracticeSettings,
+} from "@modules/practice/components/PracticeWizard";
+import { AppLayout } from "@shared/components/layout/AppLayout";
+import { ErrorBoundary } from "@shared/ui";
+import { ErrorMessage } from "@shared/ui/ErrorMessage";
+import { Progress } from "@shared/ui/progress";
+import { useAppStore } from "@store";
 
 export default function PracticePage(): React.JSX.Element {
   const router = useRouter();
-  const { userProfile, startAssessment, recordActivity } = useAppStore();
+  const { userProfile, startSession, recordActivity } = useAppStore();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [currentStep, setCurrentStep] = useState<WizardStep>("welcome");
@@ -50,17 +55,21 @@ export default function PracticePage(): React.JSX.Element {
         throw new Error("No questions could be generated. Please try again.");
       }
 
-      startAssessment(questions, {
-        duration: practiceSettings.duration,
-        questionCount: questions.length,
-        autoSubmit: false,
-      });
+      const SECONDS_PER_MINUTE = 60;
+      const sessionSettings = {
+        mode: "practice" as const,
+        timeLimit: practiceSettings.duration * SECONDS_PER_MINUTE,
+        allowSkip: true,
+        allowHints: true,
+      };
+
+      startSession(questions, sessionSettings);
       recordActivity();
       router.push("/assessment");
     } catch (err) {
-      const message =
+      const errorMessage =
         err instanceof Error ? err.message : "Failed to generate questions";
-      setError(`Failed to generate practice questions: ${message}`);
+      setError(`Failed to generate practice questions: ${errorMessage}`);
     } finally {
       setLoading(false);
     }
@@ -102,17 +111,23 @@ export default function PracticePage(): React.JSX.Element {
         )}
 
         {/* Practice Wizard */}
-        <PracticeWizard
-          currentStep={currentStep}
-          userProfile={userProfile}
-          practiceSettings={practiceSettings}
-          selectedInterviewType={selectedInterviewType}
-          loading={loading}
-          onStepChange={setCurrentStep}
-          onSettingsChange={setPracticeSettings}
-          onInterviewTypeSelect={setSelectedInterviewType}
-          onStart={handleGenerateQuestions}
-        />
+        <ErrorBoundary
+          onError={(error, errorInfo) => {
+            console.error("Practice wizard error:", { error, errorInfo });
+          }}
+        >
+          <PracticeWizard
+            currentStep={currentStep}
+            userProfile={userProfile}
+            practiceSettings={practiceSettings}
+            selectedInterviewType={selectedInterviewType}
+            loading={loading}
+            onStepChange={setCurrentStep}
+            onSettingsChange={setPracticeSettings}
+            onInterviewTypeSelect={setSelectedInterviewType}
+            onStart={handleGenerateQuestions}
+          />
+        </ErrorBoundary>
       </div>
     </AppLayout>
   );

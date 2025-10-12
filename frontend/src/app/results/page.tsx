@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from "react";
 
 import type { IAssessmentResults } from "@/types/ai";
-import { AppLayout } from "@components/layout/AppLayout";
-import { EmptyState } from "@components/results/EmptyState";
-import { ResultCard } from "@components/results/ResultCard";
-import { Statistics } from "@components/results/Statistics";
-import { useAppStore } from "@store/useAppStore";
+import { EmptyState } from "@modules/results/components/EmptyState";
+import { ResultCard } from "@modules/results/components/ResultCard";
+import { Statistics } from "@modules/results/components/Statistics";
+import { AppLayout } from "@shared/components/layout/AppLayout";
+import { ErrorBoundary } from "@shared/ui";
+import { useAppStore } from "@store";
 
 export default function ResultsPage(): React.JSX.Element {
   const { getRecentResults } = useAppStore();
@@ -34,18 +35,33 @@ export default function ResultsPage(): React.JSX.Element {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-4">Assessment Results</h1>
-          <Statistics results={results} />
+          <ErrorBoundary
+            onError={(error, errorInfo) => {
+              console.error("Statistics component error:", {
+                error,
+                errorInfo,
+              });
+            }}
+          >
+            <Statistics results={results} />
+          </ErrorBoundary>
         </div>
 
         <div className="space-y-6">
-          {results.map((result, index) => (
-            <ResultCard
-              key={index}
-              result={result}
-              index={index}
-              totalResults={results.length}
-            />
-          ))}
+          <ErrorBoundary
+            onError={(error, errorInfo) => {
+              console.error("Results list error:", { error, errorInfo });
+            }}
+          >
+            {results.map((result, index) => (
+              <ResultCard
+                key={index}
+                result={result}
+                index={index}
+                totalResults={results.length}
+              />
+            ))}
+          </ErrorBoundary>
         </div>
       </div>
     </AppLayout>
