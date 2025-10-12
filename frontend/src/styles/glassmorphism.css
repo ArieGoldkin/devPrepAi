@@ -255,6 +255,30 @@
   }
 }
 
+/* ===== WIZARD LAYOUT UTILITIES ===== */
+
+.wizard-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.wizard-nav-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.wizard-progress-bar {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--brand-primary)),
+    hsl(var(--brand-secondary))
+  );
+  box-shadow: 0 0 20px hsl(var(--brand-primary) / 0.5);
+}
+
 /* ===== MOBILE OPTIMIZATIONS ===== */
 
 @media (max-width: 768px) {
