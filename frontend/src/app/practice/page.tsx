@@ -12,6 +12,7 @@ import {
   type WizardStep,
   type PracticeSettings,
 } from "@modules/practice/components/PracticeWizard";
+import { getStepNumber } from "@modules/practice/utils";
 import { AppLayout } from "@shared/components/layout/AppLayout";
 import { ErrorBoundary } from "@shared/ui";
 import { ErrorMessage } from "@shared/ui/ErrorMessage";
@@ -75,30 +76,15 @@ export default function PracticePage(): React.JSX.Element {
     }
   };
 
-  const getStepNumber = (): number => {
-    switch (currentStep) {
-      case "welcome":
-        return 1;
-      case "profile":
-        return 2;
-      case "focus":
-        return 3;
-      case "settings":
-        return 4;
-      case "ready":
-        return 5;
-      default:
-        return 1;
-    }
-  };
-
   return (
     <AppLayout>
       <div className="container-xl py-8">
         {/* Progress Indicator */}
         <div className="mb-8">
           <Progress
-            value={(getStepNumber() / TOTAL_STEPS) * PROGRESS_MULTIPLIER}
+            value={
+              (getStepNumber(currentStep) / TOTAL_STEPS) * PROGRESS_MULTIPLIER
+            }
             className="h-1 max-w-2xl mx-auto"
           />
         </div>

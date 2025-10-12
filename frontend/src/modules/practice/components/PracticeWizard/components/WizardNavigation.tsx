@@ -20,12 +20,9 @@ export function WizardNavigation({
         onStepChange("profile");
         break;
       case "profile":
-        onStepChange("focus");
+        onStepChange("setup");
         break;
-      case "focus":
-        onStepChange("settings");
-        break;
-      case "settings":
+      case "setup":
         onStepChange("ready");
         break;
       default:
@@ -38,14 +35,11 @@ export function WizardNavigation({
       case "profile":
         onStepChange("welcome");
         break;
-      case "focus":
+      case "setup":
         onStepChange("profile");
         break;
-      case "settings":
-        onStepChange("focus");
-        break;
       case "ready":
-        onStepChange("settings");
+        onStepChange("setup");
         break;
       default:
         break;

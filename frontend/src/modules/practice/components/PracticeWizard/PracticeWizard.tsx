@@ -1,14 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 
 import type { InterviewType } from "@/types/ai";
 
 import { StepIndicator } from "./components/StepIndicator";
 import { WizardNavigation } from "./components/WizardNavigation";
 import type { WizardStep, PracticeSettings } from "./constants";
-import { FocusStep } from "./steps/FocusStep";
 import { ProfileStep } from "./steps/ProfileStep";
 import { ReadyStep } from "./steps/ReadyStep";
-import { SettingsStep } from "./steps/SettingsStep";
 import { WelcomeStep } from "./steps/WelcomeStep";
 
 interface IPracticeWizardProps {
@@ -30,14 +28,10 @@ export function PracticeWizard({
   selectedInterviewType,
   loading,
   onStepChange,
-  onSettingsChange,
+  onSettingsChange: _onSettingsChange,
   onInterviewTypeSelect,
   onStart,
 }: IPracticeWizardProps): React.JSX.Element {
-  const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
-    [],
-  );
-
   const { handleNext, handleBack } = WizardNavigation({
     currentStep,
     onStepChange,
@@ -46,10 +40,6 @@ export function PracticeWizard({
   const handleInterviewTypeSelect = (type: InterviewType): void => {
     onInterviewTypeSelect(type);
     handleNext(); // Automatically proceed to profile step
-  };
-
-  const handleTechnologiesChange = (technologies: string[]): void => {
-    setSelectedTechnologies(technologies);
   };
 
   return (
@@ -67,22 +57,23 @@ export function PracticeWizard({
             selectedInterviewType={selectedInterviewType}
           />
         )}
-        {currentStep === "focus" && (
-          <FocusStep
-            onNext={handleNext}
-            onBack={handleBack}
-            selectedInterviewType={selectedInterviewType}
-            onTechnologiesChange={handleTechnologiesChange}
-            selectedTechnologies={selectedTechnologies}
-          />
-        )}
-        {currentStep === "settings" && (
-          <SettingsStep
-            settings={practiceSettings}
-            onSettingsChange={onSettingsChange}
-            onNext={handleNext}
-            onBack={handleBack}
-          />
+        {currentStep === "setup" && (
+          <div className="glass-card p-8">
+            <h2 className="gradient-text text-2xl font-bold mb-4">
+              Complete Setup (Coming Soon)
+            </h2>
+            <p className="text-gray-300 mb-6">
+              This step will consolidate focus areas and settings configuration.
+            </p>
+            <div className="flex gap-4">
+              <button onClick={handleBack} className="btn-glass">
+                Back
+              </button>
+              <button onClick={handleNext} className="btn-primary-glass">
+                Continue
+              </button>
+            </div>
+          </div>
         )}
         {currentStep === "ready" && (
           <ReadyStep
