@@ -35,7 +35,7 @@ export function CompleteSetupStep({
   const [techs, setTechs] = useState<string[]>(
     selectedTechnologies.length > 0
       ? selectedTechnologies
-      : userProfile?.technologies || []
+      : userProfile?.technologies || [],
   );
 
   const updateSettings = (updates: Partial<PracticeSettings>): void => {
@@ -56,7 +56,7 @@ export function CompleteSetupStep({
   };
 
   return (
-    <Card className="glass-card fade-in max-w-3xl mx-auto">
+    <Card className="glass-card-static fade-in w-[80vw] max-w-[1400px]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 gradient-text">
           <Settings className="h-5 w-5 icon-glow" />
@@ -91,9 +91,7 @@ export function CompleteSetupStep({
           {/* Right Column: Technologies + Stats */}
           <div className="split-column">
             <TechnologySelector selectedTechs={techs} onToggle={toggleTech} />
-            <div style={{ marginTop: "auto" }}>
-              <StatsPreview settings={settings} selectedTechs={techs} />
-            </div>
+            <StatsPreview settings={settings} selectedTechs={techs} />
           </div>
         </div>
       </CardContent>

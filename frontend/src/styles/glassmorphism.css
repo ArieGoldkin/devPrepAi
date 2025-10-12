@@ -258,7 +258,7 @@
 /* ===== WIZARD LAYOUT UTILITIES ===== */
 
 .wizard-container {
-  max-width: 800px;
+  width: 100%;
   margin: 0 auto;
   padding: 2rem 1rem;
 }
@@ -285,14 +285,25 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
-  max-height: calc(100vh - 350px);
-  overflow: hidden;
+  max-height: calc(100vh - 280px);
+  overflow: visible;
 }
 
 .split-column {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  min-height: 0;
+}
+
+.split-column:first-child {
+  overflow-y: auto;
+  padding-right: 0.5rem;
+}
+
+.split-column:last-child {
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
 .tech-grid-scrollable {

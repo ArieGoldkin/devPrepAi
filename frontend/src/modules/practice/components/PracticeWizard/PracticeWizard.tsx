@@ -36,7 +36,7 @@ export function PracticeWizard({
   onStart,
 }: IPracticeWizardProps): React.JSX.Element {
   const [selectedTechnologies, setSelectedTechnologies] = useState<string[]>(
-    []
+    [],
   );
 
   const { handleNext, handleBack } = WizardNavigation({
@@ -68,18 +68,8 @@ export function PracticeWizard({
         isLastStep={currentStep === "ready"}
       />
 
-      <div className="wizard-container fade-in">
-        {currentStep === "welcome" && (
-          <WelcomeStep onNext={handleInterviewTypeSelect} />
-        )}
-        {currentStep === "profile" && (
-          <ProfileStep
-            onNext={handleNext}
-            onBack={handleBack}
-            selectedInterviewType={selectedInterviewType}
-          />
-        )}
-        {currentStep === "setup" && (
+      {currentStep === "setup" ? (
+        <div className="fade-in py-8 flex justify-center items-start w-full">
           <CompleteSetupStep
             settings={practiceSettings}
             onSettingsChange={onSettingsChange}
@@ -87,16 +77,29 @@ export function PracticeWizard({
             selectedTechnologies={selectedTechnologies}
             onTechnologiesChange={handleTechnologiesChange}
           />
-        )}
-        {currentStep === "ready" && (
-          <ReadyStep
-            settings={practiceSettings}
-            loading={loading}
-            onStart={onStart}
-            onBack={handleBack}
-          />
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="wizard-container fade-in">
+          {currentStep === "welcome" && (
+            <WelcomeStep onNext={handleInterviewTypeSelect} />
+          )}
+          {currentStep === "profile" && (
+            <ProfileStep
+              onNext={handleNext}
+              onBack={handleBack}
+              selectedInterviewType={selectedInterviewType}
+            />
+          )}
+          {currentStep === "ready" && (
+            <ReadyStep
+              settings={practiceSettings}
+              loading={loading}
+              onStart={onStart}
+              onBack={handleBack}
+            />
+          )}
+        </div>
+      )}
     </>
   );
 }

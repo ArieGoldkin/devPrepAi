@@ -21,7 +21,7 @@ export function ReadyStep({
   onBack,
 }: IReadyStepProps): React.JSX.Element {
   return (
-    <Card className="glass-card fade-in max-w-2xl mx-auto text-center">
+    <Card className="glass-card-static fade-in max-w-2xl mx-auto text-center">
       <CardContent className="pt-8 space-y-6">
         <div className="inline-flex items-center justify-center h-20 w-20 rounded-full bg-white/20 backdrop-blur mx-auto neon-glow-green">
           <Trophy className="h-10 w-10 text-white" />

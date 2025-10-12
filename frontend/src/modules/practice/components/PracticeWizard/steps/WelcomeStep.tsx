@@ -48,7 +48,7 @@ export function WelcomeStep({ onNext }: IWelcomeStepProps): React.JSX.Element {
   };
 
   return (
-    <Card className="glass-card fade-in max-w-2xl mx-auto">
+    <Card className="glass-card-static fade-in max-w-2xl mx-auto">
       <CardHeader className="text-center pb-4">
         <div className="flex justify-center mb-4">
           <Logo size="lg" variant="gradient" showText={false} />
