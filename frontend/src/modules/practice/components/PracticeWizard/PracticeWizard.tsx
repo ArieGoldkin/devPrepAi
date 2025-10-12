@@ -1,10 +1,12 @@
 import React from "react";
 
 import type { InterviewType } from "@/types/ai";
+import { getStepNumber } from "@modules/practice/utils";
 
-import { StepIndicator } from "./components/StepIndicator";
+import { WizardNav } from "./components/WizardNav";
 import { WizardNavigation } from "./components/WizardNavigation";
 import type { WizardStep, PracticeSettings } from "./constants";
+import { TOTAL_STEPS } from "./constants";
 import { ProfileStep } from "./steps/ProfileStep";
 import { ReadyStep } from "./steps/ReadyStep";
 import { WelcomeStep } from "./steps/WelcomeStep";
@@ -42,9 +44,20 @@ export function PracticeWizard({
     handleNext(); // Automatically proceed to profile step
   };
 
+  const currentStepNumber = getStepNumber(currentStep);
+  const canProceed = selectedInterviewType !== null;
+
   return (
     <>
-      <StepIndicator currentStep={currentStep} />
+      <WizardNav
+        currentStep={currentStepNumber}
+        totalSteps={TOTAL_STEPS}
+        onBack={handleBack}
+        onContinue={handleNext}
+        canProceed={canProceed}
+        isFirstStep={currentStep === "welcome"}
+        isLastStep={currentStep === "ready"}
+      />
 
       <div className="animate-fade-in">
         {currentStep === "welcome" && (
@@ -58,21 +71,13 @@ export function PracticeWizard({
           />
         )}
         {currentStep === "setup" && (
-          <div className="glass-card p-8">
+          <div className="glass-card p-8 max-w-2xl mx-auto">
             <h2 className="gradient-text text-2xl font-bold mb-4">
               Complete Setup (Coming Soon)
             </h2>
-            <p className="text-gray-300 mb-6">
+            <p className="text-gray-300">
               This step will consolidate focus areas and settings configuration.
             </p>
-            <div className="flex gap-4">
-              <button onClick={handleBack} className="btn-glass">
-                Back
-              </button>
-              <button onClick={handleNext} className="btn-primary-glass">
-                Continue
-              </button>
-            </div>
           </div>
         )}
         {currentStep === "ready" && (
