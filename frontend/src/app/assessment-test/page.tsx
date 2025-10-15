@@ -14,40 +14,18 @@ import {
 import { sampleQuestions } from "@/shared/mocks/sampleQuestions";
 
 export default function AssessmentTestPage() {
-  const baseQuestion = sampleQuestions[1] || sampleQuestions[0];
+  // Use the first question with complete mock data (constraints, examples, etc.)
+  const question = sampleQuestions[0];
   const questionNumber = 1;
 
-  if (!baseQuestion) {
+  if (!question) {
     return <div className="p-8 text-white">No sample questions available</div>;
   }
-
-  // Enhanced question with constraints and examples for testing
-  const question = {
-    ...baseQuestion,
-    constraints: [
-      "Solution must be implemented in O(n) time complexity",
-      "Use only built-in JavaScript methods",
-      "Code must be production-ready with error handling",
-    ],
-    examples: [
-      {
-        input: "const counter = createCounter(); counter();",
-        output: "1",
-        explanation:
-          "First call returns 1, subsequent calls increment the counter",
-      },
-      {
-        input: "counter(); counter();",
-        output: "2, then 3",
-        explanation: "The closure maintains state between function calls",
-      },
-    ],
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900/20 to-gray-900 p-4">
       <h1 className="text-2xl font-bold text-white mb-4 px-2">
-        Tasks 2.1-2.9 Visual Test
+        DATABASE 1: Split Screen & Question Display
       </h1>
 
       <SplitScreenContainer
@@ -62,8 +40,12 @@ export default function AssessmentTestPage() {
                 title={question.title}
                 content={question.content}
               />
-              <ConstraintsSection constraints={question.constraints} />
-              <ExamplesSection examples={question.examples} />
+              {question.constraints && (
+                <ConstraintsSection constraints={question.constraints} />
+              )}
+              {question.examples && (
+                <ExamplesSection examples={question.examples} />
+              )}
             </QuestionCard>
           </QuestionPanel>
         }
