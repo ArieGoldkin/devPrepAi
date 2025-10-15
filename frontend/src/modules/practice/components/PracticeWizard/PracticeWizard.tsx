@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 
 import type { InterviewType } from "@/types/ai";
+import { getStepNumber } from "@modules/practice/utils";
 
-import { StepIndicator } from "./components/StepIndicator";
+import { WizardNav } from "./components/WizardNav";
 import { WizardNavigation } from "./components/WizardNavigation";
 import type { WizardStep, PracticeSettings } from "./constants";
-import { FocusStep } from "./steps/FocusStep";
+import { TOTAL_STEPS } from "./constants";
+import { CompleteSetupStep } from "./steps/CompleteSetupStep";
 import { ProfileStep } from "./steps/ProfileStep";
 import { ReadyStep } from "./steps/ReadyStep";
-import { SettingsStep } from "./steps/SettingsStep";
 import { WelcomeStep } from "./steps/WelcomeStep";
 
 interface IPracticeWizardProps {
@@ -52,47 +53,53 @@ export function PracticeWizard({
     setSelectedTechnologies(technologies);
   };
 
+  const currentStepNumber = getStepNumber(currentStep);
+  const canProceed = selectedInterviewType !== null;
+
   return (
     <>
-      <StepIndicator currentStep={currentStep} />
+      <WizardNav
+        currentStep={currentStepNumber}
+        totalSteps={TOTAL_STEPS}
+        onBack={handleBack}
+        onContinue={handleNext}
+        canProceed={canProceed}
+        isFirstStep={currentStep === "welcome"}
+        isLastStep={currentStep === "ready"}
+      />
 
-      <div className="animate-fade-in">
-        {currentStep === "welcome" && (
-          <WelcomeStep onNext={handleInterviewTypeSelect} />
-        )}
-        {currentStep === "profile" && (
-          <ProfileStep
-            onNext={handleNext}
-            onBack={handleBack}
-            selectedInterviewType={selectedInterviewType}
-          />
-        )}
-        {currentStep === "focus" && (
-          <FocusStep
-            onNext={handleNext}
-            onBack={handleBack}
-            selectedInterviewType={selectedInterviewType}
-            onTechnologiesChange={handleTechnologiesChange}
-            selectedTechnologies={selectedTechnologies}
-          />
-        )}
-        {currentStep === "settings" && (
-          <SettingsStep
+      {currentStep === "setup" ? (
+        <div className="fade-in py-8 flex justify-center items-start w-full">
+          <CompleteSetupStep
             settings={practiceSettings}
             onSettingsChange={onSettingsChange}
-            onNext={handleNext}
-            onBack={handleBack}
+            selectedInterviewType={selectedInterviewType}
+            selectedTechnologies={selectedTechnologies}
+            onTechnologiesChange={handleTechnologiesChange}
           />
-        )}
-        {currentStep === "ready" && (
-          <ReadyStep
-            settings={practiceSettings}
-            loading={loading}
-            onStart={onStart}
-            onBack={handleBack}
-          />
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="wizard-container fade-in">
+          {currentStep === "welcome" && (
+            <WelcomeStep onNext={handleInterviewTypeSelect} />
+          )}
+          {currentStep === "profile" && (
+            <ProfileStep
+              onNext={handleNext}
+              onBack={handleBack}
+              selectedInterviewType={selectedInterviewType}
+            />
+          )}
+          {currentStep === "ready" && (
+            <ReadyStep
+              settings={practiceSettings}
+              loading={loading}
+              onStart={onStart}
+              onBack={handleBack}
+            />
+          )}
+        </div>
+      )}
     </>
   );
 }

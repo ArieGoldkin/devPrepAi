@@ -48,12 +48,12 @@ export function WelcomeStep({ onNext }: IWelcomeStepProps): React.JSX.Element {
   };
 
   return (
-    <Card className="card-feature max-w-2xl mx-auto">
+    <Card className="glass-card-static fade-in max-w-2xl mx-auto">
       <CardHeader className="text-center pb-4">
         <div className="flex justify-center mb-4">
           <Logo size="lg" variant="gradient" showText={false} />
         </div>
-        <CardTitle className="text-headline">
+        <CardTitle className="text-headline gradient-text">
           Welcome to Practice Mode
         </CardTitle>
         <CardDescription className="text-subtitle text-muted-foreground">
@@ -97,10 +97,9 @@ export function WelcomeStep({ onNext }: IWelcomeStepProps): React.JSX.Element {
         <div className="flex justify-center pt-4">
           <Button
             size="lg"
-            variant="accent"
             onClick={handleNext}
             disabled={!selectedType}
-            className="min-w-[200px]"
+            className="btn-primary-glass min-w-[200px]"
           >
             {selectedType ? "Continue" : "Select Interview Type"}
             <ChevronRight className="ml-2 h-5 w-5" />

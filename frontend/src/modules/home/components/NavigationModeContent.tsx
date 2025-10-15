@@ -22,14 +22,7 @@ export function NavigationModeContent({
 
   switch (mode) {
     case "practice":
-      return (
-        <Badge
-          variant="outline"
-          className="text-xs bg-blue-50 text-blue-700 border-blue-200"
-        >
-          Practice Mode
-        </Badge>
-      );
+      return null; // No badge needed - user is already in practice mode
 
     case "assessment":
       return (
@@ -88,7 +81,8 @@ export function NavigationActionButton({
       );
 
     case "assessment":
-      return null; // No action button in assessment mode
+    case "practice":
+      return null; // No action button in assessment or practice mode
 
     default:
       return (

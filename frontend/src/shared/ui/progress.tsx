@@ -7,10 +7,15 @@ import { cn } from "@shared/utils/cn";
 
 const FULL_PERCENTAGE = 100;
 
+interface IProgressProps
+  extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
+  indicatorClassName?: string;
+}
+
 const Progress = React.forwardRef<
   React.ComponentRef<typeof ProgressPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
->(({ className, value, ...props }, ref) => {
+  IProgressProps
+>(({ className, indicatorClassName, value, ...props }, ref) => {
   const safeValue = value ?? 0;
   const translateX = FULL_PERCENTAGE - safeValue;
 
@@ -24,7 +29,10 @@ const Progress = React.forwardRef<
       {...props}
     >
       <ProgressPrimitive.Indicator
-        className="h-full w-full flex-1 bg-primary transition-all"
+        className={cn(
+          "h-full w-full flex-1 bg-primary transition-all",
+          indicatorClassName,
+        )}
         style={{ transform: `translateX(-${translateX}%)` }}
       />
     </ProgressPrimitive.Root>

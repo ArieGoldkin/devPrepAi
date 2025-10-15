@@ -28,6 +28,8 @@ const buttonVariants = cva(
         success: "bg-brand-success text-white shadow hover:bg-brand-success/90",
         warning: "bg-brand-warning text-white shadow hover:bg-brand-warning/90",
         error: "bg-brand-error text-white shadow hover:bg-brand-error/90",
+        glass:
+          "bg-white/5 backdrop-blur-md border border-white/10 text-[rgba(229,229,255,0.8)] hover:bg-white/10 hover:-translate-y-0.5 hover:border-[rgba(120,119,198,0.5)] transition-all duration-300",
       },
       size: {
         sm: "h-8 px-3 text-xs rounded-sm",

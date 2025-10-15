@@ -84,10 +84,10 @@ export const TECHNOLOGY_OPTIONS = {
   tools: ["Git", "Jest", "Cypress", "Webpack", "Vite", "GraphQL", "REST APIs"],
 } as const;
 
-export const TOTAL_STEPS = 5;
+export const TOTAL_STEPS = 4;
 export const PROGRESS_MULTIPLIER = 100;
 
-export type WizardStep = "welcome" | "profile" | "focus" | "settings" | "ready";
+export type WizardStep = "welcome" | "profile" | "setup" | "ready";
 export type DifficultyLevel = "easy" | "medium" | "hard";
 
 export interface IPracticeSettings {
