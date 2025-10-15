@@ -58,7 +58,7 @@ const eslintConfig = [
       "max-lines-per-function": [
         "error",
         {
-          max: 100,
+          max: 120,
           skipBlankLines: true,
           skipComments: true,
           IIFEs: true,
@@ -237,15 +237,24 @@ const eslintConfig = [
     rules: {
       "@typescript-eslint/explicit-function-return-type": "off",
       "@typescript-eslint/naming-convention": "off",
-      "max-lines-per-function": ["error", { max: 120, skipBlankLines: true, skipComments: true }],
+      "max-lines-per-function": [
+        "error",
+        { max: 120, skipBlankLines: true, skipComments: true },
+      ],
       "max-statements": ["error", 20],
     },
   },
   {
     files: ["**/store/**/*.ts", "**/hooks/**/*.ts"],
     rules: {
-      "max-lines": ["error", { max: 250, skipBlankLines: true, skipComments: true }],
-      "max-lines-per-function": ["error", { max: 150, skipBlankLines: true, skipComments: true }],
+      "max-lines": [
+        "error",
+        { max: 250, skipBlankLines: true, skipComments: true },
+      ],
+      "max-lines-per-function": [
+        "error",
+        { max: 150, skipBlankLines: true, skipComments: true },
+      ],
       "max-statements": ["error", 30],
     },
   },

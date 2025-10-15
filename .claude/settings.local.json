@@ -87,7 +87,9 @@
       "mcp__chrome-devtools__performance_start_trace",
       "mcp__chrome-devtools__resize_page",
       "mcp__chrome-devtools__navigate_page",
-      "mcp__notion__API-post-page"
+      "mcp__notion__API-post-page",
+      "mcp__notion__API-delete-a-block",
+      "Bash(npx shadcn@latest add:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

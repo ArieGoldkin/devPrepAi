@@ -3,23 +3,27 @@
 import React, { useEffect } from "react";
 
 import { AnswerInput } from "@shared/ui/AnswerInput";
+import { GradientBackground } from "@shared/ui/GradientBackground";
 import { cn } from "@shared/utils/cn";
 import { useAppStore } from "@store";
 
 import { useAssessment } from "../hooks/useAssessment";
 
 import { AssessmentHeader } from "./AssessmentHeader";
-import { QuestionDisplay } from "./QuestionDisplay";
+import {
+  ConstraintsSection,
+  ExamplesSection,
+  QuestionCard,
+  QuestionContent,
+  QuestionHeader,
+  QuestionPanel,
+} from "./QuestionPanel";
+import { SplitScreenContainer } from "./SplitScreenContainer";
 import { StatusBar } from "./StatusBar";
 
 interface IAssessmentLayoutProps {
   onComplete?: () => void;
   className?: string;
-}
-
-// Type guard to ensure timeLimit is string | undefined (not string | undefined union)
-function getTimeLimit(hasTime: boolean): string | undefined {
-  return hasTime ? "15 minutes" : undefined;
 }
 
 // Empty state component
@@ -75,24 +79,21 @@ export function AssessmentLayout({
     return <EmptyState />;
   }
 
-  // Calculate time limit per question (optional display)
-  const timeLimit = getTimeLimit(timeRemaining > 0);
-
   return (
-    <div className={cn("min-h-screen flex flex-col bg-background", className)}>
-      {/* StatusBar with progress and timer (Task 1.5) */}
+    <GradientBackground className={cn("flex flex-col", className)}>
+      {/* StatusBar with progress and timer (sticky at top) */}
       <StatusBar
         currentQuestion={currentIndex + 1}
         totalQuestions={questions.length}
         timeRemaining={timeRemaining}
       />
 
-      {/* Header with navigation and progress */}
+      {/* Header with navigation only (no timer) */}
       <AssessmentHeader
         currentQuestion={currentIndex + 1}
         totalQuestions={questions.length}
         progress={progress}
-        timeRemaining={timeRemaining}
+        timeRemaining={null}
         isFirstQuestion={isFirstQuestion}
         isLastQuestion={isLastQuestion}
         onPrevious={handlePrevious}
@@ -101,30 +102,52 @@ export function AssessmentLayout({
         hasAnswer={hasAnswer}
       />
 
-      {/* Main content area */}
-      <main className="flex-1 overflow-auto">
-        {/* Question display */}
-        <QuestionDisplay
-          questionNumber={currentIndex + 1}
-          totalQuestions={questions.length}
-          question={currentQuestion}
-          timeLimit={timeLimit}
+      {/* Main content area with split-screen layout */}
+      <main className="flex-1 overflow-hidden p-4">
+        <SplitScreenContainer
+          questionPanel={
+            <QuestionPanel>
+              <QuestionCard
+                question={currentQuestion}
+                questionNumber={currentIndex + 1}
+              >
+                <QuestionHeader
+                  questionNumber={currentIndex + 1}
+                  difficulty={currentQuestion.difficulty}
+                />
+                <QuestionContent
+                  title={currentQuestion.title}
+                  content={currentQuestion.content}
+                />
+                {currentQuestion.constraints &&
+                  currentQuestion.constraints.length > 0 && (
+                    <ConstraintsSection
+                      constraints={currentQuestion.constraints}
+                    />
+                  )}
+                {currentQuestion.examples &&
+                  currentQuestion.examples.length > 0 && (
+                    <ExamplesSection examples={currentQuestion.examples} />
+                  )}
+              </QuestionCard>
+            </QuestionPanel>
+          }
+          answerPanel={
+            <div className="h-full flex flex-col">
+              <div className="flex-1 border border-border rounded-lg overflow-hidden shadow-sm">
+                <AnswerInput
+                  question={currentQuestion}
+                  value={currentAnswer}
+                  onChange={handleAnswerChange}
+                  disabled={false}
+                  autoFocus={true}
+                  placeholder="// Write your solution here..."
+                />
+              </div>
+            </div>
+          }
         />
-
-        {/* Answer input */}
-        <div className="container max-w-4xl mx-auto px-6 pb-8">
-          <div className="border border-border rounded-lg overflow-hidden shadow-sm">
-            <AnswerInput
-              question={currentQuestion}
-              value={currentAnswer}
-              onChange={handleAnswerChange}
-              disabled={false}
-              autoFocus={true}
-              placeholder="// Write your solution here..."
-            />
-          </div>
-        </div>
       </main>
-    </div>
+    </GradientBackground>
   );
 }

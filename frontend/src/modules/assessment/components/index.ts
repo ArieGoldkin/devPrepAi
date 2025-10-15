@@ -5,4 +5,5 @@
 
 export { AssessmentLayout } from "./AssessmentLayout";
 export { AssessmentHeader } from "./AssessmentHeader";
-export { QuestionDisplay } from "./QuestionDisplay";
+export { SplitScreenContainer } from "./SplitScreenContainer";
+export * from "./QuestionPanel";

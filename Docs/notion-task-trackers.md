@@ -7,10 +7,12 @@
 
 ## 📊 Overview
 
-Two comprehensive task tracking databases have been created in Notion to manage the implementation of DevPrep AI's major features:
+Four comprehensive task tracking databases are being created in Notion to manage the implementation of DevPrep AI's major features:
 
-1. **🎨 Glassmorphism Design Transition** - Home page visual redesign
-2. **📝 Phase 1: Immediate Evaluation** - Question answering enhancement
+1. **🎨 Glassmorphism Design Transition** - Home page visual redesign (19 tasks)
+2. **📝 DATABASE 1: Split Screen & Question Display** - Layout foundation (10 tasks)
+3. **💡 DATABASE 2: Smart Hints System** - Progressive 3-level hints with AI (9 tasks)
+4. **✏️ DATABASE 3: Answer Panel** - Dual-mode text/code input (13 tasks)
 
 ---
 
@@ -55,45 +57,118 @@ Two comprehensive task tracking databases have been created in Notion to manage 
 
 ---
 
-## 📝 Tracker 2: Phase 1 - Immediate Evaluation
+## 📝 Tracker 2: Phase 1 - Split-Screen Q&A Interface
 
 ### Summary
-- **Tasks**: 8 tasks (sequential dependencies)
-- **Effort**: 32 hours (~1.5 weeks)
-- **Priority**: Start AFTER design transition
-- **Status**: ⏳ Awaiting design system completion
+- **Databases**: 3 focused databases (32 tasks total)
+- **Effort**: ~47 hours (~6 days)
+- **Priority**: High - Complete split-screen Q&A interface
+- **Status**: ✅ Ready for Notion setup
+- **Design Prototype**: `.superdesign/design_iterations/glassmorphism_session_split_1.html`
 
-### Task Breakdown
+### Database Breakdown
 
-| Task | Priority | Hours | Dependencies | Component |
-|------|----------|-------|--------------|-----------|
-| **Task 1**: API Endpoint | High | 4 | None | `app/api/ai/evaluate-answer/route.ts` |
-| **Task 2**: Constants | Medium | 2 | None | `shared/constants/evaluation.ts` (NEW) |
-| **Task 3**: Practice Store | High | 4 | Task 2 | `store/slices/practice/index.ts` |
-| **Task 4**: FeedbackModal | High | 6 | Task 2 | `modules/assessment/components/FeedbackModal/` |
-| **Task 5**: Layout Integration | High | 4 | Task 4 | `modules/assessment/components/AssessmentLayout.tsx` |
-| **Task 6**: useAssessment Hook | High | 4 | Task 1, 3 | `modules/assessment/hooks/useAssessment.ts` |
-| **Task 7**: Revision Tracking | Medium | 4 | Task 3, 6 | Store & FeedbackModal |
-| **Task 8**: UI Polish | Low | 4 | Task 4, 5 | FeedbackModal & AssessmentLayout |
+| Database | Focus Area | Tasks | Hours | Description |
+|----------|-----------|-------|-------|-------------|
+| **DATABASE 1** | Split Screen & Question Display | 10 | 15.5 | Layout, question card, sections, cleanup |
+| **DATABASE 2** | Smart Hints System | 9 | 13.5 | 3-level hints, API, store, animations |
+| **DATABASE 3** | Answer Panel | 13 | 18.0 | Text input, Monaco editor, submit, cleanup |
 
-### Database Fields
-- **Task**: Task name with number
+### Database 1: Split Screen & Question Display (Left 20%)
+
+**Purpose**: Create the foundational split-screen layout and question display components
+
+**Key Tasks**:
+- Task 2.1: SplitScreenContainer (20-80 grid layout)
+- Task 2.2: QuestionCard with glassmorphism styling
+- Task 2.3: QuestionHeader (title, type badge, difficulty badge)
+- Task 2.4: QuestionContent with collapsible sections
+- Task 2.5: Examples section with code blocks
+- Task 2.6: Constraints section (bullet list)
+- Task 2.7: Edge Cases section (bullet list)
+- Task 2.8: Integration with AssessmentLayout
+- Task 2.9: Custom scrollbar styling
+- Task 2.10: Cleanup deprecated components
+
+**Components Created**: `SplitScreenContainer`, `QuestionCard`, `QuestionHeader`, `QuestionContent`
+
+**shadcn Packages**: `npx shadcn@latest add @shadcn/scroll-area @shadcn/tooltip`
+
+### Database 2: Smart Hints System
+
+**Purpose**: Implement progressive 3-level hint system with AI evaluation and penalty tracking
+
+**Key Tasks**:
+- Task 3.1: HintCard with glassmorphism
+- Task 3.2: HintLevel components (General, Specific, Code Skeleton)
+- Task 3.3: API endpoint `/api/ai/generate-hints`
+- Task 3.4: Store actions for hints management
+- Task 3.5: useHints hook with TanStack Query
+- Task 3.6: Integration with AssessmentLayout
+- Task 3.7: CSS animations (glow, pulse, reveal)
+- Task 3.8: Keyboard shortcuts (Cmd/Ctrl+H)
+- Task 3.9: Cleanup unused hint components
+
+**Components Created**: `HintCard`, `HintLevel`, `HintButton`, `HintPenaltyBadge`
+
+**API**: `/api/ai/generate-hints` (Claude AI integration)
+
+### Database 3: Answer Panel (Right 80%)
+
+**Purpose**: Create dual-mode answer input with text area and Monaco code editor
+
+**Key Tasks**:
+- Task 4.1: AnswerPanel container (right 80%)
+- Task 4.2: PanelHeader with question type badge
+- Task 4.3: AnswerTextInput with character counter
+- Task 4.4: CodeEditor with Monaco (14 languages)
+- Task 4.5: Language selector dropdown
+- Task 4.6: Answer type toggle (text/code detection)
+- Task 4.7: SubmitButton with loading states
+- Task 4.8: Auto-save with 500ms debounce
+- Task 4.9: Keyboard shortcuts (Cmd/Ctrl+Enter)
+- Task 4.10: Store actions for answers
+- Task 4.11: useAssessment hook updates
+- Task 4.12: Custom Monaco scrollbar theme
+- Task 4.13: Cleanup deprecated answer components
+
+**Components Created**: `AnswerPanel`, `PanelHeader`, `AnswerTextInput`, `CodeEditor`, `SubmitButton`
+
+**Packages**: `@monaco-editor/react`, `monaco-editor`, `prettier`, `@types/prettier`
+
+### Shared Database Fields (All 3 Databases)
+- **Task**: Task number and description (e.g., "2.1: Create SplitScreenContainer")
 - **Status**: 📋 Not Started / 🚧 In Progress / ✅ Complete / ⚠️ Blocked / ⏸️ On Hold
-- **Priority**: High / Medium / Low
-- **Effort (hrs)**: Time estimate
-- **Dependencies**: Which tasks must complete first
-- **Component/File**: File path(s)
-- **Notes**: Implementation details
+- **Priority**: P0 (Critical) / P1 (High) / P2 (Medium)
+- **Effort (hrs)**: Time estimate per task
+- **Dependencies**: Which tasks must complete first (e.g., "Task 2.1")
+- **Agent**: Which agent handles this (frontend-ui-developer, ai-ml-engineer, etc.)
+- **Component/File**: Exact file path(s) for implementation
+- **Notes**: Detailed implementation specs, design references, acceptance criteria
 
 ### Key Features
-- **Immediate AI Evaluation**: Submit answer → instant feedback
-- **Revision System**: Up to 2 revisions per question
-- **FeedbackModal**: Glassmorphic modal with score, strengths, improvements, suggestions
-- **TanStack Query**: Refactored with React Query for better state management
+- **Split-Screen Layout**: 20-80 desktop split, vertical stack on mobile (<1024px)
+- **Question Display**: Glassmorphism card with collapsible sections (Examples, Constraints, Edge Cases)
+- **Smart Hints**: 3-level progressive system with AI-generated hints
+- **Dual Answer Input**: Text area for behavioral/conceptual, Monaco editor for coding questions
+- **Auto-save**: Debounced 500ms save to Zustand store
+- **Keyboard Shortcuts**: Cmd/Ctrl+Enter (submit), Cmd/Ctrl+H (hints)
+- **Custom Scrollbars**: Glassmorphism-styled scrollbars throughout
+- **Responsive Design**: Mobile-first with breakpoints at 1024px and 768px
+
+### Pre-Implementation Setup
+```bash
+# Install shadcn components
+npx shadcn@latest add @shadcn/scroll-area @shadcn/tooltip
+
+# Install Monaco editor packages
+npm install @monaco-editor/react monaco-editor prettier @types/prettier
+```
 
 ### Documentation
 - **Overview**: [phase-1-immediate-evaluation.md](question-answering-enhancement/phase-1-immediate-evaluation.md)
 - **Task Breakdown**: [phase-1-task-breakdown.md](question-answering-enhancement/phase-1-task-breakdown.md)
+- **Design Prototype**: `.superdesign/design_iterations/glassmorphism_session_split_1.html`
 
 ---
 
@@ -122,19 +197,24 @@ The FeedbackModal component in Phase 1 depends on design system components from 
 - Test responsive behavior
 - Deploy home page updates
 
-### Week 2-3.5: QA Enhancement (1.5 weeks)
-**Week 1:**
-- Days 1-2: Tasks 1-2 (API, Constants)
-- Days 3-4: Tasks 3-4 (Store, FeedbackModal)
-- Day 5: Task 5 (Layout Integration)
+### Week 2-3: Split-Screen Q&A Interface (6 days)
+**Days 1-2: DATABASE 1 - Split Screen & Question Display**
+- Task 2.1-2.5: Core layout and question components (10 hrs)
+- Task 2.6-2.10: Sections, integration, cleanup (5.5 hrs)
+- **Deliverable**: Working question display with split-screen layout
 
-**Week 2:**
-- Days 1-2: Tasks 6-7 (Hook, Revision Tracking)
-- Day 3: Task 8 (UI Polish)
-- Days 4-5: Testing & bug fixes
-- Days 6-7: Deployment
+**Days 3-4: DATABASE 2 - Smart Hints System**
+- Task 3.1-3.3: Hint card, levels, API (7 hrs)
+- Task 3.4-3.6: Store, hooks, integration (4 hrs)
+- Task 3.7-3.9: Animations, shortcuts, cleanup (2.5 hrs)
+- **Deliverable**: Progressive 3-level hint system with AI
 
-**Total**: ~4-5 weeks for both projects
+**Days 5-6: DATABASE 3 - Answer Panel**
+- Task 4.1-4.6: Panel container, text/code inputs, toggles (12 hrs)
+- Task 4.7-4.13: Submit, autosave, shortcuts, cleanup (6 hrs)
+- **Deliverable**: Complete answer input with dual mode (text/code)
+
+**Total**: ~10 days for both projects (4 days design + 6 days Q&A)
 
 ---
 
@@ -142,9 +222,11 @@ The FeedbackModal component in Phase 1 depends on design system components from 
 
 **Main Notion Page**: https://www.notion.so/DevPrepAI-2874489affb980fab76afc9789d813bd
 
-Both databases are embedded on this page in order:
-1. 🎨 Home Page Glassmorphism - Implementation Tracker
-2. 📝 Phase 1: Immediate Evaluation - Task Tracker
+Four databases are embedded on this page in order:
+1. 🎨 Home Page Glassmorphism - Implementation Tracker (19 tasks)
+2. 📝 DATABASE 1: Split Screen & Question Display (10 tasks)
+3. 💡 DATABASE 2: Smart Hints System (9 tasks)
+4. ✏️ DATABASE 3: Answer Panel (13 tasks)
 
 ---
 
@@ -211,13 +293,17 @@ Docs/question-answering-enhancement/
 - ✅ Responsive at all breakpoints
 - ✅ WCAG 2.1 AA compliant
 
-### QA Enhancement
-- ✅ All 8 tasks completed
-- ✅ Immediate evaluation working
-- ✅ Revision system functional (max 2 attempts)
-- ✅ FeedbackModal displays correctly
-- ✅ TanStack Query integrated
-- ✅ No console errors
+### Split-Screen Q&A Interface
+- ✅ All 32 tasks completed (10 + 9 + 13)
+- ✅ Split-screen layout working (20-80 desktop, vertical mobile)
+- ✅ Question display with collapsible sections
+- ✅ 3-level progressive hint system with AI
+- ✅ Dual-mode answer input (text + Monaco code editor)
+- ✅ Auto-save functional (500ms debounce)
+- ✅ Keyboard shortcuts working (Cmd/Ctrl+Enter, Cmd/Ctrl+H)
+- ✅ Custom glassmorphism scrollbars
+- ✅ Responsive at all breakpoints (<1024px, <768px)
+- ✅ No console errors or warnings
 
 ---
 
@@ -230,13 +316,21 @@ Docs/question-answering-enhancement/
 4. Reference [home-page-glassmorphism-plan.md](design-transition/home-page-glassmorphism-plan.md) for details
 5. Update status after each task
 
-### For QA Enhancement
-1. **Wait for design transition to complete**
-2. Open Notion tracker
-3. Start with "Task 1: Update API Endpoint"
-4. Follow dependencies (check Dependencies field)
-5. Reference [phase-1-task-breakdown.md](question-answering-enhancement/phase-1-task-breakdown.md) for details
-6. Update status after each task
+### For Split-Screen Q&A Interface
+1. **Wait for design transition to complete** (glassmorphism.css required)
+2. **Install packages first**:
+   ```bash
+   npx shadcn@latest add @shadcn/scroll-area @shadcn/tooltip
+   npm install @monaco-editor/react monaco-editor prettier @types/prettier
+   ```
+3. **Open DATABASE 1** and start with Task 2.1
+4. **Follow dependencies** (check Dependencies field carefully)
+5. **Reference documentation**:
+   - Task details: [phase-1-task-breakdown.md](question-answering-enhancement/phase-1-task-breakdown.md)
+   - Design specs: `.superdesign/design_iterations/glassmorphism_session_split_1.html`
+6. **Update status** after each task
+7. **Complete DATABASE 1** before moving to DATABASE 2
+8. **Complete DATABASE 2** before moving to DATABASE 3
 
 ---
 
@@ -264,7 +358,7 @@ Docs/question-answering-enhancement/
 Link commits to Notion tasks:
 
 ```
-feat(home): Complete Phase 1 Task 1 - Create glassmorphism.css
+feat(home): Complete Task 1 - Create glassmorphism.css
 
 - Extracted glass card styles from prototype
 - Added neon glow variants (purple, pink, blue)
@@ -274,13 +368,40 @@ feat(home): Complete Phase 1 Task 1 - Create glassmorphism.css
 Notion: 🎨 Glassmorphism Tracker - Task 1
 ```
 
+```
+feat(assessment): Complete Task 2.1 - Create SplitScreenContainer
+
+- Implemented 20-80 grid layout for desktop
+- Added vertical stack for mobile (<1024px)
+- Applied glassmorphism styling with backdrop blur
+- Set up responsive height calculation
+
+Notion: 📝 DATABASE 1 - Task 2.1
+```
+
+```
+feat(assessment): Complete Task 3.3 - API endpoint for hint generation
+
+- Created /api/ai/generate-hints route
+- Integrated Claude AI for Socratic hint generation
+- Implemented 3-level hint structure
+- Added error handling and validation
+
+Notion: 💡 DATABASE 2 - Task 3.3
+```
+
 ### Branch Strategy
 ```bash
 # For design transition
 git checkout -b feature/glassmorphism-design
 
-# For QA enhancement
-git checkout -b feature/immediate-evaluation
+# For split-screen Q&A interface
+git checkout -b feature/split-screen-qa
+
+# Alternative: One branch per database
+git checkout -b feature/db1-split-screen-layout
+git checkout -b feature/db2-smart-hints
+git checkout -b feature/db3-answer-panel
 ```
 
 ---
@@ -300,16 +421,25 @@ git checkout -b feature/immediate-evaluation
 ### Overall Project Status
 
 ```
-Glassmorphism Design Transition: [            ] 0/19 tasks (0%)
-Phase 1 QA Enhancement:         [            ] 0/8 tasks (0%)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Total Progress:                  [            ] 0/27 tasks (0%)
+Glassmorphism Design Transition:  [            ] 0/19 tasks (0%)
+DATABASE 1 - Split Screen:        [            ] 0/10 tasks (0%)
+DATABASE 2 - Smart Hints:         [            ] 0/9 tasks (0%)
+DATABASE 3 - Answer Panel:        [            ] 0/13 tasks (0%)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Total Progress:                   [            ] 0/51 tasks (0%)
 ```
 
 **Update this section as you complete tasks!**
 
+**Estimated Timeline**:
+- Design Transition: 3-4 days (26.5 hrs)
+- DATABASE 1: 2 days (15.5 hrs)
+- DATABASE 2: 2 days (13.5 hrs)
+- DATABASE 3: 2 days (18 hrs)
+- **Total**: ~10 days (73.5 hrs)
+
 ---
 
-**Last Updated**: October 9, 2025
-**Status**: Both trackers active and ready for use
-**Next Action**: Open Notion page and begin Glassmorphism Design Transition
+**Last Updated**: October 15, 2025
+**Status**: All trackers documented and ready for Notion setup
+**Next Action**: Create 3 new databases in Notion using task breakdown from [phase-1-task-breakdown.md](question-answering-enhancement/phase-1-task-breakdown.md)
