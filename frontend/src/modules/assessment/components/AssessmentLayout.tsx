@@ -1,14 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 
 import { AnswerInput } from "@shared/ui/AnswerInput";
 import { cn } from "@shared/utils/cn";
+import { useAppStore } from "@store";
 
 import { useAssessment } from "../hooks/useAssessment";
 
 import { AssessmentHeader } from "./AssessmentHeader";
 import { QuestionDisplay } from "./QuestionDisplay";
+import { StatusBar } from "./StatusBar";
 
 interface IAssessmentLayoutProps {
   onComplete?: () => void;
@@ -55,6 +57,19 @@ export function AssessmentLayout({
     handleAnswerChange,
   } = useAssessment();
 
+  // Get timer state and actions from store (Task 1.5)
+  const { startTimer, stopTimer } = useAppStore();
+
+  // Start timer on mount, stop on unmount (Task 1.5)
+  useEffect(() => {
+    if (isActive) {
+      startTimer();
+    }
+    return () => {
+      stopTimer();
+    };
+  }, [isActive, startTimer, stopTimer]);
+
   // Show empty state if no active assessment
   if (!isActive || questions.length === 0 || !currentQuestion) {
     return <EmptyState />;
@@ -65,6 +80,13 @@ export function AssessmentLayout({
 
   return (
     <div className={cn("min-h-screen flex flex-col bg-background", className)}>
+      {/* StatusBar with progress and timer (Task 1.5) */}
+      <StatusBar
+        currentQuestion={currentIndex + 1}
+        totalQuestions={questions.length}
+        timeRemaining={timeRemaining}
+      />
+
       {/* Header with navigation and progress */}
       <AssessmentHeader
         currentQuestion={currentIndex + 1}

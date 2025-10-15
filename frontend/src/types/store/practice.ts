@@ -60,6 +60,10 @@ export interface IPracticeState {
   isActive: boolean;
   isComplete: boolean;
 
+  // Timer Management (Task 1.4)
+  sessionStartTime: Date | null;
+  timerInterval: ReturnType<typeof setInterval> | null;
+
   // Settings
   settings: IPracticeSettings;
   metrics: IPracticeMetrics;
@@ -84,4 +88,9 @@ export interface IPracticeActions {
 
   // Progress
   calculateProgress: () => number;
+
+  // Timer Management (Task 1.4)
+  startTimer: () => void;
+  stopTimer: () => void;
+  resetTimer: () => void;
 }

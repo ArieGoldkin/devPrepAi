@@ -1,6 +1,7 @@
 /**
  * API Route: Evaluate Answer
  * Server-side Claude API integration for answer evaluation
+ * Supports mock mode for development (NEXT_PUBLIC_USE_MOCK_API=true)
  */
 
 import Anthropic from "@anthropic-ai/sdk";
@@ -15,6 +16,10 @@ import type {
 import { buildEvaluationPrompt } from "@lib/claude/services/ai-prompts";
 import { DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE } from "@shared/constants/ai";
 import { HTTP_BAD_REQUEST, HTTP_SERVER_ERROR } from "@shared/constants/http";
+import {
+  mockEvaluateAnswer,
+  shouldUseMockService,
+} from "@shared/mocks/mockEvaluationService";
 
 // Initialize Claude client server-side
 const getClaudeClient = (): Anthropic => {
@@ -25,10 +30,19 @@ const getClaudeClient = (): Anthropic => {
   return new Anthropic({ apiKey });
 };
 
+// eslint-disable-next-line max-statements -- API route handlers naturally have many statements
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Parse request body
     const body: IEvaluateAnswerRequest = await request.json();
+
+    // Use mock service if enabled (development mode)
+    if (shouldUseMockService()) {
+      // eslint-disable-next-line no-console -- Development-only log for mock service
+      console.log("🎭 Using mock evaluation service (no API call)");
+      const mockResponse = await mockEvaluateAnswer(body);
+      return NextResponse.json(mockResponse);
+    }
 
     // Validate required fields
     if (body.question === undefined || body.answer === undefined) {
