@@ -4,6 +4,8 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 
 import type { IQuestion } from "@/types/ai";
+import type { IPracticeAnswer } from "@/types/store/practice";
+import { useEvaluateAnswer } from "@lib/claude/hooks";
 import { useAppStore } from "@store";
 
 interface IUseAssessmentReturn {
@@ -21,21 +23,37 @@ interface IUseAssessmentReturn {
   isLastQuestion: boolean;
   hasAnswer: boolean;
   isActive: boolean;
+  isEvaluating: boolean;
 
   // Handlers
   handlePrevious: () => void;
   handleNext: () => void;
-  handleSubmit: () => void;
+  handleSubmit: () => Promise<void>;
   handleAnswerChange: (value: string) => void;
 }
 
 export function useAssessment(): IUseAssessmentReturn {
   const router = useRouter();
 
+  // Initialize evaluation hook
+  const { mutateAsync: evaluateAnswer, isPending: isEvaluating } =
+    useEvaluateAnswer();
+
   // Get store state and actions - using flat structure
   const questions = useAppStore((state) => state.questions ?? []);
   const currentIndex = useAppStore((state) => state.currentIndex ?? 0);
-  const savedAnswers = useAppStore((state) => state.savedAnswers ?? new Map());
+  // Fix: Force Map conversion to handle Zustand serialization
+  // When Zustand serializes state, Maps become plain objects {}
+  // The ?? operator doesn't trigger for truthy {} values
+  const savedAnswers = useAppStore((state) => {
+    const stored = state.savedAnswers;
+    // Return Map if already Map, otherwise convert object to Map
+    return stored instanceof Map
+      ? stored
+      : new Map<string, IPracticeAnswer>(
+          Object.entries(stored ?? {}) as Array<[string, IPracticeAnswer]>,
+        );
+  });
   const isActive = useAppStore((state) => state.isActive ?? false);
   const storeTimeRemaining = useAppStore((state) => state.timeRemaining ?? 0);
   const currentDraft = useAppStore((state) => state.currentDraft ?? "");
@@ -44,6 +62,7 @@ export function useAssessment(): IUseAssessmentReturn {
   const goToQuestion = useAppStore((state) => state.goToQuestion);
   const updateDraft = useAppStore((state) => state.updateDraft);
   const saveAnswer = useAppStore((state) => state.saveAnswer);
+  const saveFeedback = useAppStore((state) => state.saveFeedback);
   const endSession = useAppStore((state) => state.endSession);
 
   // Local state for current answer
@@ -67,8 +86,13 @@ export function useAssessment(): IUseAssessmentReturn {
   // Load saved answer when question changes
   useEffect(() => {
     if (currentQuestion?.id) {
-      const savedAnswer = savedAnswers.get(currentQuestion.id);
-      if (savedAnswer) {
+      // Add type guard for Map instance before calling .get()
+      const savedAnswer: IPracticeAnswer | undefined =
+        savedAnswers instanceof Map
+          ? savedAnswers.get(currentQuestion.id)
+          : undefined;
+      // Explicit null check to satisfy @typescript-eslint/strict-boolean-expressions
+      if (savedAnswer !== null && savedAnswer !== undefined) {
         setCurrentAnswer(savedAnswer.answer);
       } else if (currentDraft) {
         setCurrentAnswer(currentDraft);
@@ -123,28 +147,63 @@ export function useAssessment(): IUseAssessmentReturn {
   }, [isLastQuestion, hasAnswer, currentIndex, goToQuestion, saveAnswer]);
 
   // Handle assessment submission
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async () => {
     if (!hasAnswer) return;
 
-    // Save final answer
-    if (saveAnswer !== undefined && saveAnswer !== null) {
-      saveAnswer();
-    }
+    try {
+      // Save final answer
+      if (saveAnswer !== undefined && saveAnswer !== null) {
+        saveAnswer();
+      }
 
-    // End session
-    if (endSession !== undefined && endSession !== null) {
-      endSession();
-    }
+      // Evaluate the current answer
+      if (currentQuestion !== null) {
+        const response = await evaluateAnswer({
+          question: currentQuestion,
+          answer: currentAnswer,
+        });
 
-    // Navigate to results
-    router.push("/results");
-  }, [hasAnswer, saveAnswer, endSession, router]);
+        // Save feedback to store
+        if (
+          response.data?.feedback !== undefined &&
+          saveFeedback !== undefined &&
+          saveFeedback !== null
+        ) {
+          saveFeedback(currentQuestion.id, response.data.feedback);
+        }
+      }
+
+      // End session
+      if (endSession !== undefined && endSession !== null) {
+        endSession();
+      }
+
+      // Navigate to results
+      router.push("/results");
+    } catch (error) {
+      console.error("Failed to submit assessment:", error);
+      // Still navigate to results even if evaluation fails
+      router.push("/results");
+    }
+  }, [
+    hasAnswer,
+    saveAnswer,
+    currentQuestion,
+    currentAnswer,
+    evaluateAnswer,
+    saveFeedback,
+    endSession,
+    router,
+  ]);
 
   // Convert saved answers Map to simple Map<string, string> for return
+  // Add Map instance check before forEach to prevent errors
   const answersMap = new Map<string, string>();
-  savedAnswers.forEach((answer, questionId) => {
-    answersMap.set(questionId, answer.answer);
-  });
+  if (savedAnswers instanceof Map) {
+    savedAnswers.forEach((answer: IPracticeAnswer, questionId: string) => {
+      answersMap.set(questionId, answer.answer);
+    });
+  }
 
   return {
     // State
@@ -161,6 +220,7 @@ export function useAssessment(): IUseAssessmentReturn {
     isLastQuestion,
     hasAnswer,
     isActive,
+    isEvaluating,
 
     // Handlers
     handlePrevious,

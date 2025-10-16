@@ -55,6 +55,7 @@ export function AssessmentLayout({
     isLastQuestion,
     hasAnswer,
     isActive,
+    isEvaluating,
     handlePrevious,
     handleNext,
     handleSubmit,
@@ -96,9 +97,10 @@ export function AssessmentLayout({
         timeRemaining={null}
         isFirstQuestion={isFirstQuestion}
         isLastQuestion={isLastQuestion}
+        isEvaluating={isEvaluating}
         onPrevious={handlePrevious}
         onNext={handleNext}
-        onSubmit={handleSubmit}
+        onSubmit={() => void handleSubmit()}
         hasAnswer={hasAnswer}
       />
 

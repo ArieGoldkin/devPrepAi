@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronLeft, Clock } from "lucide-react";
+import { ChevronLeft, Clock, Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 
 import { Button } from "@shared/ui/button";
@@ -14,6 +14,7 @@ interface IAssessmentHeaderProps {
   timeRemaining?: number | null; // in seconds
   isFirstQuestion: boolean;
   isLastQuestion: boolean;
+  isEvaluating?: boolean;
   onPrevious: () => void;
   onNext: () => void;
   onSubmit: () => void;
@@ -68,6 +69,7 @@ export function AssessmentHeader({
   timeRemaining,
   isFirstQuestion,
   isLastQuestion,
+  isEvaluating = false,
   onPrevious,
   onNext,
   onSubmit,
@@ -137,10 +139,11 @@ export function AssessmentHeader({
               variant="default"
               size="default"
               onClick={onSubmit}
-              disabled={!hasAnswer}
-              className="min-w-[100px]"
+              disabled={!hasAnswer || isEvaluating}
+              className="min-w-[120px] gap-2"
             >
-              Submit
+              {isEvaluating && <Loader2 className="w-4 h-4 animate-spin" />}
+              {isEvaluating ? "Evaluating..." : "Submit"}
             </Button>
           ) : (
             <Button

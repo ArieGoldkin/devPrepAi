@@ -4,6 +4,7 @@
  */
 import type { StateCreator } from "zustand";
 
+import type { IAnswerFeedback } from "@/types/ai";
 import type {
   IPracticeState,
   IPracticeActions,
@@ -17,7 +18,10 @@ type GetFn = Parameters<StateCreator<PracticeSlice>>[1];
 export const createAnswerActions = (
   set: SetFn,
   get: GetFn,
-): Pick<IPracticeActions, "updateDraft" | "saveAnswer" | "submitAnswer"> => ({
+): Pick<
+  IPracticeActions,
+  "updateDraft" | "saveAnswer" | "submitAnswer" | "saveFeedback"
+> => ({
   updateDraft: (content): void => {
     set({ currentDraft: content });
   },
@@ -79,5 +83,31 @@ export const createAnswerActions = (
     if (state.currentIndex < state.questions.length - 1) {
       get().nextQuestion();
     }
+  },
+
+  saveFeedback: (questionId: string, feedback: IAnswerFeedback): void => {
+    const state = get();
+    const savedAnswer = state.savedAnswers.get(questionId);
+
+    if (savedAnswer === undefined) {
+      console.error(
+        `Cannot save feedback: No answer found for question ${questionId}`,
+      );
+      return;
+    }
+
+    // Create updated answer with feedback
+    const updatedAnswer: IPracticeAnswer = {
+      ...savedAnswer,
+      feedback,
+    };
+
+    set((state: PracticeSlice) => {
+      const newAnswers = new Map(state.savedAnswers);
+      newAnswers.set(questionId, updatedAnswer);
+      return {
+        savedAnswers: newAnswers,
+      };
+    });
   },
 });

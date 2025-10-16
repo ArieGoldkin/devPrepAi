@@ -85,6 +85,7 @@ export interface IPracticeActions {
   updateDraft: (content: string) => void;
   saveAnswer: () => void;
   submitAnswer: () => void;
+  saveFeedback: (questionId: string, feedback: IAnswerFeedback) => void;
 
   // Progress
   calculateProgress: () => number;
