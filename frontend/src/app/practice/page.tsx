@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
-import type { InterviewType, IGenerateQuestionsRequest } from "@/types/ai";
-import { useGenerateQuestionsMutation } from "@lib/claude/hooks";
+import type { InterviewType } from "@/types/ai";
+import { trpc } from "@lib/trpc/Provider";
 import {
   PracticeWizard,
   type WizardStep,
@@ -14,6 +14,8 @@ import { AppLayout } from "@shared/components/layout/AppLayout";
 import { ErrorBoundary } from "@shared/ui";
 import { ErrorMessage } from "@shared/ui/ErrorMessage";
 import { useAppStore } from "@store";
+
+const SECONDS_PER_MINUTE = 60;
 
 export default function PracticePage(): React.JSX.Element {
   const router = useRouter();
@@ -31,8 +33,9 @@ export default function PracticePage(): React.JSX.Element {
     focusAreas: [],
   });
 
+  // tRPC mutation hook - auto-generated with type safety
   const { mutateAsync: generateQuestions, isPending: loading } =
-    useGenerateQuestionsMutation();
+    trpc.ai.generateQuestions.useMutation();
 
   const handleGenerateQuestions = async (): Promise<void> => {
     if (!userProfile) {
@@ -43,21 +46,20 @@ export default function PracticePage(): React.JSX.Element {
     setError("");
 
     try {
-      const request: IGenerateQuestionsRequest = {
+      // tRPC automatically validates input with Zod schemas
+      const response = await generateQuestions({
         profile: userProfile,
         count: practiceSettings.questionCount,
         difficulty: 5,
         type: userProfile.interviewType,
-      };
+      });
 
-      const response = await generateQuestions(request);
-
-      if (!response.success || (response.data?.questions.length ?? 0) === 0) {
-        throw new Error(response.error ?? "No questions generated");
+      // tRPC returns data directly (no .success wrapper)
+      if (response.questions.length === 0) {
+        throw new Error("No questions generated");
       }
 
-      const SECONDS_PER_MINUTE = 60;
-      startSession(response.data.questions, {
+      startSession(response.questions, {
         mode: "practice" as const,
         timeLimit: practiceSettings.duration * SECONDS_PER_MINUTE,
         allowSkip: true,
@@ -67,6 +69,7 @@ export default function PracticePage(): React.JSX.Element {
       recordActivity();
       router.push("/assessment");
     } catch (err) {
+      // tRPC errors are thrown, not returned in response.error
       const errorMessage =
         err instanceof Error ? err.message : "Failed to generate questions";
       setError(`Failed to generate practice questions: ${errorMessage}`);

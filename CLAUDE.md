@@ -61,6 +61,14 @@ This project uses a modular instruction system to optimize token usage.
 - `future-enhancements.md` - Completed features & roadmap (v2.0.0)
 - `README.md` - Documentation overview
 
+### API Transition (`/Docs/api-transition/`) - 📋 Planned
+- `trpc-migration.md` - Complete tRPC migration guide (28 tasks, 4 phases, ~10-12 hrs)
+  - **Status**: Planning complete, all tasks in Notion, ready for implementation
+  - **Purpose**: Migrate from custom HTTP client to tRPC for type-safe APIs
+  - **Benefits**: 35% code reduction, 6x faster development, 100% type safety
+  - **Notion**: [tRPC Migration Database](https://www.notion.so/28e4489affb981c3b9f3c3c192612859)
+  - **Docs**: `README.md`, `trpc-migration.md`, `trpc-setup-guide.md`, `before-after-comparison.md`
+
 ### Design Transitions (`/Docs/design-transition/`) - 🔄 Active
 - `wizard-refactor.md` - Practice Wizard 5→4 step glassmorphism refactor (30 hrs, 13 tasks)
   - **Status**: Planning complete, ready for Phase 1 implementation
@@ -68,6 +76,7 @@ This project uses a modular instruction system to optimize token usage.
 
 ### Task Tracking (Notion) - 🔗 Connected
 - **Main Hub**: [DevPrepAI Workspace](https://www.notion.so/DevPrepAI-2874489affb980fab76afc9789d813bd)
+  - 🔄 [tRPC Migration](https://www.notion.so/28e4489affb981c3b9f3c3c192612859) (28 tasks, 4 phases, ~10-12 hrs)
   - 🎨 Home Page Glassmorphism - Implementation Tracker (19 tasks)
   - 🧙‍♂️ Practice Wizard Glassmorphism Refactor (13 tasks, 6 phases, 30 hrs)
   - 📝 [Phase 1: Immediate Evaluation - Task Tracker](https://www.notion.so/2874489affb9810fa1d1f8723a497f05) **(54 tasks, 8 sessions, ~94 hrs)**
