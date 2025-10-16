@@ -3,16 +3,14 @@
  * Contains all Claude AI-related tRPC procedures
  *
  * Endpoints:
- * - hello (test procedure)
  * - generateQuestions (Phase 2) ✅
- * - evaluateAnswer (Phase 3)
- * - explainConcept (Phase 3)
+ * - evaluateAnswer (Phase 3) - TODO
+ * - explainConcept (Phase 3) - TODO
  */
 import type { IGenerateQuestionsRequest } from "@/types/ai";
 import { generateQuestions } from "@lib/claude/services/question-service";
 
 import { publicProcedure, router } from "../init";
-import { helloInputSchema, helloOutputSchema } from "../schemas/hello.schema";
 import {
   generateQuestionsInputSchema,
   generateQuestionsOutputSchema,
@@ -22,18 +20,6 @@ import {
  * AI-related procedures
  */
 export const aiRouter = router({
-  /**
-   * Test procedure: Hello World
-   * Validates tRPC setup with type-safe input/output
-   */
-  hello: publicProcedure
-    .input(helloInputSchema)
-    .output(helloOutputSchema)
-    .query(async ({ input }) => ({
-      message: `Hello, ${input.name}! tRPC is working correctly! 🎉`,
-      timestamp: new Date().toISOString(),
-    })),
-
   /**
    * Generate Questions Procedure
    * Generate interview questions based on user profile
