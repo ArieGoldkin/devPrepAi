@@ -243,9 +243,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 ### Total Code to Remove
 - **HTTP Client**: 189 lines
 - **React Query Hooks**: 189 lines
+- **Old Validation Layers**: 330 lines
 - **Type Definitions**: ~50 lines (kept as type inference from Zod)
 - **API Routes**: 180 lines (replaced by tRPC procedures)
-- **Total**: ~460 lines of boilerplate
+- **Total**: ~790 lines of boilerplate
 
 ---
 
@@ -369,9 +370,9 @@ function PracticeWizard() {
 | **Phase 1** | Infrastructure Setup | 3 hrs | tRPC running alongside old API |
 | **Phase 2** | Migrate Generate Questions | 4 hrs | One endpoint fully migrated |
 | **Phase 3** | Migrate Remaining Endpoints | 4.5 hrs | All endpoints on tRPC |
-| **Phase 4** | Cleanup & Documentation | 3.5 hrs | Old code removed, docs complete |
+| **Phase 4** | Cleanup & Documentation | 3.75 hrs | Old code removed, docs complete |
 
-**Total**: 10-12 hours
+**Total**: 10.25-12.25 hours
 
 ---
 
@@ -1688,8 +1689,8 @@ export default function IntegrationTest() {
 ## Phase 4: Cleanup & Documentation
 
 **Goal**: Remove legacy code and finalize documentation.
-**Duration**: 3.5 hours
-**Tasks**: 8
+**Duration**: 3.75 hours
+**Tasks**: 9
 **Risk**: Low (code already working)
 
 ### Task 4.1: Delete HTTP Client Class (0.25 hrs)
@@ -1728,7 +1729,51 @@ git commit -m "refactor: Remove custom HTTP client (replaced by tRPC)"
 
 ---
 
-### Task 4.2: Delete Old React Query Hooks (0.25 hrs)
+### Task 4.2: Delete Old Validation Layers (0.25 hrs)
+
+**Context**: The project had duplicate validation systems before tRPC migration:
+- `lib/claude/validation/schemas.ts` (250 lines) - Old Zod schemas, unused
+- `lib/claude/services/validation-helpers.ts` (80+ lines) - Old validation helpers, unused
+- `lib/trpc/schemas/` (new) - Current tRPC schemas, actively used
+
+**Before Deleting**:
+```bash
+# Verify old validation files are not imported anywhere
+grep -r "from.*validation/schemas" frontend/src/
+grep -r "from.*validation-helpers" frontend/src/
+grep -r "validateRequestBody" frontend/src/
+```
+
+**Expected**: No results (all validation now via tRPC schemas)
+
+**Delete Files**:
+```bash
+rm frontend/src/lib/claude/validation/schemas.ts
+rm frontend/src/lib/claude/services/validation-helpers.ts
+```
+
+**Lines Removed**: ~330 lines total
+
+**Testing**:
+```bash
+npm run type-check
+npm run dev
+```
+- ✅ TypeScript compiles successfully
+- ✅ No import errors
+- ✅ All functionality works (uses tRPC validation)
+
+**Git Commit**:
+```bash
+git add .
+git commit -m "refactor: Remove old validation layers (replaced by tRPC Zod schemas)"
+```
+
+**Dependencies**: Task 4.1
+
+---
+
+### Task 4.3: Delete Old React Query Hooks (0.25 hrs)
 
 **Before Deleting**:
 ```bash
@@ -1764,11 +1809,11 @@ git add .
 git commit -m "refactor: Remove custom React Query hooks (replaced by tRPC)"
 ```
 
-**Dependencies**: Task 4.1
+**Dependencies**: Task 4.2
 
 ---
 
-### Task 4.3: Clean Up Type Definitions (0.5 hrs)
+### Task 4.4: Clean Up Type Definitions (0.5 hrs)
 
 **File to Review**: `frontend/src/types/ai/api.ts`
 
@@ -1819,11 +1864,11 @@ npm run type-check
 - ✅ All type references still work
 - ✅ No breaking changes
 
-**Dependencies**: Task 4.2
+**Dependencies**: Task 4.3
 
 ---
 
-### Task 4.4: Update CLAUDE.md (0.25 hrs)
+### Task 4.5: Update CLAUDE.md (0.25 hrs)
 
 **File**: `CLAUDE.md`
 
@@ -1877,11 +1922,11 @@ import { generateQuestionsInputSchema } from "@lib/trpc/schemas/question.schema"
 - ✅ Links work
 - ✅ Examples are correct
 
-**Dependencies**: Task 4.3
+**Dependencies**: Task 4.4
 
 ---
 
-### Task 4.5: Create tRPC Migration Documentation (1 hr)
+### Task 4.6: Create tRPC Migration Documentation (1 hr)
 
 **Files to Create**: (This document + 3 others)
 
@@ -1893,11 +1938,11 @@ import { generateQuestionsInputSchema } from "@lib/trpc/schemas/question.schema"
 - `Docs/api-transition/trpc-setup-guide.md` (next task)
 - `Docs/api-transition/before-after-comparison.md` (next task)
 
-**Dependencies**: Task 4.4
+**Dependencies**: Task 4.5
 
 ---
 
-### Task 4.6: Update Technical Architecture Doc (0.5 hrs)
+### Task 4.7: Update Technical Architecture Doc (0.5 hrs)
 
 **File**: `Docs/technical-architecture.md`
 
@@ -2047,21 +2092,21 @@ See: [\`Docs/api-transition/trpc-setup-guide.md\`](./api-transition/trpc-setup-g
 - ✅ File paths are correct
 - ✅ Links work
 
-**Dependencies**: Task 4.5
+**Dependencies**: Task 4.6
 
 ---
 
-### Task 4.7: Create Developer Guide for New Endpoints (0.5 hrs)
+### Task 4.8: Create Developer Guide for New Endpoints (0.5 hrs)
 
 **File**: `Docs/api-transition/trpc-setup-guide.md`
 
 (Content provided in separate documentation file - see next section)
 
-**Dependencies**: Task 4.6
+**Dependencies**: Task 4.7
 
 ---
 
-### Task 4.8: Performance Audit & Metrics (0.5 hrs)
+### Task 4.9: Performance Audit & Metrics (0.5 hrs)
 
 **Metrics to Document**:
 
@@ -2108,10 +2153,11 @@ du -sh .next/static/chunks/
 ### Phase 4 Complete ✅
 
 **Deliverables**:
-- ✅ ~460 lines of code removed
+- ✅ ~790 lines of code removed
 - ✅ All documentation complete
 - ✅ Developer guide ready
 - ✅ Performance metrics documented
+- ✅ Old validation layers removed (single source of truth)
 
 **Migration Complete!** 🎉
 
