@@ -2,7 +2,7 @@
  * Question Generation Hooks
  * Handles generating interview questions with Claude AI
  */
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type {
   IGenerateQuestionsRequest,
@@ -43,6 +43,25 @@ export function useGenerateQuestions(
     gcTime: CACHE_TIME.QUESTIONS_GC, // 30 minutes - keep longer for navigation back/forth
     // Only fetch when we have all required parameters
     enabled: Boolean(request.profile) && request.count > 0,
+  });
+}
+
+/**
+ * Hook for generating questions on-demand (e.g., button click)
+ *
+ * Simple mutation hook for POST operations - no caching needed
+ * Use this when user explicitly triggers question generation
+ */
+export function useGenerateQuestionsMutation(): ReturnType<
+  typeof useMutation<
+    IAPIResponse<IGenerateQuestionsResponse>,
+    Error,
+    IGenerateQuestionsRequest
+  >
+> {
+  return useMutation({
+    mutationFn: (request: IGenerateQuestionsRequest) =>
+      apiClient.generateQuestions(request),
   });
 }
 

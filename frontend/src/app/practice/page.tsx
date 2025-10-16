@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
-import type { InterviewType } from "@/types/ai";
-import { generatePracticeQuestions } from "@lib/claude/services/ai";
+import type { InterviewType, IGenerateQuestionsRequest } from "@/types/ai";
+import { useGenerateQuestionsMutation } from "@lib/claude/hooks";
 import {
   PracticeWizard,
   type WizardStep,
@@ -18,8 +18,9 @@ import { useAppStore } from "@store";
 export default function PracticePage(): React.JSX.Element {
   const router = useRouter();
   const { userProfile, startSession, recordActivity } = useAppStore();
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  // Always start at "welcome" step to prevent SSR/client hydration mismatch
+  // The wizard component handles navigation based on userProfile state
   const [currentStep, setCurrentStep] = useState<WizardStep>("welcome");
   const [selectedInterviewType, setSelectedInterviewType] =
     useState<InterviewType | null>(null);
@@ -30,11 +31,8 @@ export default function PracticePage(): React.JSX.Element {
     focusAreas: [],
   });
 
-  useEffect(() => {
-    if (!userProfile && currentStep !== "welcome") {
-      setCurrentStep("profile");
-    }
-  }, [userProfile, currentStep]);
+  const { mutateAsync: generateQuestions, isPending: loading } =
+    useGenerateQuestionsMutation();
 
   const handleGenerateQuestions = async (): Promise<void> => {
     if (!userProfile) {
@@ -42,33 +40,36 @@ export default function PracticePage(): React.JSX.Element {
       return;
     }
 
-    setLoading(true);
     setError("");
 
     try {
-      const questions = await generatePracticeQuestions(userProfile);
+      const request: IGenerateQuestionsRequest = {
+        profile: userProfile,
+        count: practiceSettings.questionCount,
+        difficulty: 5,
+        type: userProfile.interviewType,
+      };
 
-      if (questions.length === 0) {
-        throw new Error("No questions could be generated. Please try again.");
+      const response = await generateQuestions(request);
+
+      if (!response.success || (response.data?.questions.length ?? 0) === 0) {
+        throw new Error(response.error ?? "No questions generated");
       }
 
       const SECONDS_PER_MINUTE = 60;
-      const sessionSettings = {
+      startSession(response.data.questions, {
         mode: "practice" as const,
         timeLimit: practiceSettings.duration * SECONDS_PER_MINUTE,
         allowSkip: true,
         allowHints: true,
-      };
+      });
 
-      startSession(questions, sessionSettings);
       recordActivity();
       router.push("/assessment");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : "Failed to generate questions";
       setError(`Failed to generate practice questions: ${errorMessage}`);
-    } finally {
-      setLoading(false);
     }
   };
 

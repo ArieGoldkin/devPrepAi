@@ -6,25 +6,10 @@
 // Question Generation
 export {
   useGenerateQuestions,
+  useGenerateQuestionsMutation,
   usePrefetchQuestions,
   questionUtils,
 } from "./useQuestionGeneration";
 
 // Answer Evaluation
 export { useEvaluateAnswer } from "./useAnswerEvaluation";
-
-// Assessment Results & Sessions
-export {
-  usePracticeSession,
-  useApiCostTracking,
-  assessmentUtils,
-} from "./useAssessmentResults";
-
-// Legacy compatibility - combine utils under original export name
-import { assessmentUtils } from "./useAssessmentResults";
-import { questionUtils } from "./useQuestionGeneration";
-
-export const claudeQueryUtils = {
-  ...questionUtils,
-  ...assessmentUtils,
-};
