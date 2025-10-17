@@ -170,14 +170,29 @@ npm install -D monaco-editor
 
 ---
 
-### TASK 3.3: Create Hint API Endpoint
+### TASK 3.3: Create Hint tRPC Procedure
 **Priority**: P0 | **Effort**: 2h | **Deps**: None | **Agent**: ai-ml-engineer
-**File**: `frontend/src/app/api/ai/get-hint/route.ts`
+**Files**:
+- `frontend/src/lib/trpc/routers/ai.ts` (add getHint procedure)
+- `frontend/src/lib/trpc/schemas/hint.schema.ts` (NEW - Zod schemas)
+- `frontend/src/lib/claude/prompts/hints.ts` (prompt templates)
 
-**Implementation**: POST endpoint with 3 prompt templates (general/specific/skeleton)
-**Key Specs**: Level 1=approach, 2=technique, 3=code skeleton, returns JSON
-**Accept**: ✅ 3 prompts work, ✅ Claude API calls, ✅ JSON response, ✅ error handling
-**Design Ref**: Prototype hint data structure (lines 998-1017)
+**Implementation**: tRPC procedure with Zod schemas + 3 prompt templates (general/specific/skeleton)
+**Key Specs**:
+- Level 1=approach, 2=technique, 3=code skeleton
+- Input: question object, currentAnswer (optional), hintLevel (1-3)
+- Output: hint object with level/content/hasMore, success boolean
+- Zod validates all inputs/outputs at runtime
+- Returns typed response with full TypeScript inference
+
+**Accept**:
+- ✅ Zod schemas defined (getHintInputSchema, getHintOutputSchema)
+- ✅ tRPC procedure added to aiRouter
+- ✅ 3 prompts work (getLevel1/2/3Prompt)
+- ✅ Claude API calls with error handling
+- ✅ Type-safe responses (no manual typing needed)
+
+**Design Ref**: See [phase-2-progressive-hints.md](../question-answering-enhancement/phase-2-progressive-hints.md) for full tRPC implementation
 
 ---
 
@@ -203,14 +218,26 @@ npm install -D monaco-editor
 
 ---
 
-### TASK 3.6: Create useRequestHint Hook
-**Priority**: P1 | **Effort**: 2h | **Deps**: 3.3, 3.4 | **Agent**: frontend-ui-developer
+### TASK 3.6: Create useRequestHint Hook (tRPC)
+**Priority**: P1 | **Effort**: 1h | **Deps**: 3.3, 3.4 | **Agent**: frontend-ui-developer
 **File**: `frontend/src/modules/assessment/hooks/useRequestHint.ts`
 
-**Implementation**: TanStack Query mutation hook, calls API, saves to store
-**Key Specs**: Uses mutation, onSuccess saves hint, onError logs, returns loading state
-**Accept**: ✅ API call works, ✅ saves to store, ✅ loading state, ✅ error handling
-**Design Ref**: TanStack Query patterns
+**Implementation**: tRPC auto-generated mutation hook, saves to store on success
+**Key Specs**:
+- Uses `trpc.ai.getHint.useMutation()` (auto-generated, type-safe)
+- onSuccess callback saves hint to store
+- Returns `requestHint`, `isLoading`, `isError`, `canRequestMore`
+- Full TypeScript autocomplete for input/output
+- No manual type definitions needed
+
+**Accept**:
+- ✅ tRPC mutation hook used (not manual useMutation)
+- ✅ Saves hint to store on success
+- ✅ Loading and error states exposed
+- ✅ Type-safe request with Zod validation
+- ✅ Integration with existing store actions
+
+**Design Ref**: See [phase-2-progressive-hints.md](../question-answering-enhancement/phase-2-progressive-hints.md) Section 3 for full implementation
 
 ---
 
