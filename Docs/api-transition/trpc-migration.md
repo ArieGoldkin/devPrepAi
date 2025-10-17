@@ -62,7 +62,7 @@
 
 - **Phase 2**: `c3f0f56` - generateQuestions migration + performance docs
 - **Phase 3**: `1f64b4d` - evaluateAnswer migration + hook refactoring + E2E tests
-- **Phase 4**: `[pending]` - Cleanup legacy code + documentation
+- **Phase 4**: `16e7f29` - Cleanup legacy code + documentation (790+ lines removed)
 
 ### Lessons Learned
 
