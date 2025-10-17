@@ -112,72 +112,23 @@ For semantic routing beyond keywords, load `.claude/instructions/orchestration.m
 
 ## 📁 Architecture & Organization
 
-### Clean 6-Folder Structure (Final Architecture)
+### Clean 6-Folder Structure
 
-The project uses a **simplified domain-driven architecture** with just 6 focused directories:
+The project uses a **simplified domain-driven architecture**:
 
-```
-frontend/src/
-├── app/              # Next.js App Router (routes only)
-│   ├── api/         # API routes
-│   └── (pages)/     # Page components
-│
-├── modules/         # Feature-based business logic
-│   ├── assessment/  # Assessment module
-│   ├── practice/    # Practice module
-│   ├── results/     # Results module
-│   ├── profile/     # Profile module
-│   ├── questions/   # Questions module
-│   └── home/       # Home page module
-│
-├── shared/          # Cross-cutting concerns
-│   ├── ui/         # Design system components
-│   ├── components/ # Shared layouts
-│   ├── hooks/      # Reusable React hooks
-│   ├── utils/      # Utility functions
-│   ├── constants/  # App constants
-│   └── mocks/      # Sample data
-│
-├── lib/            # External integrations
-│   ├── claude/     # Claude AI service
-│   └── query/      # React Query setup
-│
-├── store/          # Global state (Zustand) - Root level!
-│   ├── slices/     # State slices (practice, user, results, streak)
-│   ├── hooks.ts    # Typed selectors
-│   └── index.ts    # Main export
-│
-├── styles/         # Design system foundation
-│   ├── globals.css       # Global CSS
-│   ├── glassmorphism.css # Glassmorphism utilities (284 lines)
-│   ├── tokens.ts         # Design tokens
-│   └── variants.ts       # Component variants
-│
-└── types/          # TypeScript definitions
-    └── ai/         # AI-related types only
-```
+- **app/** - Next.js App Router (routes only)
+- **modules/** - Feature-based business logic (assessment, practice, results, etc.)
+- **shared/** - Cross-cutting concerns (UI, components, hooks, utils)
+- **lib/** - External integrations (tRPC, Claude AI, React Query)
+- **store/** - Global state (Zustand slices)
+- **styles/** - Design system (globals, glassmorphism, tokens)
 
-### Import Patterns (Clean & Intuitive):
-```typescript
-import { Button } from "@shared/ui/button"
-import { useAppStore } from "@store"
-import { AssessmentLayout } from "@modules/assessment/components"
-import type { IQuestion } from "@/types/ai"
-```
+**Key Benefits**:
+- 6 folders instead of 17 (65% reduction)
+- Domain-driven organization
+- Zero redundancy
 
-### Architectural Benefits:
-- **6 folders instead of 17** - 65% reduction in complexity
-- **Single source of truth** - No duplicate files or overlapping concerns
-- **Clean imports** - Using @modules/, @shared/, @lib/ aliases
-- **Domain-driven** - Features organized by business logic
-- **Zero redundancy** - Each folder has one clear purpose
-
-### Module Structure:
-Each module is self-contained with:
-- `components/` - Module-specific components
-- `hooks/` - Module-specific hooks
-- `utils/` - Module utilities
-- `types.ts` - Module types
+**Full Details**: See [Docs/technical-architecture.md](Docs/technical-architecture.md)
 
 ## 🔧 API Layer (tRPC)
 

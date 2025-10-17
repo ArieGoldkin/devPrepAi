@@ -239,7 +239,6 @@ git pull
 - [Notion MCP Server Documentation](https://github.com/makenotion/notion-mcp-server)
 - [Model Context Protocol Specification](https://modelcontextprotocol.io/)
 - [Notion API Documentation](https://developers.notion.com/)
-- [Project Troubleshooting Guide](./notion-mcp-troubleshooting.md)
 
 ---
 

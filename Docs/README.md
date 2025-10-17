@@ -1,61 +1,119 @@
 # DevPrep AI Documentation
 
-## 📚 Current Documentation Structure
+**Quick Start**: See [../CLAUDE.md](../CLAUDE.md) for project overview and architecture summary.
 
-### Active Documents
+---
+
+## 📚 Core Documentation
 
 | Document | Purpose | Status |
 |----------|---------|--------|
-| **next-plan/ESSENTIAL_TASKS.md** | 🎯 **Recommended: 15 essential tasks for MVP** | Active |
-| **next-plan/IMPLEMENTATION_TASKS.md** | Comprehensive 35-task plan (optional features) | Reference |
-| **COMPLETED_MILESTONES.md** | Historical record of completed work (Phases 1-4) | Reference |
-| **PRD.md** | Product requirements and feature specifications | Reference |
-| **technical-architecture.md** | System design and architecture | Reference |
-| **api-design.md** | Claude AI integration specifications | Reference |
-| **code-standards.md** | ESLint rules and coding guidelines | Active |
-| **design-system.md** | UI/UX design specifications | Reference |
-| **user-flows.md** | User journey and interface flows | Reference |
-| **future-enhancements.md** | Long-term feature ideas | Reference |
-
-### Next Plan Documents
-- `next-plan/README.md` - Explains which task list to use
-- `next-plan/ESSENTIAL_TASKS.md` - **15 essential tasks (2-3 days)** ✨
-- `next-plan/IMPLEMENTATION_TASKS.md` - 35 comprehensive tasks (15-20 days)
-- `next-plan/complete-implementation-summary.md` - Zustand integration guide
-- `next-plan/unified-implementation-plan.md` - React Query integration guide
-- `next-plan/zustand-react-query-integration.md` - State management patterns
+| [**technical-architecture.md**](./technical-architecture.md) | System design, 6-folder architecture, tech stack details | ✅ Current |
+| [**api-design.md**](./api-design.md) | tRPC API layer, procedures, Zod schemas, usage examples | ✅ Current |
+| [**code-standards.md**](./code-standards.md) | ESLint rules, file size limits, coding guidelines | ✅ Active |
+| [**PRD.md**](./PRD.md) | Product requirements, features, user stories | ✅ Reference |
+| [**user-flows.md**](./user-flows.md) | User journeys, wizard flow, interface patterns | ✅ Reference |
+| [**future-enhancements.md**](./future-enhancements.md) | Completed features history, roadmap ideas | ✅ Reference |
 
 ---
 
-## 🚀 Next Steps
+## 🔄 Active Transitions
 
-**Start Here**: [next-plan/ESSENTIAL_TASKS.md](./next-plan/ESSENTIAL_TASKS.md)
+### API Migration
+**Status**: ✅ Complete (Oct 17, 2025)
 
-Why start with essentials?
-1. **Ship in 2-3 days** instead of 15-20 days
-2. **Focus on what matters** - Core functionality only
-3. **Get user feedback faster** - Iterate based on real needs
-4. **Lower risk** - Less complexity = fewer bugs
-5. **Save resources** - Time and money
+| Document | Description |
+|----------|-------------|
+| [api-transition/trpc-migration.md](./api-transition/trpc-migration.md) | Complete migration guide (4 phases, 28 tasks) |
+| [api-transition/trpc-setup-guide.md](./api-transition/trpc-setup-guide.md) | Developer setup instructions |
+| [api-transition/before-after-comparison.md](./api-transition/before-after-comparison.md) | HTTP vs tRPC comparison |
+| [api-transition/performance-comparison.md](./api-transition/performance-comparison.md) | Performance metrics |
 
----
+**Results**: 790+ lines removed, 100% type safety, 6x faster development
 
-## 📊 Project Status
+### Design Transitions
+**Status**: 🔄 Planning (Glassmorphism refactor)
 
-- **Phases 1-4**: ✅ Complete (MVP with 5-step wizard, AI integration, professional UI)
-- **Current Focus**: Polish, optimize, and prepare for production
-- **Timeline**: ~10 days to production-ready
-
----
-
-## 💡 Key Principles
-
-1. **Keep it simple** - No over-engineering
-2. **User-focused** - Prioritize user experience
-3. **Maintainable** - All files < 180 lines
-4. **Tested** - Critical paths have test coverage
-5. **Performant** - Fast loading and responsive
+| Document | Description |
+|----------|-------------|
+| [design-transition/wizard-refactor.md](./design-transition/wizard-refactor.md) | Practice Wizard 5→4 step refactor |
+| [design-transition/home-page-glassmorphism-plan.md](./design-transition/home-page-glassmorphism-plan.md) | Home page redesign plan |
+| [design-transition/glassmorphism-gap-analysis.md](./design-transition/glassmorphism-gap-analysis.md) | Component gap analysis |
 
 ---
 
-*Last updated: September 21, 2025*
+## 📊 Current Project Status
+
+### Completed Milestones
+- ✅ **Phase 1-4**: Core MVP with 4-step wizard, AI integration, professional UI
+- ✅ **tRPC Migration**: Full API layer migration (Oct 16-17, 2025)
+- ✅ **6-Folder Architecture**: Simplified from 17 folders to 6
+- ✅ **Type Safety**: 100% end-to-end via tRPC + Zod
+
+### Active Work
+- 🔄 **Design Transitions**: Glassmorphism refactor for wizard and home page
+- 📋 **Task Tracking**: [Notion Workspace](https://www.notion.so/DevPrepAI-2874489affb980fab76afc9789d813bd)
+
+---
+
+## 🎯 Documentation Hierarchy
+
+```
+CLAUDE.md              # Primary entry point (what, where, quick start)
+    ↓
+Docs/README.md         # This file (documentation map)
+    ↓
+Docs/*.md              # Detailed specifications (how, why)
+```
+
+**Principle**: Each fact documented once, clear hierarchy, zero duplication.
+
+---
+
+## 🛠️ Development Quick Links
+
+### Getting Started
+1. Read [../CLAUDE.md](../CLAUDE.md) for project overview
+2. Review [technical-architecture.md](./technical-architecture.md) for system design
+3. Check [api-design.md](./api-design.md) for API usage patterns
+4. Follow [code-standards.md](./code-standards.md) when writing code
+
+### Key Concepts
+- **6-Folder Architecture**: Simplified domain-driven structure
+- **tRPC API**: Type-safe procedures with auto-generated hooks
+- **Hybrid State**: Zustand (client) + tRPC/React Query (server)
+- **Type Safety**: Zod schemas → TypeScript types (single source of truth)
+
+### Code Standards
+- Files: < 180 lines (enforced by pre-commit hook)
+- Functions: < 50 lines
+- Complexity: < 15 (ESLint)
+- TypeScript: Strict mode
+- Validation: Zod runtime checks
+
+---
+
+## 📝 Recent Updates
+
+**October 17, 2025**:
+- ✅ Completed tRPC migration (all 4 phases)
+- ✅ Removed 790+ lines of legacy code
+- ✅ Updated all core documentation
+- ✅ Cleaned up obsolete docs (design-system/, question-answering-enhancement/)
+
+**October 16, 2025**:
+- ✅ Started tRPC migration (Phase 1-2)
+- ✅ Created api-transition/ documentation
+
+---
+
+## 🔗 External Resources
+
+- **Notion Workspace**: [DevPrepAI Hub](https://www.notion.so/DevPrepAI-2874489affb980fab76afc9789d813bd)
+- **Design Prototypes**: `.superdesign/design_iterations/`
+- **Git Repository**: Current working branch status in [../CLAUDE.md](../CLAUDE.md)
+
+---
+
+*Last Updated: October 17, 2025*
+*Documentation Version: 2.0.0*
