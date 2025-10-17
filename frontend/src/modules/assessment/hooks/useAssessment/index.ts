@@ -3,41 +3,19 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
 
-import type { IQuestion } from "@/types/ai";
 import type { IPracticeAnswer } from "@/types/store/practice";
-import { useEvaluateAnswer } from "@lib/claude/hooks";
+import { trpc } from "@lib/trpc/Provider";
 import { useAppStore } from "@store";
 
-interface IUseAssessmentReturn {
-  // State
-  questions: IQuestion[];
-  currentQuestion: IQuestion | null;
-  currentIndex: number;
-  currentAnswer: string;
-  answers: Map<string, string>;
-  progress: number;
-  timeRemaining: number;
-
-  // Flags
-  isFirstQuestion: boolean;
-  isLastQuestion: boolean;
-  hasAnswer: boolean;
-  isActive: boolean;
-  isEvaluating: boolean;
-
-  // Handlers
-  handlePrevious: () => void;
-  handleNext: () => void;
-  handleSubmit: () => Promise<void>;
-  handleAnswerChange: (value: string) => void;
-}
+import { useSubmitHandler } from "./handlers";
+import type { IUseAssessmentReturn } from "./types";
 
 export function useAssessment(): IUseAssessmentReturn {
   const router = useRouter();
 
-  // Initialize evaluation hook
+  // Initialize evaluation hook (tRPC)
   const { mutateAsync: evaluateAnswer, isPending: isEvaluating } =
-    useEvaluateAnswer();
+    trpc.ai.evaluateAnswer.useMutation();
 
   // Get store state and actions - using flat structure
   const questions = useAppStore((state) => state.questions ?? []);
@@ -146,55 +124,17 @@ export function useAssessment(): IUseAssessmentReturn {
     setCurrentAnswer("");
   }, [isLastQuestion, hasAnswer, currentIndex, goToQuestion, saveAnswer]);
 
-  // Handle assessment submission
-  const handleSubmit = useCallback(async () => {
-    if (!hasAnswer) return;
-
-    try {
-      // Save final answer
-      if (saveAnswer !== undefined && saveAnswer !== null) {
-        saveAnswer();
-      }
-
-      // Evaluate the current answer
-      if (currentQuestion !== null) {
-        const response = await evaluateAnswer({
-          question: currentQuestion,
-          answer: currentAnswer,
-        });
-
-        // Save feedback to store
-        if (
-          response.data?.feedback !== undefined &&
-          saveFeedback !== undefined &&
-          saveFeedback !== null
-        ) {
-          saveFeedback(currentQuestion.id, response.data.feedback);
-        }
-      }
-
-      // End session
-      if (endSession !== undefined && endSession !== null) {
-        endSession();
-      }
-
-      // Navigate to results
-      router.push("/results");
-    } catch (error) {
-      console.error("Failed to submit assessment:", error);
-      // Still navigate to results even if evaluation fails
-      router.push("/results");
-    }
-  }, [
+  // Handle assessment submission - extracted to handlers.ts
+  const handleSubmit = useSubmitHandler({
     hasAnswer,
-    saveAnswer,
     currentQuestion,
     currentAnswer,
+    saveAnswer,
     evaluateAnswer,
     saveFeedback,
     endSession,
     router,
-  ]);
+  });
 
   // Convert saved answers Map to simple Map<string, string> for return
   // Add Map instance check before forEach to prevent errors

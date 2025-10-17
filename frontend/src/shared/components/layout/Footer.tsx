@@ -2,7 +2,6 @@ import { Code2, Github, Heart, Twitter } from "lucide-react";
 import Link from "next/link";
 import type { ReactElement } from "react";
 
-// eslint-disable-next-line max-lines-per-function
 export function Footer(): ReactElement {
   const currentYear = new Date().getFullYear();
 
