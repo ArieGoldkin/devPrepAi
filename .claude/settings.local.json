@@ -90,7 +90,14 @@
       "mcp__notion__API-post-page",
       "mcp__notion__API-delete-a-block",
       "Bash(npx shadcn@latest add:*)",
-      "Bash(git rm:*)"
+      "Bash(git rm:*)",
+      "Bash(git checkout:*)",
+      "Bash(git reset:*)",
+      "Bash(./.claude/skills/quality-reviewer/scripts/check-architecture.sh)",
+      "Bash(./.claude/skills/quality-reviewer/scripts/check-file-size.sh)",
+      "Bash(wc -l .claude/skills/quality-reviewer/SKILL.md .claude/skills/quality-reviewer/docs/*.md .claude/skills/quality-reviewer/examples/*.tsx .claude/skills/quality-reviewer/examples/refactor-after/*.{tsx,ts})",
+      "Bash(./.claude/skills/quality-reviewer/scripts/check-naming.sh)",
+      "Bash(./.claude/skills/quality-reviewer/scripts/check-imports.sh)"
     ]
   },
   "enableAllProjectMcpServers": true,

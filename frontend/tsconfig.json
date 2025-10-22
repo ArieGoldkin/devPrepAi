@@ -71,6 +71,7 @@
     ".next",
     "out",
     "dist",
-    "build"
+    "build",
+    "../.claude/**/*"
   ]
 }

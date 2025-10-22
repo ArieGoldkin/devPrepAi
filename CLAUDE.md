@@ -17,7 +17,7 @@ version: 2.0.0
 DevPrep AI helps developers prepare for technical interviews with:
 - **AI-Generated Questions**: Personalized based on role & experience
 - **Real-time Evaluation**: Claude AI provides instant feedback with code execution
-- **Practice Wizard**: 4-step guided flow (🔄 Refactoring to glassmorphism design - see `Docs/design-transition/wizard-refactor.md`)
+- **Practice Wizard**: 4-step guided flow with glassmorphism design
 - **Multiple Practice Modes**: Quick Practice, Assessment Mode, Mock Interview
 - **Progress Tracking**: Comprehensive analytics and performance metrics
 - **Responsive Design**: Mobile-first approach with adaptive layouts
@@ -33,6 +33,7 @@ This project uses a modular instruction system to optimize token usage.
 
 | Module | Purpose | When to Load |
 |--------|---------|--------------|
+| `.claude/instructions/agent-routing.md` | Agent routing rules | **EVERY development task** |
 | `.claude/instructions/orchestration.md` | Routing & coordination | Complex tasks, multi-agent work |
 | `.claude/instructions/agents.md` | Agent capabilities | When invoking specific agents |
 | `.claude/instructions/context.md` | Context system | Session continuity, handoffs |
@@ -42,16 +43,18 @@ This project uses a modular instruction system to optimize token usage.
 
 ## 🎯 Quick Start
 
-1. **Simple tasks**: Work directly without loading extra instructions
-2. **Agent work**: Read `.claude/instructions/agents.md` for capabilities
-3. **Complex projects**: Read `.claude/instructions/orchestration.md` for routing
-4. **Multi-session**: Read `.claude/instructions/context.md` for continuity
-5. **CLI usage**: Read `.claude/instructions/cli-integration.md` for auto-detection
-6. **UI/UX design**: Read `.claude/instructions/superdesign.md` for design workflow
+1. **Development workflows**: See `Docs/developer-guide.md` for setup, commands, patterns
+2. **Simple tasks**: Work directly without loading extra instructions
+3. **Agent work**: Read `.claude/instructions/agents.md` for capabilities
+4. **Complex projects**: Read `.claude/instructions/orchestration.md` for routing
+5. **Multi-session**: Read `.claude/instructions/context.md` for continuity
+6. **CLI usage**: Read `.claude/instructions/cli-integration.md` for auto-detection
+7. **UI/UX design**: Read `.claude/instructions/superdesign.md` for design workflow
 
 ## 📚 Project Documentation
 
 ### Core Documentation (`/Docs`) - ✅ Updated Oct 2025
+- `developer-guide.md` - **Quick reference**: Setup, workflows, commands, patterns
 - `PRD.md` - Product requirements & features (v2.0.0)
 - `technical-architecture.md` - System design & 6-folder architecture (v2.0.0)
 - `design-system.md` - Component library & styling guide (v2.0.0)
@@ -69,19 +72,15 @@ This project uses a modular instruction system to optimize token usage.
   - **Notion**: [tRPC Migration Database](https://www.notion.so/28e4489affb981c3b9f3c3c192612859)
   - **Docs**: `README.md`, `trpc-migration.md`, `trpc-setup-guide.md`, `before-after-comparison.md`
 
-### Design Transitions (`/Docs/design-transition/`) - 🔄 Active
-- `wizard-refactor.md` - Practice Wizard 5→4 step glassmorphism refactor (30 hrs, 13 tasks)
-  - **Status**: Planning complete, ready for Phase 1 implementation
-  - **Notion**: All tasks tracked with dependencies and agent assignments
+### Design Transitions (`/Docs/design-transition/`)
+- `wizard-refactor.md` - ✅ Complete (Practice Wizard 5→4 step glassmorphism)
+- `home-page-glassmorphism-plan.md` - 📋 Planning phase
 
 ### Task Tracking (Notion) - 🔗 Connected
 - **Main Hub**: [DevPrepAI Workspace](https://www.notion.so/DevPrepAI-2874489affb980fab76afc9789d813bd)
-  - 🔄 [tRPC Migration](https://www.notion.so/28e4489affb981c3b9f3c3c192612859) (28 tasks, 4 phases, ~10-12 hrs)
-  - 🎨 Home Page Glassmorphism - Implementation Tracker (19 tasks)
-  - 🧙‍♂️ Practice Wizard Glassmorphism Refactor (13 tasks, 6 phases, 30 hrs)
-  - 📝 [Phase 1: Immediate Evaluation - Task Tracker](https://www.notion.so/2874489affb9810fa1d1f8723a497f05) **(54 tasks, 8 sessions, ~94 hrs)**
-    - SESSION 1-6D: Complete Q&A interface with evaluation, hints, code editor, testing
-    - **Documentation**: `Docs/notion-task-trackers.md`
+  - 💡 DATABASE 2: Smart Hints System (Active)
+  - ✏️ DATABASE 3: Answer Panel (Active)
+  - 📋 Design System Implementation v2 (Future)
 
 **All docs synchronized to v2.0.0 reflecting Phase 4 completion**
 
@@ -108,6 +107,23 @@ For semantic routing beyond keywords, load `.claude/instructions/orchestration.m
 - **studio-coach**
 - **ux-researcher**
 - **whimsy-injector**
+
+## 🤖 Agent Routing Policy
+
+**CRITICAL**: For development tasks, route to specialist agents. Don't do the work yourself.
+
+| Task Type | Agent | Auto-Trigger Keywords |
+|-----------|-------|----------------------|
+| React/UI work | frontend-ui-developer | component, React, UI, form, page |
+| API/Backend | backend-system-architect | API, endpoint, database, auth |
+| AI/ML integration | ai-ml-engineer | AI, ML, LLM, Claude, prompt |
+| Design/Mockups | rapid-ui-designer | design, mockup, wireframe |
+| Code review | code-quality-reviewer | review, test, lint, refactor |
+| Planning | sprint-prioritizer | sprint, plan, roadmap |
+| Multi-domain | studio-coach | full app, build from scratch |
+
+**Full routing rules**: Load `.claude/instructions/agent-routing.md` for routing decision tree.
+**Keyword reference**: See `.claude/context-triggers.md` for complete keyword lists.
 
 
 ## 📁 Architecture & Organization
