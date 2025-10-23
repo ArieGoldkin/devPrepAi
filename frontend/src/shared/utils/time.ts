@@ -1,11 +1,8 @@
 /**
- * Time Utilities
- * Centralized time constants, conversions, and formatting functions
+ * Time Utilities - Constants, conversions, and formatting functions
  */
 
-// =============================================================================
 // Core Time Constants
-// =============================================================================
 
 export const MS_PER_SECOND = 1000;
 export const SECONDS_PER_MINUTE = 60;
@@ -35,9 +32,7 @@ export const TIME_CONSTANTS = {
   SECONDS_PER_DAY,
 } as const;
 
-// =============================================================================
 // Timeout and Interval Values (in milliseconds)
-// =============================================================================
 
 export const TIMEOUTS = {
   INSTANT: 0,
@@ -58,9 +53,7 @@ export const INTERVALS = {
   TIMER: 1000, // 1 second for timers
 } as const;
 
-// =============================================================================
 // Assessment Timing Constants
-// =============================================================================
 
 export const ASSESSMENT_TIMING = {
   DEFAULT_QUESTION_TIME: MINUTES_PER_QUESTION_DEFAULT * SECONDS_PER_MINUTE, // 30 minutes
@@ -71,9 +64,7 @@ export const ASSESSMENT_TIMING = {
   TIME_WARNING_THRESHOLD: 300, // 5 minutes in seconds (for useTimer)
 } as const;
 
-// =============================================================================
 // Animation Durations (in milliseconds)
-// =============================================================================
 
 export const ANIMATION_DURATION = {
   INSTANT: 0,
@@ -83,9 +74,7 @@ export const ANIMATION_DURATION = {
   EXTRA_SLOW: 1000,
 } as const;
 
-// =============================================================================
 // Conversion Utility Functions
-// =============================================================================
 
 export function secondsToMs(seconds: number): number {
   return seconds * MS_PER_SECOND;
@@ -111,9 +100,7 @@ export function msToHours(ms: number): number {
   return Math.floor(ms / MS_PER_HOUR);
 }
 
-// =============================================================================
 // Time Formatting Functions
-// =============================================================================
 
 /**
  * Format seconds into MM:SS format
@@ -123,7 +110,7 @@ export function msToHours(ms: number): number {
 export function formatTime(seconds: number): string {
   const minutes = Math.floor(seconds / SECONDS_PER_MINUTE);
   const remainingSeconds = seconds % SECONDS_PER_MINUTE;
-  return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
 /**
@@ -160,12 +147,10 @@ export function formatDuration(ms: number): string {
 export function formatQuestionTime(seconds: number): string {
   const mins = Math.floor(seconds / SECONDS_PER_MINUTE);
   const secs = seconds % SECONDS_PER_MINUTE;
-  return `${mins}:${secs.toString().padStart(2, '0')}`;
+  return `${mins}:${secs.toString().padStart(2, "0")}`;
 }
 
-// =============================================================================
 // Time Checking Utilities
-// =============================================================================
 
 /**
  * Check if time is low (under warning threshold)
@@ -187,9 +172,7 @@ export function isTimeCritical(timeLeft: number, totalTime: number): boolean {
   return percentage <= 10;
 }
 
-// =============================================================================
 // Type Exports
-// =============================================================================
 
 export type TimeoutKey = keyof typeof TIMEOUTS;
 export type IntervalKey = keyof typeof INTERVALS;

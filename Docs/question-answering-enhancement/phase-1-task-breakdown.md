@@ -1,683 +1,473 @@
-# Phase 1: Immediate Evaluation - Task Breakdown
+# Phase 1: Split-Screen Q&A Interface - Complete Task Breakdown
 
 ## 📋 Overview
 
-This document breaks down Phase 1 implementation into **8 incremental, deliverable tasks**. Each task is self-contained and can be completed independently without adding unnecessary complexity.
+Implementation plan for the **20-80 split-screen Question & Answer interface** based on prototype (`glassmorphism_session_split_1.html`) using established design system and shadcn/ui components.
 
-**Total Estimated Effort:** 32 hours (~1.5 weeks)
-**Approach:** Build → Test Manually → Deploy → Iterate
+**Approach**: 3 Notion databases for organized tracking
+**Total Tasks**: 32 tasks (10 + 9 + 13)
+**Total Effort**: ~47 hours (~6 days)
+**Design**: glassmorphism.css + shad cn/ui + prototype specs
 
 ---
 
-## Task 1: Update API Endpoint with Revision Support
+## ✅ Pre-Implementation: Install Packages
 
-**Effort:** 4 hours
-**Priority:** High
-**Dependencies:** None
+**Run these commands first:**
+```bash
+# shadcn UI components
+npx shadcn@latest add @shadcn/scroll-area @shadcn/tooltip
 
-### 📝 Description
-Add `attemptNumber` parameter to the existing evaluation endpoint to track revision attempts and provide context-aware feedback.
-
-### 📂 Files to Modify
-- `src/app/api/ai/evaluate-answer/route.ts`
-- `src/types/ai/index.ts` (update IEvaluateAnswerRequest type)
-
-### ✅ Acceptance Criteria
-- [x] `attemptNumber` parameter accepted in request body
-- [x] Parameter passed to evaluation prompt for context
-- [x] Response includes revision-specific guidance when applicable
-- [x] Existing functionality remains unchanged (backward compatible)
-
-### 🔧 Implementation Notes
-```typescript
-// Update IEvaluateAnswerRequest type
-interface IEvaluateAnswerRequest {
-  question: IQuestion;
-  answer: string;
-  attemptNumber?: number; // NEW: defaults to 1
-}
-
-// In route handler
-const body: IEvaluateAnswerRequest = await request.json();
-const attemptNumber = body.attemptNumber ?? 1;
-
-// Pass to prompt builder
-const prompt = buildEvaluationPrompt({
-  ...body,
-  attemptNumber,
-});
+# NPM packages
+npm install @monaco-editor/react use-debounce react-hotkeys-hook
+npm install -D monaco-editor
 ```
 
-### 🧪 Manual Test Cases
-1. Submit answer without attemptNumber → works as before
-2. Submit answer with attemptNumber: 1 → initial evaluation
-3. Submit answer with attemptNumber: 2 → revision feedback
-4. Submit answer with attemptNumber: 3 → final attempt feedback
+---
+
+## 🗂️ DATABASE 1: Split Screen & Question Display (Left 20%)
+
+**Purpose**: Layout container + Question content display with all sections
+**Tasks**: 10 | **Effort**: ~15.5 hours | **Focus**: Question panel on left side
 
 ---
 
-## Task 2: Create Centralized Evaluation Constants
+### TASK 2.1: Create SplitScreenContainer Component
+**Priority**: P0 | **Effort**: 2h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/SplitScreenContainer.tsx`
 
-**Effort:** 2 hours
-**Priority:** Medium
-**Dependencies:** None
-
-### 📝 Description
-Consolidate all evaluation-related constants into a single, centralized file to eliminate duplication and improve maintainability.
-
-### 📂 Files to Create
-- `src/shared/constants/evaluation.ts`
-
-### 📂 Files to Update (Remove Duplicates)
-- `src/modules/practice/components/PracticeWizard/constants.ts` (if any overlap)
-- Any components using hardcoded evaluation values
-
-### ✅ Acceptance Criteria
-- [x] All evaluation constants in one file
-- [x] Type-safe with const assertions
-- [x] Helper functions for common operations (getScoreColor)
-- [x] Zero duplicate constants across codebase
-- [x] Proper JSDoc documentation
-
-### 🔧 Implementation
-```typescript
-// src/shared/constants/evaluation.ts
-
-/**
- * Evaluation & Feedback Constants
- * Centralized configuration for immediate answer evaluation
- */
-
-// Revision Limits
-export const MAX_REVISIONS = 2;
-export const MIN_ANSWER_LENGTH = 10;
-
-// Timeouts
-export const EVALUATION_TIMEOUT = 30000; // 30 seconds
-
-// Score Thresholds (0-100 scale)
-export const SCORE_THRESHOLDS = {
-  EXCELLENT: 90,
-  GOOD: 75,
-  FAIR: 60,
-  PASS: 50,
-} as const;
-
-// Animation Durations (milliseconds)
-export const FEEDBACK_ANIMATIONS = {
-  MODAL_DURATION: 300,
-  SCORE_COUNT_DURATION: 800,
-  SECTION_STAGGER: 150,
-} as const;
-
-// Score Color Mapping
-export const SCORE_COLORS = {
-  EXCELLENT: 'gradient-green-glow',
-  GOOD: 'gradient-blue-glow',
-  FAIR: 'gradient-orange-glow',
-  POOR: 'gradient-red-glow',
-} as const;
-
-/**
- * Get color class for score
- */
-export function getScoreColor(score: number): string {
-  if (score >= SCORE_THRESHOLDS.EXCELLENT) return SCORE_COLORS.EXCELLENT;
-  if (score >= SCORE_THRESHOLDS.GOOD) return SCORE_COLORS.GOOD;
-  if (score >= SCORE_THRESHOLDS.FAIR) return SCORE_COLORS.FAIR;
-  return SCORE_COLORS.POOR;
-}
-```
-
-### 🧪 Manual Test Cases
-1. Import constants in multiple files → no TypeScript errors
-2. Use getScoreColor with various scores → correct colors returned
-3. Verify no duplicate constants exist via grep
+**Implementation**: Grid layout 20-80 split (desktop), vertical stack (mobile), proper height calculation
+**Key Specs**: `grid-cols-[minmax(320px,25%)_1fr]`, `gap-5`, `h-[calc(100vh-100px)]`
+**Accept**: ✅ 20-80 split desktop, ✅ stack mobile (<1024px), ✅ no scrollbars, ✅ types
+**Design Ref**: Prototype lines 131-142, 777-881
 
 ---
 
-## Task 3: Extend Practice Store with Evaluation State
+### TASK 2.2: Create QuestionPanel with ScrollArea
+**Priority**: P0 | **Effort**: 1.5h | **Deps**: 2.1, scroll-area | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/index.tsx`
 
-**Effort:** 4 hours
-**Priority:** High
-**Dependencies:** Task 2 (Constants)
-
-### 📝 Description
-Add evaluation-related state to the practice slice to track evaluations, revisions, and feedback for each question.
-
-### 📂 Files to Modify
-- `src/store/slices/practice/index.ts`
-- `src/types/store/index.ts` (update IPracticeState)
-
-### ✅ Acceptance Criteria
-- [x] QuestionAnswer type includes evaluation history
-- [x] Revision count tracked per question
-- [x] Current evaluation state stored
-- [x] Status field tracks submission state
-- [x] Store actions for evaluation workflow
-- [x] Existing state structure unchanged
-
-### 🔧 Implementation
-```typescript
-// Update QuestionAnswer type
-interface QuestionAnswer {
-  questionId: string;
-  answer: string;
-  timestamp: Date;
-
-  // NEW: Evaluation tracking
-  evaluations: Array<{
-    attemptNumber: number;
-    score: number;
-    strengths: string[];
-    improvements: string[];
-    suggestions: string[];
-    overallFeedback: string;
-    timestamp: Date;
-  }>;
-
-  // NEW: Revision tracking
-  revisionCount: number;
-  status: 'unanswered' | 'in-progress' | 'submitted' | 'revised';
-}
-
-// NEW: Store actions
-interface PracticeActions {
-  // ... existing actions
-
-  // Evaluation actions
-  saveEvaluation: (questionId: string, evaluation: Evaluation) => void;
-  incrementRevisionCount: (questionId: string) => void;
-  updateQuestionStatus: (questionId: string, status: QuestionStatus) => void;
-  getCurrentEvaluation: (questionId: string) => Evaluation | null;
-  canReviseAnswer: (questionId: string) => boolean;
-}
-```
-
-### 🧪 Manual Test Cases
-1. Save evaluation → appears in question's evaluation history
-2. Increment revision → count increases, max enforced
-3. Check revision eligibility → correct based on count
-4. Get current evaluation → returns latest evaluation
+**Implementation**: shadcn ScrollArea wrapper with custom purple scrollbar, flex-col gap-4
+**Key Specs**: 8px scrollbar, `rgba(120,119,198,0.3)` thumb, smooth scroll
+**Accept**: ✅ custom scrollbar, ✅ hover state, ✅ smooth scroll, ✅ contains QuestionCard + HintsCard
+**Design Ref**: Prototype lines 144-152, 166-182
 
 ---
 
-## Task 4: Build FeedbackModal Component
+### TASK 2.3: Build QuestionCard Component
+**Priority**: P0 | **Effort**: 2h | **Deps**: 2.2 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/QuestionCard.tsx`
 
-**Effort:** 6 hours
-**Priority:** High
-**Dependencies:** Task 2 (Constants)
-
-### 📝 Description
-Create the glassmorphic feedback modal that displays evaluation results with smooth animations and clear action buttons.
-
-### 📂 Files to Create
-- `src/modules/assessment/components/FeedbackModal/index.tsx`
-- `src/modules/assessment/components/FeedbackModal/ScoreDisplay.tsx`
-- `src/modules/assessment/components/FeedbackModal/FeedbackSection.tsx`
-- `src/modules/assessment/components/FeedbackModal/DetailedFeedback.tsx`
-
-### ✅ Acceptance Criteria
-- [x] Modal displays all evaluation data clearly
-- [x] Score color-coded based on thresholds
-- [x] Strengths, improvements, suggestions well-organized
-- [x] Revision button shows remaining attempts
-- [x] Revision button disabled when max reached
-- [x] Smooth entrance/exit animations
-- [x] Keyboard navigation (Tab, Escape)
-- [x] Mobile responsive layout
-
-### 🔧 Component Structure
-```typescript
-// Main Modal Component
-interface IFeedbackModalProps {
-  isOpen: boolean;
-  evaluation: {
-    score: number;
-    strengths: string[];
-    improvements: string[];
-    suggestions: string[];
-    overallFeedback: string;
-  };
-  attemptNumber: number;
-  maxAttempts: number;
-  onRevise: () => void;
-  onNext: () => void;
-  onClose: () => void;
-  loading?: boolean;
-}
-
-export function FeedbackModal(props: IFeedbackModalProps) {
-  // Implementation
-}
-```
-
-### 🎨 Design Specs
-- **Modal**: Glass card with backdrop blur
-- **Score Badge**: Large, animated count-up, color-coded glow
-- **Sections**: Icon + title + list items with staggered animation
-- **Buttons**: Full-width on mobile, side-by-side on desktop
-- **Animations**:
-  - Modal: slide-up + fade (300ms)
-  - Score: count-up (800ms)
-  - Sections: stagger (150ms delay)
-
-### 🧪 Manual Test Cases
-1. Open modal → smooth entrance animation
-2. Score displays correctly with right color
-3. Revise button shows "2 left" → "1 left" → disabled
-4. Close with X or Escape → modal closes
-5. Mobile view → responsive layout works
+**Implementation**: Glassmorphism card with exact prototype colors, backdrop blur, shadows
+**Key Specs**: `bg-[rgba(20,15,40,0.85)]`, `border-[rgba(120,119,198,0.3)]`, `backdrop-blur-[20px]`
+**Accept**: ✅ exact glass styling, ✅ renders all sections, ✅ conditional rendering
+**Design Ref**: Prototype lines 154-163, 781-821
 
 ---
 
-## Task 5: Integrate FeedbackModal with AssessmentLayout
+### TASK 2.4: Create QuestionHeader with Badge
+**Priority**: P1 | **Effort**: 1.5h | **Deps**: 2.3 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/QuestionHeader.tsx`
 
-**Effort:** 4 hours
-**Priority:** High
-**Dependencies:** Task 4 (FeedbackModal)
-
-### 📝 Description
-Update AssessmentLayout to replace "Next" button with "Submit Answer" and integrate the FeedbackModal.
-
-### 📂 Files to Modify
-- `src/modules/assessment/components/AssessmentLayout.tsx`
-- `src/modules/assessment/components/AnswerInput.tsx` (disable during evaluation)
-
-### ✅ Acceptance Criteria
-- [x] "Submit Answer" button replaces "Next" button
-- [x] Button disabled when answer empty or evaluating
-- [x] Loading state shows spinner + "Evaluating..."
-- [x] FeedbackModal appears after evaluation
-- [x] Answer input disabled during evaluation
-- [x] Layout remains responsive
-
-### 🔧 Implementation
-```typescript
-export function AssessmentLayout() {
-  const {
-    currentQuestion,
-    currentAnswer,
-    handleAnswerChange,
-    isEvaluating,
-    currentEvaluation,
-    showFeedback,
-    handleSubmitAnswer,
-    handleReviseAnswer,
-    handleNextQuestion,
-    closeFeedbackModal,
-    currentAttemptNumber,
-  } = useAssessment();
-
-  return (
-    <div className="min-h-screen flex flex-col">
-      <AssessmentHeader />
-
-      <main className="flex-1">
-        <QuestionDisplay question={currentQuestion} />
-
-        <AnswerInput
-          question={currentQuestion}
-          value={currentAnswer}
-          onChange={handleAnswerChange}
-          disabled={isEvaluating}
-        />
-
-        {/* Submit Button */}
-        <div className="container max-w-4xl mx-auto px-6 pb-8">
-          <Button
-            variant="primary"
-            onClick={handleSubmitAnswer}
-            disabled={!currentAnswer.trim() || isEvaluating}
-            className="w-full"
-          >
-            {isEvaluating ? (
-              <>
-                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                Evaluating...
-              </>
-            ) : (
-              <>
-                Submit Answer
-                <ArrowRight className="w-5 h-5 ml-2" />
-              </>
-            )}
-          </Button>
-        </div>
-      </main>
-
-      {/* Feedback Modal */}
-      <FeedbackModal
-        isOpen={showFeedback}
-        evaluation={currentEvaluation}
-        attemptNumber={currentAttemptNumber}
-        maxAttempts={MAX_REVISIONS}
-        onRevise={handleReviseAnswer}
-        onNext={handleNextQuestion}
-        onClose={closeFeedbackModal}
-        loading={isEvaluating}
-      />
-    </div>
-  );
-}
-```
-
-### 🧪 Manual Test Cases
-1. Empty answer → Submit disabled
-2. Type answer → Submit enabled
-3. Click Submit → Loading state appears
-4. Evaluation complete → Modal shows
-5. Answer input disabled during evaluation
+**Implementation**: Flex layout with question number + difficulty badge (cyan/pink/purple)
+**Key Specs**: Badge colors by difficulty (Easy=cyan, Medium=pink, Hard=purple)
+**Accept**: ✅ correct colors, ✅ number display, ✅ badge rounded-full, ✅ justify-between
+**Design Ref**: Prototype lines 184-204
 
 ---
 
-## Task 6: Update useAssessment Hook with TanStack Query
+### TASK 2.5: Build QuestionContent Component
+**Priority**: P1 | **Effort**: 2h | **Deps**: 2.3 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/QuestionContent.tsx`
 
-**Effort:** 4 hours
-**Priority:** High
-**Dependencies:** Task 3 (Store), Task 1 (API)
-
-### 📝 Description
-Refactor useAssessment hook to use TanStack Query mutation instead of raw fetch, leveraging existing useEvaluateAnswer hook.
-
-### 📂 Files to Modify
-- `src/modules/assessment/hooks/useAssessment.ts`
-- `src/lib/claude/hooks/useAnswerEvaluation.ts` (if adjustments needed)
-
-### ✅ Acceptance Criteria
-- [x] Uses `useEvaluateAnswer` mutation hook
-- [x] `isPending` state from mutation controls UI
-- [x] onSuccess callback stores evaluation
-- [x] onError callback shows error toast
-- [x] No more manual fetch/loading state
-- [x] Request cancellation on unmount
-
-### 🔧 Implementation
-```typescript
-import { useEvaluateAnswer } from "@lib/claude/hooks/useAnswerEvaluation";
-
-export function useAssessment() {
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [currentEvaluation, setCurrentEvaluation] = useState(null);
-
-  const store = useAppStore();
-  const { mutate: evaluateAnswer, isPending: isEvaluating } = useEvaluateAnswer();
-
-  const handleSubmitAnswer = useCallback(() => {
-    if (!currentQuestion || !currentAnswer.trim()) return;
-
-    const attemptNumber = store.getRevisionCount(currentQuestion.id) + 1;
-
-    evaluateAnswer(
-      {
-        question: currentQuestion,
-        answer: currentAnswer,
-        attemptNumber,
-      },
-      {
-        onSuccess: (response) => {
-          if (response.success && response.data.feedback) {
-            setCurrentEvaluation(response.data.feedback);
-            store.saveEvaluation(currentQuestion.id, {
-              ...response.data.feedback,
-              attemptNumber,
-              timestamp: new Date(),
-            });
-            setShowFeedback(true);
-          }
-        },
-        onError: (error) => {
-          console.error('Evaluation failed:', error);
-          toast.error('Failed to evaluate answer. Please try again.');
-        },
-      }
-    );
-  }, [currentQuestion, currentAnswer, evaluateAnswer, store]);
-
-  const handleReviseAnswer = useCallback(() => {
-    setShowFeedback(false);
-    store.incrementRevisionCount(currentQuestion.id);
-    store.updateQuestionStatus(currentQuestion.id, 'in-progress');
-  }, [currentQuestion, store]);
-
-  const handleNextQuestion = useCallback(() => {
-    setShowFeedback(false);
-    store.updateQuestionStatus(currentQuestion.id, 'submitted');
-    store.goToNextQuestion();
-  }, [currentQuestion, store]);
-
-  return {
-    // ... existing
-    isEvaluating,
-    showFeedback,
-    currentEvaluation,
-    currentAttemptNumber: store.getRevisionCount(currentQuestion?.id ?? ''),
-    handleSubmitAnswer,
-    handleReviseAnswer,
-    handleNextQuestion,
-    closeFeedbackModal: () => setShowFeedback(false),
-  };
-}
-```
-
-### 🧪 Manual Test Cases
-1. Submit answer → TanStack Query mutation fires
-2. During evaluation → isPending = true
-3. Success → feedback modal opens
-4. Error → toast notification appears
-5. Check DevTools → mutation tracked correctly
+**Implementation**: Title + content with inline code parsing (backticks and <code> tags)
+**Key Specs**: Title 18px/bold, content 13px, inline code: cyan bg + blue text
+**Accept**: ✅ parses code, ✅ proper styling, ✅ line-height 1.7, ✅ monospace for code
+**Design Ref**: Prototype lines 206-228
 
 ---
 
-## Task 7: Add Revision Tracking and Limits
+### TASK 2.6: Create ConstraintsSection Component
+**Priority**: P1 | **Effort**: 1.5h | **Deps**: 2.3 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/ConstraintsSection.tsx`
 
-**Effort:** 4 hours
-**Priority:** Medium
-**Dependencies:** Task 3 (Store), Task 6 (Hook)
-
-### 📝 Description
-Implement revision count tracking with max limit enforcement and appropriate UI feedback.
-
-### 📂 Files to Modify
-- `src/store/slices/practice/index.ts` (revision logic)
-- `src/modules/assessment/components/FeedbackModal/index.tsx` (revision UI)
-
-### ✅ Acceptance Criteria
-- [x] Revision count increments on "Revise Answer"
-- [x] Max revisions enforced (2 attempts)
-- [x] Revise button disabled at limit
-- [x] Revision count displays correctly ("2 left", "1 left", disabled)
-- [x] Each revision creates new evaluation entry
-- [x] Question status tracks revision state
-
-### 🔧 Implementation
-```typescript
-// Store action
-incrementRevisionCount: (questionId: string) => {
-  set((state) => {
-    const answer = state.savedAnswers.get(questionId);
-    if (answer) {
-      answer.revisionCount = Math.min(
-        answer.revisionCount + 1,
-        MAX_REVISIONS
-      );
-      answer.status = 'in-progress';
-    }
-  });
-},
-
-canReviseAnswer: (questionId: string) => {
-  const answer = get().savedAnswers.get(questionId);
-  return answer ? answer.revisionCount < MAX_REVISIONS : true;
-},
-
-// FeedbackModal
-const canRevise = attemptNumber < maxAttempts;
-const attemptsLeft = maxAttempts - attemptNumber;
-
-<Button
-  variant="glass"
-  onClick={onRevise}
-  disabled={!canRevise}
->
-  <RefreshCw className="w-4 h-4 mr-2" />
-  Revise Answer
-  {canRevise && (
-    <span className="text-xs ml-2">
-      ({attemptsLeft} {attemptsLeft === 1 ? 'left' : 'left'})
-    </span>
-  )}
-</Button>
-```
-
-### 🧪 Manual Test Cases
-1. First submission → "Revise Answer (2 left)"
-2. First revision → "Revise Answer (1 left)"
-3. Second revision → Button disabled
-4. Check store → 3 evaluation entries
-5. Status updates correctly through flow
+**Implementation**: Section title + bulleted list with custom purple bullets
+**Key Specs**: 12px uppercase title, custom `::before` bullet color `#7877c6`
+**Accept**: ✅ custom bullets, ✅ proper spacing, ✅ uppercase title, ✅ responsive
+**Design Ref**: Prototype lines 230-264
 
 ---
 
-## Task 8: Polish UI/UX and Animations
+### TASK 2.7: Create ExamplesSection Component
+**Priority**: P1 | **Effort**: 2h | **Deps**: 2.3 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/ExamplesSection.tsx`
 
-**Effort:** 4 hours
-**Priority:** Low
-**Dependencies:** Task 4 (FeedbackModal), Task 5 (Integration)
-
-### 📝 Description
-Add final polish with smooth animations, transitions, and micro-interactions for a premium user experience.
-
-### 📂 Files to Modify
-- `src/modules/assessment/components/FeedbackModal/index.tsx`
-- `src/modules/assessment/components/FeedbackModal/ScoreDisplay.tsx`
-- `src/modules/assessment/components/AssessmentLayout.tsx`
-
-### ✅ Acceptance Criteria
-- [x] Modal entrance: slide-up + fade (300ms)
-- [x] Score badge: count-up animation (800ms)
-- [x] Feedback sections: staggered fade-in (150ms delay)
-- [x] Button hover states with scale effect
-- [x] Loading spinner smooth rotation
-- [x] Toast notifications for errors
-- [x] Keyboard shortcuts documented
-
-### 🎨 Animation Details
-```typescript
-// Modal entrance
-const modalVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.3, ease: 'easeOut' }
-  }
-};
-
-// Score count-up
-const scoreRef = useRef(null);
-useEffect(() => {
-  if (isOpen && scoreRef.current) {
-    animateValue(scoreRef.current, 0, score, 800);
-  }
-}, [isOpen, score]);
-
-// Staggered sections
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15 }
-  }
-};
-
-const itemVariants = {
-  hidden: { opacity: 0, x: -10 },
-  visible: {
-    opacity: 1,
-    x: 0,
-    transition: { duration: 0.3 }
-  }
-};
-```
-
-### 🎯 Micro-interactions
-- **Submit button**: Scale 0.95 on click, pulse when enabled
-- **Revise button**: Subtle rotate icon on hover
-- **Next button**: Arrow slides right on hover
-- **Modal close**: Scale down + fade out
-- **Feedback items**: Slide in from left with fade
-
-### 🧪 Manual Test Cases
-1. Open modal → smooth slide-up animation
-2. Score counts from 0 to actual value
-3. Sections appear with stagger effect
-4. Hover buttons → scale/movement effects
-5. Close modal → smooth exit animation
+**Implementation**: Example boxes with input/output/explanation in monospace
+**Key Specs**: Box `bg-[rgba(120,119,198,0.05)]`, 11px Monaco font, bold labels
+**Accept**: ✅ boxes styled, ✅ monospace font, ✅ optional explanation, ✅ gap between
+**Design Ref**: Prototype lines 266-281
 
 ---
 
-## 📊 Implementation Checklist
+### TASK 2.8: Update AssessmentLayout to Use SplitScreen
+**Priority**: P0 | **Effort**: 1.5h | **Deps**: 2.1, 2.2 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AssessmentLayout.tsx`
 
-### Week 1 (Core Development)
-- [ ] **Task 1**: API endpoint updated (4h)
-- [ ] **Task 2**: Constants centralized (2h)
-- [ ] **Task 3**: Store extended (4h)
-- [ ] **Task 4**: FeedbackModal built (6h)
-- [ ] **Task 5**: Layout integration (4h)
-- [ ] **Task 6**: Hook refactored (4h)
-- [ ] **Task 7**: Revision tracking (4h)
-- [ ] **Task 8**: UI polish (4h)
+**Implementation**: Replace old layout with SplitScreenContainer, pass questionPanel + answerPanel
+**Key Specs**: Remove QuestionDisplay, use new components, maintain functionality
+**Accept**: ✅ split screen renders, ✅ no breaks, ✅ existing handlers work
+**Design Ref**: Full prototype structure
 
-### Week 2 (Testing & Deployment)
-- [ ] Manual testing all flows
-- [ ] Bug fixes and refinements
-- [ ] Staging deployment
-- [ ] Production deployment (feature flag)
-- [ ] Monitor metrics and gather feedback
+---
+
+### TASK 2.9: Mobile Responsive Adjustments
+**Priority**: P2 | **Effort**: 1h | **Deps**: 2.1-2.8 | **Agent**: frontend-ui-developer
+**File**: Update `SplitScreenContainer.tsx`
+
+**Implementation**: Add responsive classes for mobile stack, adjust heights
+**Key Specs**: Breakpoint 1024px, vertical stack, question panel max-h-50vh
+**Accept**: ✅ stacks mobile, ✅ heights adjust, ✅ no overflow, ✅ tested 3 sizes
+**Design Ref**: Prototype lines 742-751
+
+---
+
+### TASK 2.10: CLEANUP - Remove Old QuestionDisplay
+**Priority**: P2 | **Effort**: 0.5h | **Deps**: 2.8 complete | **Agent**: frontend-ui-developer
+**Files to Delete**: QuestionDisplay.tsx, QuestionCard/* (5 files in shared/ui)
+
+**Implementation**: Search imports, replace references, delete files, verify build
+**Key Specs**: `git rm` files, run build, commit with proper message
+**Accept**: ✅ files deleted, ✅ no import errors, ✅ build succeeds, ✅ git clean
+
+---
+
+## 🗂️ DATABASE 2: Smart Hints System
+
+**Purpose**: Progressive 3-level AI hints with animations and state management
+**Tasks**: 9 | **Effort**: ~13.5 hours | **Focus**: Hint card within question panel
+
+---
+
+### TASK 3.1: Create HintsCard Container
+**Priority**: P1 | **Effort**: 1.5h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/HintsCard.tsx`
+
+**Implementation**: Glass card with gradient title, hint counter badge, button, list
+**Key Specs**: Gradient text animation (6s loop), badge `0/3 used`, encouragement at max
+**Accept**: ✅ gradient animates, ✅ badge updates, ✅ encouragement shows, ✅ glass styled
+**Design Ref**: Prototype lines 358-384, 512-521, 824-838
+
+---
+
+### TASK 3.2: Build HintButton Component
+**Priority**: P1 | **Effort**: 1.5h | **Deps**: 3.1 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/HintButton.tsx`
+
+**Implementation**: Full-width button with 3 states (default/loading/disabled), gradient bg
+**Key Specs**: Purple-pink gradient, shows "Get Hint" → "Get Next Hint" → "All Used"
+**Accept**: ✅ 3 states work, ✅ gradient styled, ✅ hover lift, ✅ disabled at max
+**Design Ref**: Prototype lines 386-412
+
+---
+
+### TASK 3.3: Create Hint tRPC Procedure
+**Priority**: P0 | **Effort**: 2h | **Deps**: None | **Agent**: ai-ml-engineer
+**Files**:
+- `frontend/src/lib/trpc/routers/ai.ts` (add getHint procedure)
+- `frontend/src/lib/trpc/schemas/hint.schema.ts` (NEW - Zod schemas)
+- `frontend/src/lib/claude/prompts/hints.ts` (prompt templates)
+
+**Implementation**: tRPC procedure with Zod schemas + 3 prompt templates (general/specific/skeleton)
+**Key Specs**:
+- Level 1=approach, 2=technique, 3=code skeleton
+- Input: question object, currentAnswer (optional), hintLevel (1-3)
+- Output: hint object with level/content/hasMore, success boolean
+- Zod validates all inputs/outputs at runtime
+- Returns typed response with full TypeScript inference
+
+**Accept**:
+- ✅ Zod schemas defined (getHintInputSchema, getHintOutputSchema)
+- ✅ tRPC procedure added to aiRouter
+- ✅ 3 prompts work (getLevel1/2/3Prompt)
+- ✅ Claude API calls with error handling
+- ✅ Type-safe responses (no manual typing needed)
+
+**Design Ref**: See [phase-2-progressive-hints.md](../question-answering-enhancement/phase-2-progressive-hints.md) for full tRPC implementation
+
+---
+
+### TASK 3.4: Extend Store with Hint State
+**Priority**: P0 | **Effort**: 1.5h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: `frontend/src/store/slices/practice/actions/hints.ts` (NEW)
+
+**Implementation**: New actions file with hintsList Map, hintsUsed Map, 4 actions
+**Key Specs**: `saveHint()`, `getHintsForQuestion()`, `getHintsUsedCount()`, `clearHints()`
+**Accept**: ✅ actions work, ✅ Maps update, ✅ integrated in slice, ✅ types exported
+**Design Ref**: Store architecture
+
+---
+
+### TASK 3.5: Build HintDisplay with Level Variants
+**Priority**: P1 | **Effort**: 2h | **Deps**: 3.1 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/QuestionPanel/HintDisplay.tsx`
+
+**Implementation**: 3 colored variants (cyan/pink/purple), fade-in animation, inline code
+**Key Specs**: Level 1=cyan, 2=pink, 3=purple borders/badges, 400ms fade-in
+**Accept**: ✅ 3 variants styled, ✅ animation smooth, ✅ code parsing, ✅ stagger delay
+**Design Ref**: Prototype lines 429-510
+
+---
+
+### TASK 3.6: Create useRequestHint Hook (tRPC)
+**Priority**: P1 | **Effort**: 1h | **Deps**: 3.3, 3.4 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/hooks/useRequestHint.ts`
+
+**Implementation**: tRPC auto-generated mutation hook, saves to store on success
+**Key Specs**:
+- Uses `trpc.ai.getHint.useMutation()` (auto-generated, type-safe)
+- onSuccess callback saves hint to store
+- Returns `requestHint`, `isLoading`, `isError`, `canRequestMore`
+- Full TypeScript autocomplete for input/output
+- No manual type definitions needed
+
+**Accept**:
+- ✅ tRPC mutation hook used (not manual useMutation)
+- ✅ Saves hint to store on success
+- ✅ Loading and error states exposed
+- ✅ Type-safe request with Zod validation
+- ✅ Integration with existing store actions
+
+**Design Ref**: See [phase-2-progressive-hints.md](../question-answering-enhancement/phase-2-progressive-hints.md) Section 3 for full implementation
+
+---
+
+### TASK 3.7: Add Hint Animations to CSS
+**Priority**: P2 | **Effort**: 0.5h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: `frontend/src/styles/glassmorphism.css`
+
+**Implementation**: Add `@keyframes hintFadeIn` and gradient text animation
+**Key Specs**: 400ms ease-out, translateY(10px→0), opacity(0→1)
+**Accept**: ✅ animation defined, ✅ works across browsers, ✅ performant
+**Design Ref**: Prototype animations
+
+---
+
+### TASK 3.8: Integration Testing - Hints Flow
+**Priority**: P2 | **Effort**: 1.5h | **Deps**: 3.1-3.7 | **Agent**: frontend-ui-developer
+
+**Implementation**: Manual test 5 scenarios (first/second/third hint, navigation, errors)
+**Key Specs**: All hints display correctly, state persists, animations smooth
+**Accept**: ✅ 5 scenarios pass, ✅ no errors, ✅ mobile works, ✅ state correct
+
+---
+
+### TASK 3.9: CLEANUP - Remove Unused Hint Code
+**Priority**: P2 | **Effort**: 0.5h | **Deps**: 3.8 | **Agent**: frontend-ui-developer
+
+**Implementation**: Search for old hint code, remove duplicates, run eslint
+**Key Specs**: No duplicate types, no unused imports, build succeeds
+**Accept**: ✅ duplicates removed, ✅ eslint passes, ✅ build succeeds, ✅ committed
+
+---
+
+## 🗂️ DATABASE 3: Answer Panel (Right 80%)
+
+**Purpose**: Text input + Monaco code editor with submission flow and autosave
+**Tasks**: 13 | **Effort**: ~18 hours | **Focus**: Right panel (80% width)
+
+---
+
+### TASK 4.1: Create AnswerPanel Container
+**Priority**: P0 | **Effort**: 1h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AnswerPanel/index.tsx`
+
+**Implementation**: Flex-col container with EditorCard + SubmitButton
+**Key Specs**: Full height, no overflow, gap-4, passes all props
+**Accept**: ✅ renders both components, ✅ full height, ✅ no scroll
+**Design Ref**: Prototype lines 283-289, 841-881
+
+---
+
+### TASK 4.2: Build Question Type Detection
+**Priority**: P1 | **Effort**: 0.5h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/utils/questionType.ts`
+
+**Implementation**: 3 utility functions (getAnswerInputType, getDefaultLanguage, getPlaceholder)
+**Key Specs**: Returns 'code' for coding, 'text' for others, default language JS
+**Accept**: ✅ 3 functions work, ✅ types defined, ✅ JSDoc comments
+**Design Ref**: Question type logic
+
+---
+
+### TASK 4.3: Create TextAnswerInput Component
+**Priority**: P1 | **Effort**: 1.5h | **Deps**: 4.2 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AnswerPanel/TextAnswerInput.tsx`
+
+**Implementation**: shadcn Textarea with glass styling, auto-resize, custom scrollbar
+**Key Specs**: Min-height 400px, `bg-[rgba(10,1,24,0.6)]`, focus glow
+**Accept**: ✅ auto-resizes, ✅ styled correctly, ✅ scrollbar custom, ✅ focus state
+**Design Ref**: Prototype lines 327-345
+
+---
+
+### TASK 4.4: Install Monaco Editor
+**Priority**: P0 | **Effort**: 0.25h | **Deps**: None | **Agent**: frontend-ui-developer
+
+**Implementation**: Run `npm install @monaco-editor/react monaco-editor`
+**Key Specs**: Both packages installed, no errors, import works
+**Accept**: ✅ packages installed, ✅ package.json updated, ✅ import works
+
+---
+
+### TASK 4.5: Create CodeEditorWrapper Component
+**Priority**: P0 | **Effort**: 3h | **Deps**: 4.4 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AnswerPanel/CodeEditorWrapper.tsx`
+
+**Implementation**: Monaco Editor with custom dark theme, full height, all options
+**Key Specs**: Theme 'devprep-dark' (purple/pink/cyan), minimap, line numbers, autocomplete
+**Accept**: ✅ theme applied, ✅ full height, ✅ options work, ✅ onChange fires
+**Design Ref**: Monaco docs + prototype styling
+
+---
+
+### TASK 4.6: Build LanguageSelector Component
+**Priority**: P1 | **Effort**: 1.5h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AnswerPanel/LanguageSelector.tsx`
+
+**Implementation**: shadcn Select with badge-style trigger, 7 languages (JS/TS/Py/Java/C++/Go/Rust)
+**Key Specs**: Badge trigger (not full dropdown), glass dropdown, icons for languages
+**Accept**: ✅ 7 languages, ✅ badge styled, ✅ dropdown glass, ✅ onChange fires
+**Design Ref**: Prototype lines 318-325
+
+---
+
+### TASK 4.7: Create EditorHeader Component
+**Priority**: P1 | **Effort**: 1h | **Deps**: 4.6 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AnswerPanel/EditorHeader.tsx`
+
+**Implementation**: Flex layout with "Your Solution" label + LanguageSelector (code only)
+**Key Specs**: Justify-between, 14px label, selector only for code questions
+**Accept**: ✅ flex layout, ✅ conditional selector, ✅ styled correctly
+**Design Ref**: Prototype lines 305-310, 844-848
+
+---
+
+### TASK 4.8: Build EditorCard Component
+**Priority**: P0 | **Effort**: 2h | **Deps**: 4.3, 4.5, 4.7 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AnswerPanel/EditorCard.tsx`
+
+**Implementation**: Glass card combining Text/Code editors, auto-detects question type
+**Key Specs**: Flex-1 height, min-500px, glass styling, switches editor by type
+**Accept**: ✅ detects type, ✅ renders correct editor, ✅ glass styled, ✅ full height
+**Design Ref**: Prototype lines 291-303, 843-869
+
+---
+
+### TASK 4.9: Create EditorFooter Component
+**Priority**: P1 | **Effort**: 1h | **Deps**: 4.8 | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AnswerPanel/EditorFooter.tsx`
+
+**Implementation**: Flex footer with tip + count (char for text, lines for code)
+**Key Specs**: 12px text, tip with 💡, real-time count update
+**Accept**: ✅ tips correct, ✅ count updates, ✅ font-mono for count
+**Design Ref**: Prototype lines 348-355, 865-868
+
+---
+
+### TASK 4.10: Build SubmitButton Component
+**Priority**: P0 | **Effort**: 2h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: `frontend/src/modules/assessment/components/AnswerPanel/SubmitButton.tsx`
+
+**Implementation**: Full-width gradient button in glass container, 3 states
+**Key Specs**: Purple-pink gradient, "Submit Answer →", loading with spinner, disabled state
+**Accept**: ✅ 3 states work, ✅ gradient styled, ✅ hover lift + glow, ✅ disabled correct
+**Design Ref**: Prototype lines 524-577, 871-879
+
+---
+
+### TASK 4.11: Implement Autosave with Debounce
+**Priority**: P2 | **Effort**: 2h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: Update `useAssessment.ts` hook
+
+**Implementation**: Install use-debounce, add 500ms debounced save, show save indicator
+**Key Specs**: 500ms delay, saves to draft, indicator: idle/saving/saved
+**Accept**: ✅ debounce works, ✅ saves to store, ✅ indicator shows, ✅ no lag
+**Design Ref**: Best practices for autosave
+
+---
+
+### TASK 4.12: Add Keyboard Shortcuts
+**Priority**: P2 | **Effort**: 1h | **Deps**: None | **Agent**: frontend-ui-developer
+**File**: Update `AnswerPanel/index.tsx`
+
+**Implementation**: Install react-hotkeys-hook, add Cmd/Ctrl+Enter to submit
+**Key Specs**: Works in textarea + Monaco, hint in footer "⌘+Enter to submit"
+**Accept**: ✅ shortcut works, ✅ cross-platform, ✅ hint shown, ✅ disabled when evaluating
+**Design Ref**: Keyboard shortcuts UX
+
+---
+
+### TASK 4.13: CLEANUP - Remove Old AnswerInput
+**Priority**: P2 | **Effort**: 0.5h | **Deps**: 4.1-4.12 | **Agent**: frontend-ui-developer
+**Files to Delete**: AnswerInput.tsx, CodeMirrorEditor.tsx (if exists)
+
+**Implementation**: Search imports, delete files, verify build, commit
+**Key Specs**: Remove 2 files, no import errors, build succeeds
+**Accept**: ✅ files deleted, ✅ no errors, ✅ build succeeds, ✅ committed
+
+---
+
+## 📊 Summary & Timeline
+
+### Database Totals:
+- **DATABASE 1** (Split Screen & Question): 10 tasks, ~15.5 hours
+- **DATABASE 2** (Smart Hints): 9 tasks, ~13.5 hours
+- **DATABASE 3** (Answer Panel): 13 tasks, ~18 hours
+- **TOTAL**: 32 tasks, ~47 hours (~6 days)
+
+### Week 1: Foundation (Days 1-3)
+- Day 1: DATABASE 1 Tasks 2.1-2.5 (split screen + question card)
+- Day 2: DATABASE 1 Tasks 2.6-2.10 (sections + cleanup)
+- Day 3: DATABASE 3 Tasks 4.1-4.6 (answer panel + editors)
+
+### Week 2: Features (Days 4-6)
+- Day 4: DATABASE 3 Tasks 4.7-4.13 (editor features + cleanup)
+- Day 5: DATABASE 2 Tasks 3.1-3.6 (hints card + API + store)
+- Day 6: DATABASE 2 Tasks 3.7-3.9 (animations + testing + cleanup)
 
 ---
 
 ## 🎯 Success Criteria
 
-**Feature is considered complete when:**
-1. ✅ User can submit answer and get immediate evaluation
-2. ✅ Feedback modal displays all evaluation details clearly
-3. ✅ User can revise answer up to 2 times with feedback
-4. ✅ Revision limits enforced and communicated clearly
-5. ✅ All animations smooth and polished
-6. ✅ Mobile experience is responsive and usable
-7. ✅ No console errors or warnings
-8. ✅ TanStack Query integration working correctly
+**Feature complete when all checked:**
+- [ ] Split-screen layout works (20-80 desktop, stacked mobile)
+- [ ] Question panel scrolls smoothly
+- [ ] All question sections render correctly
+- [ ] Hints request and display (3 levels with colors)
+- [ ] Text input for behavioral/system-design questions
+- [ ] Monaco editor for coding questions
+- [ ] Language selector changes editor language
+- [ ] Submit button states work correctly
+- [ ] Autosave works (500ms debounce)
+- [ ] Keyboard shortcut (Cmd+Enter) submits
+- [ ] All animations smooth (60fps)
+- [ ] Mobile responsive at all breakpoints
+- [ ] No console errors or warnings
+- [ ] Build succeeds with no TypeScript errors
+- [ ] ESLint passes with no warnings
 
 ---
 
-## 🚀 Getting Started
+## 🔗 Related Files
 
-**To begin implementation:**
-
-1. **Create a feature branch**: `git checkout -b feature/immediate-evaluation`
-2. **Start with Task 1**: API endpoint (foundation)
-3. **Work sequentially**: Each task builds on previous
-4. **Test incrementally**: Manual testing after each task
-5. **Commit frequently**: Small, atomic commits per task
-
-**Branch naming convention:**
-- Main feature: `feature/immediate-evaluation`
-- Individual tasks: `feature/immediate-evaluation/task-{number}`
-
-**Commit message format:**
-```
-feat(assessment): [Task N] Brief description
-
-- Detailed change 1
-- Detailed change 2
-
-Related: Phase 1 Task N
-```
+- **Prototype**: `.superdesign/design_iterations/glassmorphism_session_split_1.html`
+- **Design System**: `frontend/src/styles/glassmorphism.css`
+- **Colors**: `frontend/src/styles/globals.css`
+- **Types**: `frontend/src/types/ai/questions.ts`
+- **Store**: `frontend/src/store/slices/practice/`
 
 ---
 
-**Status:** 📋 Ready to Start
-**Next Step:** Create feature branch and begin Task 1
-**Estimated Completion:** 1.5 weeks (32 hours)
+**Status**: 📋 Ready to Implement
+**Last Updated**: October 15, 2025
+**Next Action**: Create 3 Notion databases from this breakdown

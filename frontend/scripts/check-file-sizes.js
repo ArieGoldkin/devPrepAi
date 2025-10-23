@@ -10,7 +10,7 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const MAX_LINES = 350; // Relaxed for store slices and complex hooks
+const MAX_LINES = 250; // Accommodates current mock services and utilities
 const SRC_DIR = join(__dirname, '../src');
 
 // Files/folders to skip

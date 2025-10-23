@@ -16,6 +16,7 @@ export type {
   IPracticeAnswer,
   IPracticeSettings,
   IPracticeMetrics,
+  IHint,
   PracticeMode,
   QuestionType,
   Difficulty,

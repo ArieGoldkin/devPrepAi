@@ -19,15 +19,15 @@
 ```mermaid
 graph TB
     Client[Next.js Client]
-    RQ[React Query Cache]
+    tRPC[tRPC Client + React Query]
     Zustand[Zustand Store]
-    API[Next.js API Routes]
+    API[tRPC Router]
     Claude[Anthropic Claude API]
     Storage[Local Storage]
 
-    Client <--> RQ
+    Client <--> tRPC
     Client <--> Zustand
-    RQ <--> API
+    tRPC <--> API
     API <--> Claude
     Zustand <--> Storage
 ```
@@ -44,14 +44,15 @@ graph TB
 |-------|------------|---------|---------------|
 | Framework | Next.js | 15.5.3 | App Router, Turbopack, built-in optimizations |
 | Language | TypeScript | 5.x | Type safety, strict mode, refactoring support |
+| API Layer | tRPC | 11.x | End-to-end type safety, auto-generated hooks |
+| Schema Validation | Zod | 3.x | Runtime validation, type inference |
 | Styling | Tailwind CSS | 4.x | Utility-first, consistent design system |
 | UI Components | shadcn/ui | Latest | Accessible, customizable, radix-ui based |
 | AI Integration | Anthropic SDK | 0.62.0 | Official SDK, TypeScript support, streaming |
 | Global State | Zustand | 5.0.8 | Simple, TypeScript-friendly, minimal bundle |
-| Server State | React Query | 5.90.2 | Caching, background refetch, optimistic updates |
+| Server State | React Query | 5.90.2 | Auto-integrated via tRPC (caching, refetching) |
 | Forms | React Hook Form | 7.62.0 | Performance, validation, TypeScript integration |
 | Code Editor | CodeMirror | 6.x | Syntax highlighting, multiple language support |
-| Schema Validation | Zod | 4.1.9 | Type-safe validation, runtime checking |
 
 ### 2.2 Development Tools
 
@@ -127,20 +128,21 @@ frontend/src/
 │   └── mocks/               # Sample data
 │
 ├── lib/                     # External integrations
+│   ├── trpc/                # tRPC configuration
+│   │   ├── init.ts          # tRPC initialization
+│   │   ├── context.ts       # Request context
+│   │   ├── Provider.tsx     # Client provider
+│   │   ├── routers/
+│   │   │   ├── _app.ts      # Root router
+│   │   │   └── ai.ts        # AI procedures
+│   │   └── schemas/         # Zod schemas
+│   │       ├── question.schema.ts
+│   │       └── evaluation.schema.ts
 │   ├── claude/              # Claude AI service
-│   │   ├── client.ts        # API client
-│   │   ├── config.ts        # Configuration
-│   │   ├── types.ts         # Claude types
-│   │   ├── errors.ts        # Error handling
-│   │   ├── hooks/           # React Query hooks
-│   │   │   ├── useQuestionGeneration.ts
-│   │   │   ├── useAnswerEvaluation.ts
-│   │   │   └── useAssessmentResults.ts
 │   │   └── services/        # Business logic
-│   │       ├── ai.ts
 │   │       ├── ai-prompts.ts
 │   │       ├── question-service.ts
-│   │       └── parser/
+│   │       └── response-parser.ts
 │   └── query/               # React Query setup
 │       ├── client.ts
 │       └── provider.tsx
@@ -326,23 +328,40 @@ export const CLAUDE_CONFIG = {
 } as const;
 ```
 
-#### React Query Hooks (`lib/claude/hooks/`)
-All Claude interactions use React Query for caching and state management:
-- `useQuestionGeneration.ts`: Generate questions with caching
-- `useAnswerEvaluation.ts`: Evaluate answers with optimistic updates
-- `useAssessmentResults.ts`: Batch evaluation results
+#### tRPC Auto-Generated Hooks
+All Claude interactions use **tRPC** with auto-generated React Query hooks:
 
+**Available Procedures** (`lib/trpc/routers/ai.ts`):
+- `ai.generateQuestions`: Generate personalized questions
+- `ai.evaluateAnswer`: Evaluate answers with AI feedback
+
+**Auto-Generated Hooks** (zero manual code):
 ```typescript
-// Example: useQuestionGeneration.ts
-export function useQuestionGeneration() {
-  return useMutation({
-    mutationFn: generateQuestionsAPI,
-    onSuccess: (data) => {
-      // Update Zustand store with generated questions
-    },
+// Frontend usage - hooks generated automatically by tRPC
+import { trpc } from "@lib/trpc/Provider";
+
+function Component() {
+  // Type-safe, auto-generated hook
+  const { mutate, isPending, data } = trpc.ai.generateQuestions.useMutation();
+
+  mutate({
+    profile: { role: "frontend", experienceLevel: "mid" },
+    count: 5,
+    difficulty: 7,
+    type: "coding",
   });
+  // ✅ Full TypeScript autocomplete
+  // ✅ Runtime Zod validation
+  // ✅ Automatic React Query caching
 }
 ```
+
+**Benefits**:
+- Zero manual hook creation (100% auto-generated)
+- End-to-end type safety (Zod schemas → TypeScript types)
+- Built-in React Query integration (caching, refetching, optimistic updates)
+
+**Migration**: Completed Oct 17, 2025 - see [api-design.md](./api-design.md) for details
 
 #### Prompt Management (`lib/claude/services/ai-prompts.ts`)
 Centralized prompt templates (< 180 lines):
@@ -360,7 +379,7 @@ Modular parsing system:
 
 The application uses a **hybrid state management** approach:
 - **Zustand**: Client-side state (UI, practice session, user profile)
-- **React Query**: Server state (API calls, caching, background refetch)
+- **tRPC + React Query**: Server state (API calls via tRPC, auto-caching, background refetch)
 
 #### Zustand Store (`store/`)
 

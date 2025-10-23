@@ -16,7 +16,7 @@ import {
 } from "@shared/mocks/question-generator";
 
 import { buildQuestionsPrompt } from "./ai-prompts";
-import { parseClaudeResponse, validateQuestions } from "./parser";
+import { parseClaudeResponse, validateQuestions } from "./response-parser";
 
 const GENERATION_MAX_TOKENS = 4000;
 const DEFAULT_TEMPERATURE = 0.7;
@@ -64,10 +64,11 @@ export async function generateQuestions(
 
 /**
  * Check if test mode should be used
+ * Uses mock data when USE_MOCK_API is true or API key is missing
  */
 function shouldUseTestMode(): boolean {
   const apiKey = process.env["ANTHROPIC_API_KEY"];
-  return process.env["USE_TEST_MODE"] === "true" || !apiKey;
+  return process.env["USE_MOCK_API"] === "true" || !apiKey;
 }
 
 /**
@@ -98,14 +99,27 @@ async function generateWithClaude(
 }
 
 /**
- * Get Claude client instance
+ * Singleton Claude client instance
+ * Reuses the same client across all API calls to prevent connection pool exhaustion
+ */
+let claudeClientInstance: Anthropic | null = null;
+
+/**
+ * Get Claude client instance (singleton pattern)
+ * Creates the client once and reuses it for all subsequent calls
  */
 function getClaudeClient(): Anthropic {
+  if (claudeClientInstance) {
+    return claudeClientInstance;
+  }
+
   const apiKey = process.env["ANTHROPIC_API_KEY"];
   if (!apiKey) {
     throw new Error("ANTHROPIC_API_KEY environment variable is required");
   }
-  return new Anthropic({ apiKey });
+
+  claudeClientInstance = new Anthropic({ apiKey });
+  return claudeClientInstance;
 }
 
 /**

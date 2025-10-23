@@ -7,7 +7,7 @@ version: 2.0.0
 # 🎯 DevPrep AI - Interview Preparation Platform
 
 **Project**: AI-powered platform for developer interview preparation
-**Stack**: Next.js 15, TypeScript, Tailwind CSS, Claude AI, Zustand, React Query
+**Stack**: Next.js 15, TypeScript, Tailwind CSS, tRPC, Zod, Claude AI, Zustand
 **Mode**: ⚡ Squad (Parallel)
 **Status**: ✅ Phase 4 Complete - MVP Done (Oct 2025)
 **Documentation**: All core docs updated to v2.0.0
@@ -17,7 +17,7 @@ version: 2.0.0
 DevPrep AI helps developers prepare for technical interviews with:
 - **AI-Generated Questions**: Personalized based on role & experience
 - **Real-time Evaluation**: Claude AI provides instant feedback with code execution
-- **Practice Wizard**: 4-step guided flow (🔄 Refactoring to glassmorphism design - see `Docs/design-transition/wizard-refactor.md`)
+- **Practice Wizard**: 4-step guided flow with glassmorphism design
 - **Multiple Practice Modes**: Quick Practice, Assessment Mode, Mock Interview
 - **Progress Tracking**: Comprehensive analytics and performance metrics
 - **Responsive Design**: Mobile-first approach with adaptive layouts
@@ -33,6 +33,7 @@ This project uses a modular instruction system to optimize token usage.
 
 | Module | Purpose | When to Load |
 |--------|---------|--------------|
+| `.claude/instructions/agent-routing.md` | Agent routing rules | **EVERY development task** |
 | `.claude/instructions/orchestration.md` | Routing & coordination | Complex tasks, multi-agent work |
 | `.claude/instructions/agents.md` | Agent capabilities | When invoking specific agents |
 | `.claude/instructions/context.md` | Context system | Session continuity, handoffs |
@@ -42,16 +43,18 @@ This project uses a modular instruction system to optimize token usage.
 
 ## 🎯 Quick Start
 
-1. **Simple tasks**: Work directly without loading extra instructions
-2. **Agent work**: Read `.claude/instructions/agents.md` for capabilities
-3. **Complex projects**: Read `.claude/instructions/orchestration.md` for routing
-4. **Multi-session**: Read `.claude/instructions/context.md` for continuity
-5. **CLI usage**: Read `.claude/instructions/cli-integration.md` for auto-detection
-6. **UI/UX design**: Read `.claude/instructions/superdesign.md` for design workflow
+1. **Development workflows**: See `Docs/developer-guide.md` for setup, commands, patterns
+2. **Simple tasks**: Work directly without loading extra instructions
+3. **Agent work**: Read `.claude/instructions/agents.md` for capabilities
+4. **Complex projects**: Read `.claude/instructions/orchestration.md` for routing
+5. **Multi-session**: Read `.claude/instructions/context.md` for continuity
+6. **CLI usage**: Read `.claude/instructions/cli-integration.md` for auto-detection
+7. **UI/UX design**: Read `.claude/instructions/superdesign.md` for design workflow
 
 ## 📚 Project Documentation
 
 ### Core Documentation (`/Docs`) - ✅ Updated Oct 2025
+- `developer-guide.md` - **Quick reference**: Setup, workflows, commands, patterns
 - `PRD.md` - Product requirements & features (v2.0.0)
 - `technical-architecture.md` - System design & 6-folder architecture (v2.0.0)
 - `design-system.md` - Component library & styling guide (v2.0.0)
@@ -61,16 +64,23 @@ This project uses a modular instruction system to optimize token usage.
 - `future-enhancements.md` - Completed features & roadmap (v2.0.0)
 - `README.md` - Documentation overview
 
-### Design Transitions (`/Docs/design-transition/`) - 🔄 Active
-- `wizard-refactor.md` - Practice Wizard 5→4 step glassmorphism refactor (30 hrs, 13 tasks)
-  - **Status**: Planning complete, ready for Phase 1 implementation
-  - **Notion**: All tasks tracked with dependencies and agent assignments
+### API Transition (`/Docs/api-transition/`) - ✅ Complete (Oct 2025)
+- `trpc-migration.md` - Complete tRPC migration guide (28 tasks, 4 phases, ~10-12 hrs)
+  - **Status**: ✅ Migration Complete - All 4 phases finished
+  - **Purpose**: Migrated from custom HTTP client to tRPC for type-safe APIs
+  - **Results**: 790+ lines removed, 100% type safety achieved
+  - **Notion**: [tRPC Migration Database](https://www.notion.so/28e4489affb981c3b9f3c3c192612859)
+  - **Docs**: `README.md`, `trpc-migration.md`, `trpc-setup-guide.md`, `before-after-comparison.md`
+
+### Design Transitions (`/Docs/design-transition/`)
+- `wizard-refactor.md` - ✅ Complete (Practice Wizard 5→4 step glassmorphism)
+- `home-page-glassmorphism-plan.md` - 📋 Planning phase
 
 ### Task Tracking (Notion) - 🔗 Connected
 - **Main Hub**: [DevPrepAI Workspace](https://www.notion.so/DevPrepAI-2874489affb980fab76afc9789d813bd)
-  - 🎨 Home Page Glassmorphism - Implementation Tracker
-  - 🧙‍♂️ Practice Wizard Glassmorphism Refactor (13 tasks, 6 phases, 30 hrs)
-  - 📝 Phase 1: Immediate Evaluation - Task Tracker
+  - 💡 DATABASE 2: Smart Hints System (Active)
+  - ✏️ DATABASE 3: Answer Panel (Active)
+  - 📋 Design System Implementation v2 (Future)
 
 **All docs synchronized to v2.0.0 reflecting Phase 4 completion**
 
@@ -98,75 +108,92 @@ For semantic routing beyond keywords, load `.claude/instructions/orchestration.m
 - **ux-researcher**
 - **whimsy-injector**
 
+## 🤖 Agent Routing Policy
+
+**CRITICAL**: For development tasks, route to specialist agents. Don't do the work yourself.
+
+| Task Type | Agent | Auto-Trigger Keywords |
+|-----------|-------|----------------------|
+| React/UI work | frontend-ui-developer | component, React, UI, form, page |
+| API/Backend | backend-system-architect | API, endpoint, database, auth |
+| AI/ML integration | ai-ml-engineer | AI, ML, LLM, Claude, prompt |
+| Design/Mockups | rapid-ui-designer | design, mockup, wireframe |
+| Code review | code-quality-reviewer | review, test, lint, refactor |
+| Planning | sprint-prioritizer | sprint, plan, roadmap |
+| Multi-domain | studio-coach | full app, build from scratch |
+
+**Full routing rules**: Load `.claude/instructions/agent-routing.md` for routing decision tree.
+**Keyword reference**: See `.claude/context-triggers.md` for complete keyword lists.
+
 
 ## 📁 Architecture & Organization
 
-### Clean 6-Folder Structure (Final Architecture)
+### Clean 6-Folder Structure
 
-The project uses a **simplified domain-driven architecture** with just 6 focused directories:
+The project uses a **simplified domain-driven architecture**:
 
-```
-frontend/src/
-├── app/              # Next.js App Router (routes only)
-│   ├── api/         # API routes
-│   └── (pages)/     # Page components
-│
-├── modules/         # Feature-based business logic
-│   ├── assessment/  # Assessment module
-│   ├── practice/    # Practice module
-│   ├── results/     # Results module
-│   ├── profile/     # Profile module
-│   ├── questions/   # Questions module
-│   └── home/       # Home page module
-│
-├── shared/          # Cross-cutting concerns
-│   ├── ui/         # Design system components
-│   ├── components/ # Shared layouts
-│   ├── hooks/      # Reusable React hooks
-│   ├── utils/      # Utility functions
-│   ├── constants/  # App constants
-│   └── mocks/      # Sample data
-│
-├── lib/            # External integrations
-│   ├── claude/     # Claude AI service
-│   └── query/      # React Query setup
-│
-├── store/          # Global state (Zustand) - Root level!
-│   ├── slices/     # State slices (practice, user, results, streak)
-│   ├── hooks.ts    # Typed selectors
-│   └── index.ts    # Main export
-│
-├── styles/         # Design system foundation
-│   ├── globals.css       # Global CSS
-│   ├── glassmorphism.css # Glassmorphism utilities (284 lines)
-│   ├── tokens.ts         # Design tokens
-│   └── variants.ts       # Component variants
-│
-└── types/          # TypeScript definitions
-    └── ai/         # AI-related types only
-```
+- **app/** - Next.js App Router (routes only)
+- **modules/** - Feature-based business logic (assessment, practice, results, etc.)
+- **shared/** - Cross-cutting concerns (UI, components, hooks, utils)
+- **lib/** - External integrations (tRPC, Claude AI, React Query)
+- **store/** - Global state (Zustand slices)
+- **styles/** - Design system (globals, glassmorphism, tokens)
 
-### Import Patterns (Clean & Intuitive):
+**Key Benefits**:
+- 6 folders instead of 17 (65% reduction)
+- Domain-driven organization
+- Zero redundancy
+
+**Full Details**: See [Docs/technical-architecture.md](Docs/technical-architecture.md)
+
+## 🔧 API Layer (tRPC)
+
+**Architecture**: End-to-end type-safe APIs with tRPC + Zod
+**Location**: `frontend/src/lib/trpc/`
+**Integration**: React Query (TanStack Query v5)
+**Status**: ✅ Migration Complete (Oct 2025)
+
+### Key Benefits
+- **100% Type Safety**: Full type inference from backend to frontend
+- **Runtime Validation**: Zod schemas validate all requests/responses
+- **Auto-generated Hooks**: React Query hooks created automatically
+- **Single Source of Truth**: Types cannot drift between client/server
+- **35% Code Reduction**: 790+ lines of legacy code removed
+- **6x Faster Development**: No manual hook creation or type definitions
+
+### Quick Example
 ```typescript
-import { Button } from "@shared/ui/button"
-import { useAppStore } from "@store"
-import { AssessmentLayout } from "@modules/assessment/components"
-import type { IQuestion } from "@/types/ai"
+// Backend procedure (lib/trpc/routers/ai.ts)
+generateQuestions: publicProcedure
+  .input(generateQuestionsInputSchema)
+  .output(generateQuestionsOutputSchema)
+  .mutation(async ({ input }) => {
+    return generateQuestions(input);
+  }),
+
+// Frontend usage (automatic hook generation)
+const { mutate, isPending, data } = trpc.ai.generateQuestions.useMutation();
+
+mutate({
+  profile: { role: 'frontend', experienceLevel: 'mid' },
+  count: 5,
+  difficulty: 7,
+  type: 'coding',
+});
+// ✅ Full autocomplete
+// ✅ Runtime validation
+// ✅ Type-safe responses
 ```
 
-### Architectural Benefits:
-- **6 folders instead of 17** - 65% reduction in complexity
-- **Single source of truth** - No duplicate files or overlapping concerns
-- **Clean imports** - Using @modules/, @shared/, @lib/ aliases
-- **Domain-driven** - Features organized by business logic
-- **Zero redundancy** - Each folder has one clear purpose
+### Available Endpoints
+- **`ai.generateQuestions`** - Generate interview questions
+- **`ai.evaluateAnswer`** - Evaluate user answers with AI feedback
 
-### Module Structure:
-Each module is self-contained with:
-- `components/` - Module-specific components
-- `hooks/` - Module-specific hooks
-- `utils/` - Module utilities
-- `types.ts` - Module types
+### Migration Notes
+- All API types are now Zod-inferred (see [types/ai/api.ts](frontend/src/types/ai/api.ts))
+- Old HTTP client and React Query hooks removed
+- Legacy validation layers consolidated into tRPC schemas
+- Full migration documentation: [Docs/api-transition/trpc-migration.md](Docs/api-transition/trpc-migration.md)
 
 ## 🧠 Context Awareness
 

@@ -47,6 +47,20 @@ export function WelcomeStep({ onNext }: IWelcomeStepProps): React.JSX.Element {
     }
   };
 
+  const handleTypeSelection = (typeId: InterviewType): void => {
+    setSelectedType(typeId);
+  };
+
+  const handleKeyDown = (
+    event: React.KeyboardEvent,
+    typeId: InterviewType,
+  ): void => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleTypeSelection(typeId);
+    }
+  };
+
   return (
     <Card className="glass-card-static fade-in max-w-2xl mx-auto">
       <CardHeader className="text-center pb-4">
@@ -69,13 +83,19 @@ export function WelcomeStep({ onNext }: IWelcomeStepProps): React.JSX.Element {
             return (
               <Card
                 key={type.id}
+                data-testid={`interview-type-${type.id}`}
+                role="button"
+                tabIndex={0}
+                aria-pressed={isSelected}
+                aria-label={`Select ${type.label}: ${type.description}`}
                 className={cn(
-                  "cursor-pointer transition-all hover:shadow-lg",
+                  "cursor-pointer transition-all hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-primary/50",
                   isSelected
                     ? "border-primary bg-primary/10 ring-2 ring-primary/20"
                     : "hover:border-primary/50",
                 )}
-                onClick={() => setSelectedType(type.id as InterviewType)}
+                onClick={() => handleTypeSelection(type.id as InterviewType)}
+                onKeyDown={(e) => handleKeyDown(e, type.id as InterviewType)}
               >
                 <CardContent className="pt-6 text-center">
                   {isSelected && (

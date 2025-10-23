@@ -1,49 +1,78 @@
 /**
  * API Types
- * Types for API requests, responses, and Claude AI integration
+ * Auto-generated from tRPC Zod schemas - Single Source of Truth
+ *
+ * These types are inferred from Zod schemas in @lib/trpc/schemas.
+ * This ensures types cannot drift between client and server.
+ *
+ * Migration: Replaced manual interfaces with Zod-inferred types (Phase 4, Task 4.4)
  */
-import type { IQuestion } from "./questions";
-import type { IUserProfile } from "./user";
+import type {
+  EvaluateAnswerInput,
+  EvaluateAnswerOutput,
+  AnswerFeedback,
+} from "@lib/trpc/schemas/evaluation.schema";
+import type {
+  GenerateQuestionsInput,
+  GenerateQuestionsOutput,
+} from "@lib/trpc/schemas/question.schema";
 
-// Request/Response types for AI service
-export interface IGenerateQuestionsRequest {
-  profile: IUserProfile;
-  count: number;
-  difficulty: number;
-  type: IQuestion["type"];
-}
+// ============================================================================
+// Question Generation Types
+// ============================================================================
 
-export interface IGenerateQuestionsResponse {
-  questions: IQuestion[];
-  totalGenerated: number;
-}
+/**
+ * Request type for generating interview questions
+ * @see {@link GenerateQuestionsInput} - Source Zod schema
+ */
+export type IGenerateQuestionsRequest = GenerateQuestionsInput;
 
-export interface IEvaluateAnswerRequest {
-  question: IQuestion;
-  answer: string;
-}
+/**
+ * Response type for generated interview questions
+ * @see {@link GenerateQuestionsOutput} - Source Zod schema
+ */
+export type IGenerateQuestionsResponse = GenerateQuestionsOutput;
 
-export interface IAnswerFeedback {
-  score: number; // 0-100
-  strengths: string[];
-  improvements: string[];
-  suggestions: string[];
-  overallFeedback: string;
-  // Phase II: Include hint penalty in feedback
-  hintPenalty?: number;
-}
+// ============================================================================
+// Answer Evaluation Types
+// ============================================================================
 
-export interface IEvaluateAnswerResponse {
-  feedback: IAnswerFeedback;
-  success: boolean;
-}
+/**
+ * Request type for evaluating user answers
+ * @see {@link EvaluateAnswerInput} - Source Zod schema
+ */
+export type IEvaluateAnswerRequest = EvaluateAnswerInput;
 
+/**
+ * Feedback data structure for evaluated answers
+ * @see {@link AnswerFeedback} - Source Zod schema
+ */
+export type IAnswerFeedback = AnswerFeedback;
+
+/**
+ * Response type for answer evaluation
+ * @see {@link EvaluateAnswerOutput} - Source Zod schema
+ */
+export type IEvaluateAnswerResponse = EvaluateAnswerOutput;
+
+// ============================================================================
+// Concept Explanation Types (Future Implementation)
+// ============================================================================
+
+/**
+ * @deprecated Not yet implemented in tRPC
+ * Placeholder for future explainConcept endpoint
+ */
 export interface IExplainConceptRequest {
   concept: string;
-  userLevel: IUserProfile["experienceLevel"];
+  userLevel: string;
   includeExamples: boolean;
 }
 
+/**
+ * @deprecated Not yet implemented in tRPC
+ * Placeholder for future explainConcept endpoint
+ */
 export interface IConceptExplanation {
   concept: string;
   explanation: string;
@@ -52,6 +81,10 @@ export interface IConceptExplanation {
   relatedConcepts: string[];
 }
 
+/**
+ * @deprecated Not yet implemented in tRPC
+ * Placeholder for future explainConcept endpoint
+ */
 export interface IExplainConceptResponse {
   explanation: IConceptExplanation;
   success: boolean;
