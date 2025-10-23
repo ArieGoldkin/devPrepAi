@@ -21,7 +21,7 @@ export const GradientBackground: React.FC<IGradientBackgroundProps> = ({
   className,
 }) => (
   <div
-    className={cn("min-h-screen relative overflow-x-hidden", className)}
+    className={cn("min-h-screen relative", className)}
     style={{
       background:
         "linear-gradient(135deg, #0a0118 0%, #1a0f2e 50%, #0f0a1e 100%)",
@@ -41,6 +41,6 @@ export const GradientBackground: React.FC<IGradientBackgroundProps> = ({
     />
 
     {/* Content wrapper with proper z-index */}
-    <div className="relative z-10 min-h-screen">{children}</div>
+    <div className="relative z-10 h-full">{children}</div>
   </div>
 );

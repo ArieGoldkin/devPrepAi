@@ -8,6 +8,7 @@
 import { router } from "../init";
 
 import { aiRouter } from "./ai";
+import { hintsRouter } from "./hints";
 
 /**
  * Application router
@@ -15,6 +16,7 @@ import { aiRouter } from "./ai";
  */
 export const appRouter = router({
   ai: aiRouter,
+  hints: hintsRouter,
   // Future routers can be added here:
   // user: userRouter,
   // analytics: analyticsRouter,

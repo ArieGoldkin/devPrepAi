@@ -8,14 +8,14 @@ import { cn } from "@shared/utils/cn";
 import { useAppStore } from "@store";
 
 import { useAssessment } from "../hooks/useAssessment";
+import { useRequestHint } from "../hooks/useRequestHint";
 
-import { AssessmentHeader } from "./AssessmentHeader";
+import { EmptyState } from "./EmptyState";
+import { QuestionCardSection } from "./QuestionCardSection";
 import {
-  ConstraintsSection,
-  ExamplesSection,
-  QuestionCard,
-  QuestionContent,
-  QuestionHeader,
+  HintButton,
+  HintDisplay,
+  HintsCard,
   QuestionPanel,
 } from "./QuestionPanel";
 import { SplitScreenContainer } from "./SplitScreenContainer";
@@ -25,20 +25,6 @@ interface IAssessmentLayoutProps {
   onComplete?: () => void;
   className?: string;
 }
-
-// Empty state component
-const EmptyState = (): React.JSX.Element => (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="text-center space-y-4">
-      <h2 className="text-2xl font-bold text-foreground">
-        No Active Assessment
-      </h2>
-      <p className="text-muted-foreground">
-        Start a new assessment to begin practicing.
-      </p>
-    </div>
-  </div>
-);
 
 export function AssessmentLayout({
   className,
@@ -65,6 +51,29 @@ export function AssessmentLayout({
   // Get timer state and actions from store (Task 1.5)
   const { startTimer, stopTimer } = useAppStore();
 
+  // Hint system integration (Task 3.3-3.6)
+  const {
+    requestHint,
+    isLoading: isHintLoading,
+    canRequestMore,
+  } = useRequestHint(currentQuestion?.id || "");
+
+  // Use store actions to get hints (avoids Map re-render issues)
+  const getHintsForQuestion = useAppStore((state) => state.getHintsForQuestion);
+  const getHintsUsedCount = useAppStore((state) => state.getHintsUsedCount);
+
+  // Get hint data for current question
+  const questionId = currentQuestion?.id || "";
+  const hints = getHintsForQuestion(questionId);
+  const hintsUsedCount = getHintsUsedCount(questionId);
+
+  // Handle hint request
+  const handleRequestHint = (): void => {
+    if (currentQuestion && canRequestMore) {
+      requestHint(currentQuestion, currentAnswer);
+    }
+  };
+
   // Start timer on mount, stop on unmount (Task 1.5)
   useEffect(() => {
     if (isActive) {
@@ -81,71 +90,76 @@ export function AssessmentLayout({
   }
 
   return (
-    <GradientBackground className={cn("flex flex-col", className)}>
-      {/* StatusBar with progress and timer (sticky at top) */}
+    <GradientBackground className={cn("h-screen flex flex-col", className)}>
+      {/* StatusBar: Complete control panel with navigation, progress, and timer */}
       <StatusBar
         currentQuestion={currentIndex + 1}
         totalQuestions={questions.length}
         timeRemaining={timeRemaining}
-      />
-
-      {/* Header with navigation only (no timer) */}
-      <AssessmentHeader
-        currentQuestion={currentIndex + 1}
-        totalQuestions={questions.length}
         progress={progress}
-        timeRemaining={null}
         isFirstQuestion={isFirstQuestion}
         isLastQuestion={isLastQuestion}
         isEvaluating={isEvaluating}
+        hasAnswer={hasAnswer}
         onPrevious={handlePrevious}
         onNext={handleNext}
         onSubmit={() => void handleSubmit()}
-        hasAnswer={hasAnswer}
       />
 
-      {/* Main content area with split-screen layout */}
-      <main className="flex-1 overflow-hidden p-4">
+      {/*
+        Main content area: ALWAYS 100% of available height (viewport - StatusBar)
+        - flex-1: Takes all remaining vertical space in flex container
+        - min-h-0: Allows flexbox children to shrink below content size
+        - overflow-hidden: Prevents page-level scrolling, locks content to viewport
+        - This creates the height constraint foundation for all scrolling
+      */}
+      <main className="flex-1 min-h-0 p-4 overflow-hidden">
         <SplitScreenContainer
           questionPanel={
             <QuestionPanel>
-              <QuestionCard
-                question={currentQuestion}
-                questionNumber={currentIndex + 1}
-              >
-                <QuestionHeader
+              {/* Question card section - natural size only, no grow/shrink */}
+              <div className="flex-none max-h-[65%] overflow-y-auto overflow-x-hidden">
+                <QuestionCardSection
+                  question={currentQuestion}
                   questionNumber={currentIndex + 1}
-                  difficulty={currentQuestion.difficulty}
                 />
-                <QuestionContent
-                  title={currentQuestion.title}
-                  content={currentQuestion.content}
-                />
-                {currentQuestion.constraints &&
-                  currentQuestion.constraints.length > 0 && (
-                    <ConstraintsSection
-                      constraints={currentQuestion.constraints}
-                    />
+              </div>
+
+              {/* Hint system section - constrained to max 60vh to never exceed viewport */}
+              <div className="flex-1 min-h-0 max-h-[56vh] flex flex-col overflow-hidden">
+                <HintsCard hintsUsed={hintsUsedCount} maxHints={3}>
+                  <HintButton
+                    onClick={handleRequestHint}
+                    isLoading={isHintLoading}
+                    hintsUsed={hintsUsedCount}
+                    maxHints={3}
+                  />
+
+                  {/* Display all hints */}
+                  {hints.length > 0 && (
+                    <div className="mt-3 space-y-3">
+                      {hints.map((hint) => (
+                        <HintDisplay
+                          key={`${hint.questionId}-${hint.level}`}
+                          hint={hint}
+                        />
+                      ))}
+                    </div>
                   )}
-                {currentQuestion.examples &&
-                  currentQuestion.examples.length > 0 && (
-                    <ExamplesSection examples={currentQuestion.examples} />
-                  )}
-              </QuestionCard>
+                </HintsCard>
+              </div>
             </QuestionPanel>
           }
           answerPanel={
             <div className="h-full flex flex-col">
-              <div className="flex-1 border border-border rounded-lg overflow-hidden shadow-sm">
-                <AnswerInput
-                  question={currentQuestion}
-                  value={currentAnswer}
-                  onChange={handleAnswerChange}
-                  disabled={false}
-                  autoFocus={true}
-                  placeholder="// Write your solution here..."
-                />
-              </div>
+              <AnswerInput
+                question={currentQuestion}
+                value={currentAnswer}
+                onChange={handleAnswerChange}
+                disabled={false}
+                autoFocus={true}
+                placeholder="// Write your solution here..."
+              />
             </div>
           }
         />

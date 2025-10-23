@@ -2,6 +2,10 @@
  * Practice Store Types
  */
 import type { IQuestion, IAnswerFeedback } from "@/types/ai";
+import type { IHint } from "@store/slices/practice/actions/hints";
+
+// Re-export IHint for external use
+export type { IHint };
 
 // Modes & Difficulty
 export type PracticeMode = "practice" | "assessment" | "mock";
@@ -64,6 +68,10 @@ export interface IPracticeState {
   sessionStartTime: Date | null;
   timerInterval: ReturnType<typeof setInterval> | null;
 
+  // Hint Management (Task 3.4)
+  hintsList: Map<string, IHint[]>; // questionId → hints array
+  hintsUsed: Map<string, number>; // questionId → count
+
   // Settings
   settings: IPracticeSettings;
   metrics: IPracticeMetrics;
@@ -94,4 +102,10 @@ export interface IPracticeActions {
   startTimer: () => void;
   stopTimer: () => void;
   resetTimer: () => void;
+
+  // Hint Management (Task 3.4)
+  saveHint: (questionId: string, level: number, content: string) => void;
+  getHintsForQuestion: (questionId: string) => IHint[];
+  getHintsUsedCount: (questionId: string) => number;
+  clearHints: () => void;
 }

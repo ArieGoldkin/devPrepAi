@@ -20,21 +20,8 @@ export function useAssessment(): IUseAssessmentReturn {
   // Get store state and actions - using flat structure
   const questions = useAppStore((state) => state.questions ?? []);
   const currentIndex = useAppStore((state) => state.currentIndex ?? 0);
-  // Fix: Force Map conversion to handle Zustand serialization
-  // When Zustand serializes state, Maps become plain objects {}
-  // The ?? operator doesn't trigger for truthy {} values
-  const savedAnswers = useAppStore((state) => {
-    const stored = state.savedAnswers;
-    // Return Map if already Map, otherwise convert object to Map
-    return stored instanceof Map
-      ? stored
-      : new Map<string, IPracticeAnswer>(
-          Object.entries(stored ?? {}) as Array<[string, IPracticeAnswer]>,
-        );
-  });
   const isActive = useAppStore((state) => state.isActive ?? false);
   const storeTimeRemaining = useAppStore((state) => state.timeRemaining ?? 0);
-  const currentDraft = useAppStore((state) => state.currentDraft ?? "");
 
   // Store actions
   const goToQuestion = useAppStore((state) => state.goToQuestion);
@@ -64,21 +51,28 @@ export function useAssessment(): IUseAssessmentReturn {
   // Load saved answer when question changes
   useEffect(() => {
     if (currentQuestion?.id) {
-      // Add type guard for Map instance before calling .get()
-      const savedAnswer: IPracticeAnswer | undefined =
-        savedAnswers instanceof Map
-          ? savedAnswers.get(currentQuestion.id)
-          : undefined;
-      // Explicit null check to satisfy @typescript-eslint/strict-boolean-expressions
+      // Get values directly from store to avoid dependency issues
+      const state = useAppStore.getState();
+      const stored = state.savedAnswers;
+      const savedAnswersMap =
+        stored instanceof Map
+          ? stored
+          : new Map<string, IPracticeAnswer>(
+              Object.entries(stored ?? {}) as Array<[string, IPracticeAnswer]>,
+            );
+
+      const savedAnswer = savedAnswersMap.get(currentQuestion.id);
+      const draft = state.currentDraft ?? "";
+
       if (savedAnswer !== null && savedAnswer !== undefined) {
         setCurrentAnswer(savedAnswer.answer);
-      } else if (currentDraft) {
-        setCurrentAnswer(currentDraft);
+      } else if (draft) {
+        setCurrentAnswer(draft);
       } else {
         setCurrentAnswer("");
       }
     }
-  }, [currentQuestion?.id, savedAnswers, currentDraft]);
+  }, [currentQuestion?.id]);
 
   // Handle answer change
   const handleAnswerChange = useCallback(
@@ -137,13 +131,19 @@ export function useAssessment(): IUseAssessmentReturn {
   });
 
   // Convert saved answers Map to simple Map<string, string> for return
-  // Add Map instance check before forEach to prevent errors
   const answersMap = new Map<string, string>();
-  if (savedAnswers instanceof Map) {
-    savedAnswers.forEach((answer: IPracticeAnswer, questionId: string) => {
-      answersMap.set(questionId, answer.answer);
-    });
-  }
+  const state = useAppStore.getState();
+  const stored = state.savedAnswers;
+  const savedAnswersMap =
+    stored instanceof Map
+      ? stored
+      : new Map<string, IPracticeAnswer>(
+          Object.entries(stored ?? {}) as Array<[string, IPracticeAnswer]>,
+        );
+
+  savedAnswersMap.forEach((answer: IPracticeAnswer, questionId: string) => {
+    answersMap.set(questionId, answer.answer);
+  });
 
   return {
     // State

@@ -6,3 +6,4 @@ export { ConstraintsSection } from "./ConstraintsSection";
 export { ExamplesSection } from "./ExamplesSection";
 export { HintsCard } from "./HintsCard";
 export { HintButton } from "./HintButton";
+export { HintDisplay } from "./HintDisplay";

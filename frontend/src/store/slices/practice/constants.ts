@@ -56,6 +56,10 @@ export const initialPracticeState: IPracticeState = {
   sessionStartTime: null,
   timerInterval: null,
 
+  // Hint Management (Task 3.4)
+  hintsList: new Map(),
+  hintsUsed: new Map(),
+
   // Settings & Metrics
   settings: DEFAULT_SETTINGS,
   metrics: INITIAL_METRICS,

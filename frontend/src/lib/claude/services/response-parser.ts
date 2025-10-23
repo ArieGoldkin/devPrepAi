@@ -1,77 +1,15 @@
 /**
  * Claude API Response Parser
  * Handles parsing and validation of Claude AI responses with multiple fallback strategies
- *
- * Consolidated from parser/index.ts, parser/strategies.ts, parser/validator.ts
  */
 import type { IQuestion } from "@/types/ai";
-import { ASSESSMENT_DEFAULTS } from "@store/constants";
 
-// ============================================================================
-// PARSING STRATEGIES
-// ============================================================================
-
-/**
- * Regex pattern to remove control characters from JSON strings
- * Matches ASCII control characters (0x00-0x1F) and C1 control characters (0x7F-0x9F)
- * These characters can appear in LLM responses but are invalid in JSON strings
- *
- * eslint-disable-next-line is required here because:
- * - Control characters are intentionally matched for security/sanitization
- * - LLM responses may contain these invalid JSON characters
- * - This regex cleans them before JSON.parse() to prevent parsing errors
- */
-// eslint-disable-next-line no-control-regex
-const CONTROL_CHARS_REGEX = new RegExp("[\u0000-\u001F\u007F-\u009F]", "g");
-
-/**
- * Extract JSON from markdown code blocks
- */
-function extractJsonFromMarkdown(text: string): string {
-  const match = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
-  return match?.[1] ?? text;
-}
-
-/**
- * Extract valid JSON by matching brackets
- */
-function extractValidJsonBrackets(text: string): string {
-  const match = text.match(/(\{|\[)[\s\S]*/);
-  if (match === null || match === undefined) return text;
-
-  const startChar = match[0][0];
-  const endChar = startChar === "{" ? "}" : "]";
-  let depth = 0;
-  let endIndex = -1;
-
-  for (let i = 0; i < match[0].length; i++) {
-    if (match[0][i] === startChar) depth++;
-    if (match[0][i] === endChar) {
-      depth--;
-      if (depth === 0) {
-        endIndex = i;
-        break;
-      }
-    }
-  }
-
-  return endIndex > -1 ? match[0].substring(0, endIndex + 1) : text;
-}
-
-/**
- * Clean JSON text from common issues in Claude API responses
- *
- * Removes control characters, trailing commas, and fixes escaped quotes
- * that can appear in LLM-generated JSON
- */
-function cleanJsonText(text: string): string {
-  return text
-    .trim()
-    .replace(CONTROL_CHARS_REGEX, "") // Remove control characters using pre-compiled regex
-    .replace(/,\s*([}\]])/g, "$1") // Remove trailing commas
-    .replace(/\\'/g, "'") // Fix escaped quotes
-    .replace(/\\\\/g, "\\"); // Fix double escaping
-}
+import {
+  cleanJsonText,
+  extractJsonFromMarkdown,
+  extractValidJsonBrackets,
+} from "./json-utils";
+import { createValidatedQuestion } from "./validation-utils";
 
 /**
  * Primary parsing strategy - handle markdown and clean JSON
@@ -128,88 +66,8 @@ function trySecondaryParsing(
   }
 }
 
-// ============================================================================
-// VALIDATION
-// ============================================================================
-
-const DEFAULT_TIME_ESTIMATE = ASSESSMENT_DEFAULTS.duration; // Default question time estimate in minutes
-
 interface IQuestionFieldMap {
   [key: string]: unknown;
-}
-
-/**
- * Check if value exists (not null or undefined)
- */
-function hasValue(value: unknown): boolean {
-  return value !== null && value !== undefined;
-}
-
-/**
- * Get valid question type or fallback to default
- */
-function getValidType(
-  type: unknown,
-  defaultType?: IQuestion["type"],
-): IQuestion["type"] {
-  const validTypes = [
-    "coding",
-    "system-design",
-    "behavioral",
-    "conceptual",
-  ] as const;
-  if (
-    typeof type === "string" &&
-    validTypes.includes(type as (typeof validTypes)[number])
-  ) {
-    return type as IQuestion["type"];
-  }
-  return defaultType ?? "coding";
-}
-
-/**
- * Get optional properties that should only be included if they have values
- */
-function getOptionalProperties(item: IQuestionFieldMap): Partial<IQuestion> {
-  const optional: Partial<IQuestion> = {};
-
-  if (hasValue(item["subcategory"])) {
-    optional.subcategory = String(item["subcategory"]);
-  }
-
-  if (hasValue(item["expectedLanguage"])) {
-    optional.expectedLanguage = String(item["expectedLanguage"]);
-  }
-
-  return optional;
-}
-
-/**
- * Create validated question from raw item
- */
-function createValidatedQuestion(
-  item: IQuestionFieldMap,
-  index: number,
-  defaults: Partial<IQuestion>,
-): IQuestion {
-  const currentTime = new Date().toISOString();
-
-  return {
-    id: String(item["id"] ?? `q-${Date.now()}-${index}`),
-    title: String(item["title"] ?? "Interview Question"),
-    content: String(item["content"] ?? "Please solve this problem"),
-    type: getValidType(item["type"], defaults.type),
-    difficulty: Number(item["difficulty"] ?? defaults.difficulty ?? 5),
-    category: String(item["category"] ?? "General"),
-    hints: Array.isArray(item["hints"]) ? item["hints"] : [],
-    solution: String(item["solution"] ?? "Solution not provided"),
-    timeEstimate: Number(item["timeEstimate"] ?? DEFAULT_TIME_ESTIMATE),
-    tags: Array.isArray(item["tags"]) ? item["tags"] : [],
-    sections: Array.isArray(item["sections"]) ? item["sections"] : [],
-    createdAt: String(item["createdAt"] ?? currentTime),
-    updatedAt: String(item["updatedAt"] ?? currentTime),
-    ...getOptionalProperties(item),
-  };
 }
 
 /**

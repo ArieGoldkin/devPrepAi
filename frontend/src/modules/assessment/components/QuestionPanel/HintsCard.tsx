@@ -12,6 +12,11 @@ interface IHintsCardProps {
  * Glassmorphism card that contains the smart hints system
  * with gradient animated title and hint counter badge.
  *
+ * Scrolling behavior:
+ * - Header and hint button are always visible (fixed)
+ * - Hints list scrolls independently when content overflows
+ * - Encouragement message is always visible (fixed)
+ *
  * Design ref: Prototype lines 358-384, 512-521, 824-838
  */
 export const HintsCard: React.FC<IHintsCardProps> = ({
@@ -29,7 +34,9 @@ export const HintsCard: React.FC<IHintsCardProps> = ({
         backdrop-blur-[20px]
         border
         shadow-lg
-        mt-6
+        flex
+        flex-col
+        h-full
       "
       style={{
         background: "rgba(20, 15, 40, 0.85)",
@@ -38,8 +45,8 @@ export const HintsCard: React.FC<IHintsCardProps> = ({
           "0 0 60px rgba(120, 119, 198, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1)",
       }}
     >
-      {/* Header with gradient title and counter */}
-      <div className="flex items-center justify-between mb-4">
+      {/* Header with gradient title and counter - FIXED */}
+      <div className="flex items-center justify-between mb-4 flex-shrink-0">
         <h3
           className="
             text-[13px]
@@ -74,10 +81,12 @@ export const HintsCard: React.FC<IHintsCardProps> = ({
         </span>
       </div>
 
-      {/* Hints content */}
-      {children}
+      {/* Scrollable hints content area */}
+      <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
+        {children}
+      </div>
 
-      {/* Encouragement message when all hints used */}
+      {/* Encouragement message when all hints used - FIXED */}
       {allHintsUsed && (
         <div
           className="
@@ -86,6 +95,7 @@ export const HintsCard: React.FC<IHintsCardProps> = ({
             p-2.5
             rounded-lg
             text-[11px]
+            flex-shrink-0
           "
           style={{
             background: "rgba(0, 255, 136, 0.05)",

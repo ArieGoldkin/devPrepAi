@@ -4,3 +4,4 @@
  */
 
 export { useAssessment } from "./useAssessment";
+export { useRequestHint } from "./useRequestHint";
