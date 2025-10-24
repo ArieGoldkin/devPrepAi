@@ -21,13 +21,10 @@ while IFS= read -r file; do
     VIOLATIONS=$((VIOLATIONS + 1))
   fi
 
-  # Look for direct React imports (should be type imports)
-  if grep -q "^import { .* } from ['\"]react['\"]" "$file"; then
-    matching_lines=$(grep -n "^import { .* } from ['\"]react['\"]" "$file" | head -3)
-    echo "⚠️  $file: Direct React import (should use 'import type')"
-    echo "$matching_lines"
-    VIOLATIONS=$((VIOLATIONS + 1))
-  fi
+  # Note: React type import check disabled - too many false positives
+  # Runtime hooks (useState, useEffect, etc.) MUST use regular imports
+  # Type imports already handled by TypeScript compiler
+  # Only check for deep relative imports which are the real architectural issue
 done < <(find "$FRONTEND_SRC" \( -name "*.tsx" -o -name "*.ts" \) 2>/dev/null)
 
 echo

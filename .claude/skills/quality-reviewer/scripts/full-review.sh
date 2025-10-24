@@ -55,8 +55,15 @@ echo
 
 # Run type checking
 echo "🔍 Running TypeScript check..."
-cd frontend && npm run type-check
-TYPE_EXIT=$?
+# Navigate from skill scripts dir (.claude/skills/quality-reviewer/scripts) to project root
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../../../.." && pwd)"
+if [ -d "$PROJECT_ROOT/frontend" ]; then
+  (cd "$PROJECT_ROOT/frontend" && npm run type-check 2>&1 | grep -v "npm notice")
+  TYPE_EXIT=$?
+else
+  echo "⚠️  Frontend directory not found, skipping TypeScript check"
+  TYPE_EXIT=0
+fi
 
 echo
 echo "======================================"

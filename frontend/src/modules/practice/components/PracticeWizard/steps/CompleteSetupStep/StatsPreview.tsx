@@ -1,9 +1,8 @@
 import { Clock } from "lucide-react";
 import React from "react";
 
+import type { PracticeSettings } from "@modules/practice/components/PracticeWizard/constants";
 import { Badge } from "@shared/ui/badge";
-
-import type { PracticeSettings } from "../../constants";
 
 export const StatsPreview = ({
   settings,

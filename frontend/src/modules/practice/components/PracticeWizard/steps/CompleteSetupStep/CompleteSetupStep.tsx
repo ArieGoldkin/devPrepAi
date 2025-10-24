@@ -2,16 +2,15 @@ import { Settings } from "lucide-react";
 import React, { useState } from "react";
 
 import type { InterviewType } from "@/types/ai";
-import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
-import { useAppStore } from "@store";
-
 import {
   DurationSettings,
   QuestionCountSettings,
   DifficultySettings,
   FocusAreaSettings,
-} from "../../components/SettingsHelpers";
-import type { PracticeSettings } from "../../constants";
+} from "@modules/practice/components/PracticeWizard/components/SettingsHelpers";
+import type { PracticeSettings } from "@modules/practice/components/PracticeWizard/constants";
+import { Card, CardContent, CardHeader, CardTitle } from "@shared/ui/card";
+import { useAppStore } from "@store";
 
 import { StatsPreview } from "./StatsPreview";
 import { TechnologySelector } from "./TechnologySelector";
