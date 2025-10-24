@@ -1,8 +1,8 @@
 import { Target } from "lucide-react";
 import React from "react";
 
-import { GlassCheckboxItem } from "../../components/GlassCheckboxItem";
-import { TECHNOLOGY_OPTIONS } from "../../constants";
+import { GlassCheckboxItem } from "@modules/practice/components/PracticeWizard/components/GlassCheckboxItem";
+import { TECHNOLOGY_OPTIONS } from "@modules/practice/components/PracticeWizard/constants";
 
 // Flatten all technologies into a single array
 const ALL_TECHNOLOGIES = Object.values(TECHNOLOGY_OPTIONS).flat();

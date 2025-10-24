@@ -7,8 +7,7 @@ import type {
   IPracticeSettings,
   IPracticeMetrics,
 } from "@/types/store";
-
-import { DEFAULT_QUESTION_TIME } from "../../constants";
+import { DEFAULT_QUESTION_TIME } from "@store/constants";
 
 export const DEFAULT_SETTINGS: IPracticeSettings = {
   mode: "practice",
