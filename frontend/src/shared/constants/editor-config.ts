@@ -13,12 +13,10 @@ export const EDITOR_DEFAULTS = {
 export const EDITOR_THEME_CLASSES = {
   light: "bg-white",
   dark: "bg-gray-900",
-  "high-contrast": "bg-black border-2 border-white",
 } as const;
 
 export const EDITOR_FOCUS_STYLES = {
   default: "2px solid rgba(59, 130, 246, 0.5)",
-  highContrast: "2px solid white",
 } as const;
 
 export const themeCompartment = new Compartment();

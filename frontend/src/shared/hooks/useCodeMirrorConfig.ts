@@ -1,10 +1,11 @@
 import { javascript } from "@codemirror/lang-javascript";
 import { python } from "@codemirror/lang-python";
 import type { Extension } from "@codemirror/state";
-import { oneDark } from "@codemirror/theme-one-dark";
 import { keymap } from "@codemirror/view";
 import { githubLight } from "@uiw/codemirror-theme-github";
 import { useCallback, useMemo } from "react";
+
+import { darkTheme } from "@shared/themes/dark-theme";
 
 interface ICodeMirrorConfig {
   getLanguageExtension: () => Extension;
@@ -13,7 +14,7 @@ interface ICodeMirrorConfig {
 
 export function useCodeMirrorConfig(
   language: "javascript" | "typescript" | "python",
-  theme: "dark" | "light" | "high-contrast"
+  theme: "dark" | "light",
 ): ICodeMirrorConfig {
   const getLanguageExtension = useCallback((): Extension => {
     switch (language) {
@@ -30,10 +31,10 @@ export function useCodeMirrorConfig(
     switch (theme) {
       case "light":
         return githubLight;
-      case "high-contrast":
-        return oneDark;
+      case "dark":
+        return darkTheme;
       default:
-        return oneDark;
+        return darkTheme;
     }
   }, [theme]);
 
@@ -43,7 +44,7 @@ export function useCodeMirrorConfig(
 export function useCodeMirrorKeymap(
   onSubmit?: () => void,
   onSave?: () => void,
-  onToggleHints?: () => void
+  onToggleHints?: () => void,
 ): Extension {
   return useMemo(
     () =>
@@ -74,6 +75,6 @@ export function useCodeMirrorKeymap(
           },
         },
       ]),
-    [onSubmit, onSave, onToggleHints]
+    [onSubmit, onSave, onToggleHints],
   );
 }
