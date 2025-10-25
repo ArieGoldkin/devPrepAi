@@ -51,4 +51,19 @@ Follows the same structure as `quality-reviewer` skill:
 
 ---
 
+## Token Economics
+
+| Action | Files Loaded | Tokens | Use Case |
+|--------|-------------|--------|----------|
+| **Auto-trigger** | SKILL.md | ~1,500 | Most scaffolding tasks |
+| **Advanced patterns** | + trpc-patterns.md | ~3,200 | Complex procedures & error handling |
+| **Full tutorial** | + quick-start-guide.md | ~2,800 | Learning tRPC from scratch |
+| **Complete exploration** | All docs | ~4,500 | Deep understanding |
+
+**Design benefit:** ~55% token savings vs monolithic file
+
+**Pattern:** Minimal core (SKILL.md) + progressive disclosure for advanced topics
+
+---
+
 **Version:** 1.0.0 | **Created:** October 2025

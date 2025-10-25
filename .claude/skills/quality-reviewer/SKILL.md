@@ -12,7 +12,7 @@ Automatically enforces DevPrep AI code quality standards during development.
 
 ## Auto-Triggers
 
-Invoked when you mention:
+Auto-triggered by keywords:
 - "review", "check", "validate", "verify"
 - "lint", "quality", "standards"
 - "type check", "typescript"

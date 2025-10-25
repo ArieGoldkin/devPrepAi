@@ -14,7 +14,7 @@ Automate creation of type-safe tRPC endpoints with Zod validation.
 
 ## Auto-Triggers
 
-Invoked when you mention:
+Auto-triggered by keywords:
 - "new endpoint", "create endpoint", "tRPC procedure"
 - "new router", "API", "Zod schema"
 
