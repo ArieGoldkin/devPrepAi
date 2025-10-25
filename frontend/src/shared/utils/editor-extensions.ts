@@ -31,7 +31,7 @@ interface IExtensionConfig {
   customKeymap: Extension;
   minHeight: string;
   maxHeight: string;
-  theme: "dark" | "light" | "high-contrast";
+  theme: "dark" | "light";
   readOnly: boolean;
   onKeyDown: ((event: React.KeyboardEvent) => void) | undefined;
   onChange: (value: string) => void;
@@ -75,10 +75,7 @@ export function createEditorExtensions({
         overflow: "hidden",
       },
       ".cm-editor.cm-focused": {
-        outline:
-          theme === "high-contrast"
-            ? EDITOR_FOCUS_STYLES.highContrast
-            : EDITOR_FOCUS_STYLES.default,
+        outline: EDITOR_FOCUS_STYLES.default,
         outlineOffset: "2px",
       },
       ".cm-placeholder": {
