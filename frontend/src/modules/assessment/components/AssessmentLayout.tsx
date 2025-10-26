@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 
-import { AnswerInput } from "@shared/ui/AnswerInput";
 import { GradientBackground } from "@shared/ui/GradientBackground";
 import { cn } from "@shared/utils/cn";
 import { useAppStore } from "@store";
@@ -10,6 +9,7 @@ import { useAppStore } from "@store";
 import { useAssessment } from "../hooks/useAssessment";
 import { useRequestHint } from "../hooks/useRequestHint";
 
+import { AnswerPanelContainer, CodeAnswerEditor } from "./AnswerPanel";
 import { EmptyState } from "./EmptyState";
 import { QuestionCardSection } from "./QuestionCardSection";
 import {
@@ -105,14 +105,7 @@ export function AssessmentLayout({
         onNext={handleNext}
         onSubmit={() => void handleSubmit()}
       />
-
-      {/*
-        Main content area: ALWAYS 100% of available height (viewport - StatusBar)
-        - flex-1: Takes all remaining vertical space in flex container
-        - min-h-0: Allows flexbox children to shrink below content size
-        - overflow-hidden: Prevents page-level scrolling, locks content to viewport
-        - This creates the height constraint foundation for all scrolling
-      */}
+      {/* Main content area: flex-1 takes all remaining space, overflow-hidden prevents page scrolling */}
       <main className="flex-1 min-h-0 p-4 overflow-hidden">
         <SplitScreenContainer
           questionPanel={
@@ -151,16 +144,20 @@ export function AssessmentLayout({
             </QuestionPanel>
           }
           answerPanel={
-            <div className="h-full flex flex-col">
-              <AnswerInput
-                question={currentQuestion}
+            <AnswerPanelContainer
+              title="Your Answer"
+              description="Write your solution using the code editor below"
+            >
+              <CodeAnswerEditor
                 value={currentAnswer}
                 onChange={handleAnswerChange}
-                disabled={false}
+                language="javascript"
+                theme="dark"
+                placeholder="// Write your solution here...\n// Use Ctrl+Enter to submit, Ctrl+S to save"
                 autoFocus={true}
-                placeholder="// Write your solution here..."
+                onSubmit={() => void handleSubmit()}
               />
-            </div>
+            </AnswerPanelContainer>
           }
         />
       </main>

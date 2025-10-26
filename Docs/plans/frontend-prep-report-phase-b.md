@@ -15,6 +15,9 @@ Phase B focuses on integrating the existing TestHintsPanel component with the An
 
 **Foundation**: Phase A completed successfully with dark theme CodeMirror editor and Answer Panel components. Phase B builds upon this foundation to add intelligent assistance features.
 
+**⚠️ Important Architectural Update (Phase A)**:
+During Phase A completion, AnswerPanel was moved from `modules/practice/` to `modules/assessment/` to align with QuestionPanel location. This improves module cohesion and follows the 6-folder architecture pattern. All file paths in this report reflect this change.
+
 ---
 
 ## 1. Phase B Scope
@@ -65,6 +68,7 @@ Phase B focuses on integrating the existing TestHintsPanel component with the An
 ### 2.1 TestHintsPanel Component
 
 **Location**: `/frontend/src/modules/practice/components/TestHintsPanel.tsx`
+**Note**: ⚠️ Architectural consideration - This component may need to move to `modules/assessment/` to align with AnswerPanel location.
 
 **Current Features**:
 - Displays test cases as collapsible cards
@@ -80,10 +84,14 @@ Phase B focuses on integrating the existing TestHintsPanel component with the An
 
 ### 2.2 CodeAnswerEditor Component
 
-**Current State** (Phase A):
+**Location**: `/frontend/src/modules/assessment/components/AnswerPanel/CodeEditor/CodeAnswerEditor.tsx`
+**Parent Module**: `assessment` (moved from `practice` in Phase A - architectural fix)
+
+**Current State** (Phase A - ✅ Updated):
 - ✅ Has `onToggleHints` prop in interface
 - ✅ Wired to useCodeMirrorKeymap hook
 - ✅ Keyboard shortcut registered (Cmd/Ctrl+/)
+- ✅ Integrated into AssessmentLayout via AnswerPanelContainer
 - ❌ Not connected to any hints panel yet
 
 **What's Needed**:
@@ -114,16 +122,20 @@ Phase B focuses on integrating the existing TestHintsPanel component with the An
 
 ### 3.1 Component Hierarchy
 
+**Current Module Location**: `modules/assessment/components/AnswerPanel/`
+
 ```
-AnswerPanelWithHints
-├── AnswerPanelContainer (wrapper with glassmorphism)
-│   ├── CodeAnswerEditor (left/top: code editor)
-│   │   └── CodeMirrorEditor (core editor)
-│   └── TestHintsPanel (right/bottom: hints)
+AnswerPanelWithHints (NEW - to be created)
+├── AnswerPanelContainer (✅ EXISTS - wrapper with glassmorphism)
+│   ├── CodeAnswerEditor (✅ EXISTS - left/top: code editor)
+│   │   └── CodeMirrorEditor (✅ EXISTS - core editor)
+│   └── TestHintsPanel (⚠️ EXISTS in practice module - needs integration)
 │       ├── HintCard (individual test case)
 │       └── AIHintContent (AI-generated advice)
-└── KeyboardShortcutsHelp (floating tooltip)
+└── KeyboardShortcutsHelp (NEW - floating tooltip)
 ```
+
+**Note**: All AnswerPanel components now live in `modules/assessment/` alongside QuestionPanel for better cohesion.
 
 ### 3.2 State Management
 
@@ -186,23 +198,31 @@ interface IAnswerPanelState {
 
 ### 4.1 File Structure
 
+**📋 Updated File Paths** (Phase A architectural fix - AnswerPanel moved to assessment module)
+
 ```
 frontend/src/
-├── modules/practice/components/AnswerPanel/
-│   ├── AnswerPanelContainer.tsx           ← UPDATE (layout)
+├── modules/assessment/components/AnswerPanel/
+│   ├── AnswerPanelContainer.tsx           ← ✅ EXISTS (Phase A) - UPDATE for layout
 │   ├── CodeEditor/
-│   │   └── CodeAnswerEditor.tsx           ← UPDATE (hints callback)
-│   ├── Hints/
+│   │   └── CodeAnswerEditor.tsx           ← ✅ EXISTS (Phase A) - UPDATE for hints callback
+│   ├── Hints/                              ← NEW FOLDER
 │   │   ├── AnswerPanelWithHints.tsx       ← NEW (composite)
 │   │   ├── KeyboardShortcutsHelp.tsx      ← NEW (tooltip)
 │   │   └── HintsToggleButton.tsx          ← NEW (mobile FAB)
-│   ├── types.ts                            ← UPDATE (hints types)
-│   └── index.ts                            ← UPDATE (exports)
+│   ├── types.ts                            ← ✅ EXISTS (Phase A) - UPDATE for hints types
+│   └── index.ts                            ← ✅ EXISTS (Phase A) - UPDATE for exports
 ├── store/slices/
 │   └── answer-panel-slice.ts               ← NEW (state management)
 └── modules/practice/components/
-    └── TestHintsPanel.tsx                  ← UPDATE (integration)
+    └── TestHintsPanel.tsx                  ← ⚠️ EXISTS - UPDATE for integration
+                                              (consider moving to assessment module)
 ```
+
+**Key Changes from Phase A**:
+- AnswerPanel is now in `assessment/components/` (not `practice/components/`)
+- CodeAnswerEditor is already integrated into AssessmentLayout
+- New `Hints/` subfolder will contain Phase B components
 
 ### 4.2 Phase B Tasks
 

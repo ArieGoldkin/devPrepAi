@@ -14,7 +14,7 @@ interface IQuestionPanelProps {
  * - Children (question card, hints) have their own scroll areas
  */
 export const QuestionPanel: React.FC<IQuestionPanelProps> = ({ children }) => (
-  <div className="h-full w-full flex flex-col gap-4 p-1 overflow-hidden">
+  <div className="h-full w-full flex flex-col gap-4 overflow-hidden">
     {children}
   </div>
 );

@@ -6,6 +6,16 @@ import { CodeMirrorEditor } from "@shared/ui/CodeMirrorEditor";
 
 import { SAMPLE_JAVASCRIPT, SAMPLES } from "./sample-code";
 
+const THEME_FEATURES = [
+  "Glassmorphism effects (backdrop-filter blur, transparent backgrounds)",
+  "Purple border with signature glow (rgba(168, 85, 247, 0.2))",
+  "Syntax highlighting with brand colors (purple keywords, pink functions, cyan strings)",
+  "Text-shadow glow effects on all syntax elements",
+  "Custom scrollbar with purple-pink gradient",
+  "WCAG AA compliant colors (4.5:1+ contrast ratios)",
+  "Multi-language support (JavaScript, TypeScript, Python)",
+];
+
 export default function TestThemePage() {
   const [code, setCode] = useState(SAMPLE_JAVASCRIPT);
   const [language, setLanguage] = useState<
@@ -99,44 +109,12 @@ export default function TestThemePage() {
             Theme Features Checklist
           </h2>
           <ul className="space-y-2 text-gray-300">
-            <li className="flex items-start gap-2">
-              <span className="text-purple-400 mt-1">✓</span>
-              <span>
-                Glassmorphism effects (backdrop-filter blur, transparent
-                backgrounds)
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-purple-400 mt-1">✓</span>
-              <span>
-                Purple border with signature glow (rgba(168, 85, 247, 0.2))
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-purple-400 mt-1">✓</span>
-              <span>
-                Syntax highlighting with brand colors (purple keywords, pink
-                functions, cyan strings)
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-purple-400 mt-1">✓</span>
-              <span>Text-shadow glow effects on all syntax elements</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-purple-400 mt-1">✓</span>
-              <span>Custom scrollbar with purple-pink gradient</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-purple-400 mt-1">✓</span>
-              <span>WCAG AA compliant colors (4.5:1+ contrast ratios)</span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-purple-400 mt-1">✓</span>
-              <span>
-                Multi-language support (JavaScript, TypeScript, Python)
-              </span>
-            </li>
+            {THEME_FEATURES.map((feature, index) => (
+              <li key={index} className="flex items-start gap-2">
+                <span className="text-purple-400 mt-1">✓</span>
+                <span>{feature}</span>
+              </li>
+            ))}
           </ul>
         </div>
       </div>

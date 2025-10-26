@@ -34,20 +34,13 @@ export function AnswerPanelContainer({
   return (
     <section
       className={cn(
-        // Base glassmorphism card
-        "glass-card relative rounded-[20px] p-6",
+        // Base glassmorphism card (static variant - no hover effects)
+        "glass-card-static relative rounded-[20px] p-6",
         "bg-[rgba(20,15,40,0.85)] backdrop-blur-[20px]",
         "border border-[rgba(120,119,198,0.3)]",
 
         // Enhanced shadows for depth
         "shadow-[0_0_60px_rgba(120,119,198,0.15),inset_0_1px_0_rgba(255,255,255,0.1)]",
-
-        // Smooth transitions
-        "transition-all duration-300 ease-in-out",
-
-        // Hover state (subtle enhancement)
-        "hover:border-[rgba(120,119,198,0.4)]",
-        "hover:shadow-[0_0_80px_rgba(120,119,198,0.2),inset_0_1px_0_rgba(255,255,255,0.15)]",
 
         // Responsive padding
         "md:p-8 lg:p-10",
