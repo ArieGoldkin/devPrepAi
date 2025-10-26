@@ -9,12 +9,12 @@ import Anthropic from "@anthropic-ai/sdk";
 import { TRPCError } from "@trpc/server";
 
 import type { IQuestion } from "@/types/ai";
+import { getClaudeConfig } from "@lib/claude/config";
 import {
   getLevel1Prompt,
   getLevel2Prompt,
   getLevel3Prompt,
 } from "@lib/claude/prompts/hints";
-import { DEFAULT_TEMPERATURE } from "@shared/constants/ai";
 
 import { publicProcedure, router } from "../init";
 import {
@@ -39,16 +39,9 @@ export const hintsRouter = router({
     .mutation(async ({ input }) => {
       const { question, currentAnswer, hintLevel } = input;
 
-      // Initialize Claude client
-      const apiKey = process.env["ANTHROPIC_API_KEY"];
-      if (!apiKey) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "ANTHROPIC_API_KEY environment variable is required",
-        });
-      }
-
-      const client = new Anthropic({ apiKey });
+      // Get centralized Claude configuration
+      const config = getClaudeConfig();
+      const client = new Anthropic({ apiKey: config.apiKey });
 
       // Generate hint using level-specific prompts
       // Bridge between Zod schema and IQuestion interface
@@ -89,12 +82,14 @@ async function generateHint(
 
   const prompt = promptGenerators[hintLevel as 1 | 2 | 3]();
 
-  // Call Claude API
+  // Get centralized config (reuse from outer scope if available)
+  const config = getClaudeConfig();
+
+  // Call Claude API with centralized config
   const response = await client.messages.create({
-    model:
-      process.env["NEXT_PUBLIC_ANTHROPIC_MODEL"] || "claude-3-5-sonnet-latest",
-    max_tokens: 500, // Hints should be concise
-    temperature: DEFAULT_TEMPERATURE,
+    model: config.model,
+    max_tokens: config.maxTokens.HINTS,
+    temperature: config.temperature.HINTS,
     messages: [
       {
         role: "user",

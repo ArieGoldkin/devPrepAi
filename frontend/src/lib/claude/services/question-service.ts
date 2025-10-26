@@ -10,6 +10,7 @@ import type {
   IGenerateQuestionsResponse,
   IQuestion,
 } from "@/types/ai";
+import { getClaudeConfig } from "@lib/claude/config";
 import {
   generateTestQuestions,
   generateFallbackQuestion,
@@ -17,9 +18,6 @@ import {
 
 import { buildQuestionsPrompt } from "./ai-prompts";
 import { parseClaudeResponse, validateQuestions } from "./response-parser";
-
-const GENERATION_MAX_TOKENS = 4000;
-const DEFAULT_TEMPERATURE = 0.7;
 
 /**
  * Generate questions based on request and environment
@@ -78,13 +76,13 @@ async function generateWithClaude(
   request: IGenerateQuestionsRequest,
 ): Promise<IQuestion[]> {
   const client = getClaudeClient();
+  const config = getClaudeConfig();
   const prompt = buildQuestionsPrompt(request);
 
   const response = await client.messages.create({
-    model:
-      process.env["NEXT_PUBLIC_ANTHROPIC_MODEL"] || "claude-3-5-sonnet-latest",
-    max_tokens: GENERATION_MAX_TOKENS,
-    temperature: DEFAULT_TEMPERATURE,
+    model: config.model,
+    max_tokens: config.maxTokens.GENERATION,
+    temperature: config.temperature.GENERATION,
     messages: [{ role: "user", content: prompt }],
   });
 
