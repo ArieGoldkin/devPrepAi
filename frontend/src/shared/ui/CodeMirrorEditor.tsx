@@ -20,7 +20,7 @@ interface ICodeMirrorEditorProps {
   value: string;
   onChange: (value: string) => void;
   language?: "javascript" | "typescript" | "python";
-  theme?: "dark" | "light" | "high-contrast";
+  theme?: "dark" | "light";
   placeholder?: string;
   readOnly?: boolean;
   className?: string;

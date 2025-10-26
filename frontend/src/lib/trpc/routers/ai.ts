@@ -14,9 +14,9 @@ import type {
   IEvaluateAnswerRequest,
   IGenerateQuestionsRequest,
 } from "@/types/ai";
+import { getClaudeConfig } from "@lib/claude/config";
 import { buildEvaluationPrompt } from "@lib/claude/services/ai-prompts";
 import { generateQuestions } from "@lib/claude/services/question-service";
-import { DEFAULT_MAX_TOKENS, DEFAULT_TEMPERATURE } from "@shared/constants/ai";
 import {
   mockEvaluateAnswer,
   shouldUseMockService,
@@ -87,16 +87,9 @@ export const aiRouter = router({
         };
       }
 
-      // Initialize Claude client
-      const apiKey = process.env["ANTHROPIC_API_KEY"];
-      if (!apiKey) {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "ANTHROPIC_API_KEY environment variable is required",
-        });
-      }
-
-      const client = new Anthropic({ apiKey });
+      // Get centralized Claude configuration
+      const config = getClaudeConfig();
+      const client = new Anthropic({ apiKey: config.apiKey });
 
       // Build evaluation prompt
       // Bridge between new Zod types and old TypeScript interfaces
@@ -104,13 +97,11 @@ export const aiRouter = router({
         input as unknown as IEvaluateAnswerRequest,
       );
 
-      // Call Claude API
+      // Call Claude API with centralized config
       const response = await client.messages.create({
-        model:
-          process.env["NEXT_PUBLIC_ANTHROPIC_MODEL"] ||
-          "claude-3-5-sonnet-latest",
-        max_tokens: DEFAULT_MAX_TOKENS,
-        temperature: DEFAULT_TEMPERATURE,
+        model: config.model,
+        max_tokens: config.maxTokens.EVALUATION,
+        temperature: config.temperature.EVALUATION,
         messages: [{ role: "user", content: prompt }],
       });
 
