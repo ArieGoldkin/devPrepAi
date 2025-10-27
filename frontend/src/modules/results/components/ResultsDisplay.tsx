@@ -5,7 +5,7 @@ import { Button } from "@shared/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shared/ui/tabs";
 
 import { OverviewTab } from "./overview";
-import { QuestionResult } from "./question-details";
+import { QuestionDetailsTab } from "./question-details";
 
 interface IResultsDisplayProps {
   assessmentResults?: IAssessmentResults | undefined;
@@ -88,24 +88,8 @@ export function ResultsDisplay({
         </TabsContent>
 
         {/* Tab 2: Question Details */}
-        <TabsContent value="questions" className="mt-6 px-8">
-          {assessmentResults ? (
-            <div className="question-list">
-              {assessmentResults.questions.map((result, index) => (
-                <QuestionResult key={index} result={result} index={index} />
-              ))}
-            </div>
-          ) : (
-            <div className="glass-card p-12 text-center rounded-lg">
-              <p className="text-gray-400 text-lg">
-                📝 Question details will appear here
-              </p>
-              <p className="text-gray-500 text-sm mt-2">
-                Complete a practice session to see detailed results for each
-                question
-              </p>
-            </div>
-          )}
+        <TabsContent value="questions" className="mt-6">
+          <QuestionDetailsTab />
         </TabsContent>
         {/* Tab 3: Hint Analytics (Coming Soon) */}
         <TabsContent value="hints" className="mt-6">
