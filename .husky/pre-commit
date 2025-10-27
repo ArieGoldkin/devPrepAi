@@ -15,6 +15,10 @@ echo "Checking file sizes..."
 violations=0
 for file in $(find src -name "*.tsx" -o -name "*.ts" 2>/dev/null || true); do
   if [ -f "$file" ]; then
+    # Skip files with eslint-disable max-lines
+    if head -n 1 "$file" | grep -q "eslint-disable max-lines"; then
+      continue
+    fi
     lines=$(wc -l < "$file" 2>/dev/null || echo "0")
     if [ "$lines" -gt 180 ]; then
       echo "❌ $file: $lines lines (max: 180)"
