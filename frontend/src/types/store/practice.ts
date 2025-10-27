@@ -57,6 +57,10 @@ export interface IPracticeState {
   currentDraft: string;
   savedAnswers: Map<string, IPracticeAnswer>;
 
+  // Editor Preferences (Phase B)
+  currentLanguage: "javascript" | "typescript" | "python";
+  autocompleteEnabled: boolean;
+
   // Session State
   startedAt: string | null;
   completedAt: string | null;
@@ -108,4 +112,8 @@ export interface IPracticeActions {
   getHintsForQuestion: (questionId: string) => IHint[];
   getHintsUsedCount: (questionId: string) => number;
   clearHints: () => void;
+
+  // Editor Preferences (Phase B)
+  setLanguage: (language: "javascript" | "typescript" | "python") => void;
+  toggleAutocomplete: () => void;
 }

@@ -8,6 +8,7 @@ import type { StateCreator } from "zustand";
 import type { IPracticeState, IPracticeActions } from "@/types/store";
 
 import { createAnswerActions } from "./actions/answers";
+import { createEditorActions } from "./actions/editor";
 import { createHintActions } from "./actions/hints";
 import { createNavigationActions } from "./actions/navigation";
 import { createProgressActions } from "./actions/progress";
@@ -33,6 +34,7 @@ export const createPracticeSlice: StateCreator<
   ...createProgressActions(set, get),
   ...createTimerActions(set, get),
   ...createHintActions(set, get),
+  ...createEditorActions(set, get),
 });
 
 // Re-export selectors for backward compatibility
