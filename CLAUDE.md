@@ -128,21 +128,22 @@ For semantic routing beyond keywords, load `.claude/instructions/orchestration.m
 
 ## 📁 Architecture & Organization
 
-### Clean 6-Folder Structure
+### Clean 7-Folder Structure
 
 The project uses a **simplified domain-driven architecture**:
 
 - **app/** - Next.js App Router (routes only)
-- **modules/** - Feature-based business logic (assessment, practice, results, etc.)
-- **shared/** - Cross-cutting concerns (UI, components, hooks, utils)
+- **modules/** - Feature-based business logic (assessment, practice, questions, results, profile, home)
+- **shared/** - Cross-cutting concerns (UI components, hooks, utils, themes)
 - **lib/** - External integrations (tRPC, Claude AI, React Query)
-- **store/** - Global state (Zustand slices)
+- **store/** - Global state management (Zustand slices with modular actions)
 - **styles/** - Design system (globals, glassmorphism, tokens)
+- **types/** - Global TypeScript definitions (AI, store, components)
 
 **Key Benefits**:
-- 6 folders instead of 17 (65% reduction)
-- Domain-driven organization
-- Zero redundancy
+- 7 folders instead of 17 (60% reduction)
+- Domain-driven organization with clear separation
+- Zero redundancy, single source of truth
 
 **Full Details**: See [Docs/technical-architecture.md](Docs/technical-architecture.md)
 
@@ -186,8 +187,9 @@ mutate({
 ```
 
 ### Available Endpoints
-- **`ai.generateQuestions`** - Generate interview questions
+- **`ai.generateQuestions`** - Generate interview questions based on user profile
 - **`ai.evaluateAnswer`** - Evaluate user answers with AI feedback
+- **`hints.getHint`** - Get progressive hints (3 levels: conceptual → approach → implementation)
 
 ### Migration Notes
 - All API types are now Zod-inferred (see [types/ai/api.ts](frontend/src/types/ai/api.ts))

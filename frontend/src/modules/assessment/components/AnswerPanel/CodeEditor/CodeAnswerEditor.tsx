@@ -5,29 +5,19 @@ import { CodeMirrorEditor } from "@shared/ui/CodeMirrorEditor";
 import { cn } from "@shared/utils/cn";
 import { useAppStore } from "@store/hooks";
 
-import { EditorToolbar } from "./EditorToolbar";
-import { useLanguageSwitching } from "./hooks/useLanguageSwitching";
-import { SyntaxWarningModal } from "./SyntaxWarningModal";
-
 /**
- * CodeAnswerEditor - Enhanced CodeMirror wrapper for coding questions
+ * CodeAnswerEditor - Simple CodeMirror wrapper for coding questions
  *
- * Features (Phase A):
+ * Features:
  * - Dark theme by default matching design system
  * - Multi-language support (JavaScript, TypeScript, Python)
+ * - Syntax highlighting
  * - Keyboard shortcuts (Ctrl+Enter to submit, Ctrl+S to save)
  * - Responsive min/max heights
  * - Character and line count display
  *
- * Features (Phase B):
- * - Language switching toolbar with warning modal
- * - Syntax incompatibility detection
- * - Code preservation across language switches
- *
- * Future (Phase C):
- * - Autocomplete with custom suggestions
- * - Code formatting (Prettier integration)
- * - Auto-save with debouncing
+ * Language is determined by practice configuration (selected technologies).
+ * Users cannot switch languages mid-practice to simulate real interview conditions.
  */
 export function CodeAnswerEditor({
   value,
@@ -43,13 +33,9 @@ export function CodeAnswerEditor({
   onSave,
   onToggleHints,
 }: ICodeEditorProps): React.JSX.Element {
-  // Get language from store (Phase B)
+  // Get language from store (determined by practice configuration)
   const storeLanguage = useAppStore((state) => state.currentLanguage);
   const language = languageProp || storeLanguage;
-
-  // Language switching with warning modal (Phase B)
-  const { warningModal, confirmSwitch, cancelSwitch } =
-    useLanguageSwitching(value);
 
   // Calculate editor stats
   const totalLines = value.split("\n").length;
@@ -62,9 +48,6 @@ export function CodeAnswerEditor({
         "transition-all duration-300 ease-in-out",
       )}
     >
-      {/* Phase B: Language Switching Toolbar */}
-      <EditorToolbar />
-
       {/* CodeMirror Editor */}
       <div className="flex-1">
         <CodeMirrorEditor
@@ -81,20 +64,13 @@ export function CodeAnswerEditor({
           {...(onSave && { onSave })}
           {...(onToggleHints && { onToggleHints })}
           className={cn(
-            "h-full w-full rounded-t-none", // Connect to toolbar
+            "h-full w-full",
             readOnly && "opacity-75 cursor-not-allowed",
           )}
         />
       </div>
 
-      {/* Phase B: Syntax Warning Modal */}
-      <SyntaxWarningModal
-        {...warningModal}
-        onConfirm={confirmSwitch}
-        onCancel={cancelSwitch}
-      />
-
-      {/* Editor footer - Stats and hints */}
+      {/* Editor footer - Stats and keyboard shortcuts */}
       <footer
         className={cn(
           "mt-4 flex items-center justify-between",
