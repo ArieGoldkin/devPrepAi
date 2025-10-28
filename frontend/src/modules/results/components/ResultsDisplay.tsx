@@ -4,6 +4,7 @@ import type { IAssessmentResults } from "@/types/ai";
 import { Button } from "@shared/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shared/ui/tabs";
 
+import { HintAnalyticsTab } from "./hint-analytics";
 import { OverviewTab } from "./overview";
 import { QuestionDetailsTab } from "./question-details";
 
@@ -66,11 +67,7 @@ export function ResultsDisplay({
           <TabsTrigger value="questions" className="results-tab rounded-none">
             📝 Question Details
           </TabsTrigger>
-          <TabsTrigger
-            value="hints"
-            className="results-tab rounded-none"
-            disabled
-          >
+          <TabsTrigger value="hints" className="results-tab rounded-none">
             💡 Hint Analytics
           </TabsTrigger>
           <TabsTrigger
@@ -91,16 +88,10 @@ export function ResultsDisplay({
         <TabsContent value="questions" className="mt-6">
           <QuestionDetailsTab />
         </TabsContent>
-        {/* Tab 3: Hint Analytics (Coming Soon) */}
+
+        {/* Tab 3: Hint Analytics */}
         <TabsContent value="hints" className="mt-6">
-          <div className="glass-card-static p-12 text-center rounded-lg">
-            <p className="text-gray-400 text-lg">
-              💡 Hint Analytics Coming Soon
-            </p>
-            <p className="text-gray-500 text-sm mt-2">
-              Visualize your hint journey and learning patterns
-            </p>
-          </div>
+          <HintAnalyticsTab />
         </TabsContent>
 
         {/* Tab 4: Learning Insights (Coming Soon) */}

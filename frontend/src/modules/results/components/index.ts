@@ -7,3 +7,6 @@ export * from "./overview";
 
 // Tab 2: Question Details components
 export * from "./question-details";
+
+// Tab 3: Hint Analytics components
+export * from "./hint-analytics";

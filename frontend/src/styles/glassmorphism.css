@@ -519,6 +519,164 @@
   border: 1px solid rgba(255, 119, 198, 0.3);
 }
 
+/* ===== HINT ANALYTICS STYLES ===== */
+
+/* Hint journey container */
+.hint-journey {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 24px;
+}
+
+/* Individual journey item (question card) */
+.journey-item {
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* Numbered bubble (left side) */
+.journey-number {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(120, 119, 198, 0.3), rgba(120, 119, 198, 0.1));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #7877c6;
+  flex-shrink: 0;
+  border: 2px solid rgba(120, 119, 198, 0.4);
+}
+
+/* Card content (right side) */
+.journey-content {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.journey-content:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(120, 119, 198, 0.3);
+  transform: translateX(4px);
+}
+
+/* Journey header (title + metadata + dots) */
+.journey-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.journey-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #e5e5ff;
+}
+
+.journey-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: rgba(229, 229, 255, 0.6);
+  margin-top: 4px;
+}
+
+/* Hint dots container */
+.journey-hints {
+  display: flex;
+  gap: 8px;
+}
+
+/* Individual hint dot */
+.hint-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  border: 2px solid;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.hint-dot:hover {
+  transform: scale(1.2);
+}
+
+/* Hint dot level colors */
+.hint-dot.level-1 {
+  background: rgba(255, 179, 71, 0.2);
+  border-color: rgba(255, 179, 71, 0.5);
+  color: #ffb347;
+}
+
+.hint-dot.level-2 {
+  background: rgba(255, 119, 198, 0.2);
+  border-color: rgba(255, 119, 198, 0.5);
+  color: #ff77c6;
+}
+
+.hint-dot.level-3 {
+  background: rgba(120, 219, 255, 0.2);
+  border-color: rgba(120, 219, 255, 0.5);
+  color: #78dbff;
+}
+
+.hint-dot.unused {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: rgba(229, 229, 255, 0.3);
+}
+
+/* Journey narrative text */
+.journey-narrative {
+  font-size: 13px;
+  color: rgba(229, 229, 255, 0.7);
+  line-height: 1.5;
+}
+
+/* Hint legend */
+.hint-legend {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.legend-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  border: 2px solid;
+}
+
+.legend-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(229, 229, 255, 0.8);
+}
+
 /* ===== MOBILE OPTIMIZATIONS ===== */
 
 @media (max-width: 768px) {
@@ -534,6 +692,23 @@
 
   .fade-in {
     animation-duration: 400ms;
+  }
+
+  /* Stack hint legend vertically on mobile */
+  .hint-legend {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  /* Reduce spacing on mobile */
+  .journey-item {
+    gap: 12px;
+  }
+
+  .journey-number {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
   }
 }
 
