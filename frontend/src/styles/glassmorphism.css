@@ -720,6 +720,234 @@
   }
 }
 
+/* ===== TAB 4: LEARNING INSIGHTS ===== */
+
+/* Insights Grid - 3 column layout */
+.insights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Insight Card - Category container */
+.insight-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 4px solid;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.insight-card.strength {
+  border-left-color: #00ff88;
+}
+
+.insight-card.improvement {
+  border-left-color: #ffb347;
+}
+
+.insight-card.strategy {
+  border-left-color: #78dbff;
+}
+
+/* Insight Title - Category header */
+.insight-title {
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.insight-title.strength {
+  color: #00ff88;
+}
+
+.insight-title.improvement {
+  color: #ffb347;
+}
+
+.insight-title.strategy {
+  color: #78dbff;
+}
+
+/* Insight List - Container for insight items */
+.insight-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Insight Item - Individual clickable insight */
+.insight-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer effect on hover */
+.insight-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.insight-item:hover::before {
+  left: 100%;
+}
+
+.insight-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(120, 119, 198, 0.4);
+  transform: translateX(4px);
+}
+
+.insight-item.strength:hover {
+  border-color: rgba(0, 255, 136, 0.4);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+.insight-item.improvement:hover {
+  border-color: rgba(255, 179, 71, 0.4);
+  box-shadow: 0 0 20px rgba(255, 179, 71, 0.2);
+}
+
+.insight-item.strategy:hover {
+  border-color: rgba(120, 219, 255, 0.4);
+  box-shadow: 0 0 20px rgba(120, 219, 255, 0.2);
+}
+
+/* Insight Text */
+.insight-text {
+  font-size: 13px;
+  color: rgba(229, 229, 255, 0.8);
+  line-height: 1.5;
+  flex: 1;
+}
+
+/* Insight Action - CTA button */
+.insight-action {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(229, 229, 255, 0.6);
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.insight-item.strength .insight-action {
+  color: #00ff88;
+}
+
+.insight-item.improvement .insight-action {
+  color: #ffb347;
+}
+
+.insight-item.strategy .insight-action {
+  color: #78dbff;
+}
+
+.insight-item:hover .insight-action {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: currentColor;
+  transform: scale(1.05);
+}
+
+/* Helper Text - Info banner */
+.helper-text {
+  text-align: center;
+  padding: 16px;
+  background: rgba(120, 119, 198, 0.1);
+  border-radius: 10px;
+  margin-top: 16px;
+}
+
+.helper-text-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: #7877c6;
+  margin-bottom: 6px;
+}
+
+.helper-text-desc {
+  font-size: 12px;
+  color: rgba(229, 229, 255, 0.6);
+  line-height: 1.5;
+}
+
+/* Recommendation Grid - 4 column layout */
+.recommendation-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+/* Recommendation Item - Individual card */
+.recommendation-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 20px;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.recommendation-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+/* Recommendation Header - Icon + Title */
+.recommendation-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #e5e5ff;
+  margin-bottom: 12px;
+}
+
+.recommendation-header span:first-child {
+  font-size: 24px;
+}
+
+/* Recommendation Text - Description */
+.recommendation-text {
+  font-size: 13px;
+  color: rgba(229, 229, 255, 0.7);
+  line-height: 1.6;
+}
+
 /* ===== PERFORMANCE OPTIMIZATIONS ===== */
 
 /* Reduce blur on lower-end devices */

@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevPrep AI - Session Results & Analytics</title>
+    <style>
+        /* ====================================== */
+        /* BASE STYLES & RESET */
+        /* ====================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0118 0%, #1a0f2e 50%, #0f0a1e 100%);
+            color: #e5e5ff;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 150%;
+            height: 150%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(120, 119, 198, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 119, 198, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(120, 219, 255, 0.1) 0%, transparent 50%);
+            animation: backgroundFlow 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes backgroundFlow {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.9; }
+            50% { transform: translate(-20px, 20px) scale(1.05); opacity: 0.95; }
+        }
+
+        /* ====================================== */
+        /* MAIN CONTAINER - Full Viewport */
+        /* ====================================== */
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ====================================== */
+        /* HEADER SECTION */
+        /* ====================================== */
+        .header {
+            background: rgba(10, 1, 24, 0.95);
+            border-bottom: 1px solid rgba(120, 119, 198, 0.3);
+            padding: 24px 32px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .title-section h1 {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #7877c6, #ff77c6, #78dbff);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientFlow 8s linear infinite;
+            margin-bottom: 4px;
+        }
+
+        .title-section p {
+            font-size: 14px;
+            color: rgba(229, 229, 255, 0.6);
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #e5e5ff;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.8), rgba(255, 119, 198, 0.8));
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(120, 119, 198, 0.4);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7877c6, #ff77c6);
+            box-shadow: 0 6px 20px rgba(120, 119, 198, 0.6);
+        }
+
+        /* ====================================== */
+        /* TABS NAVIGATION */
+        /* ====================================== */
+        .tabs-container {
+            background: rgba(10, 1, 24, 0.8);
+            border-bottom: 1px solid rgba(120, 119, 198, 0.2);
+            padding: 0 32px;
+            display: flex;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .tab {
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(229, 229, 255, 0.6);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: rgba(229, 229, 255, 0.9);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tab.active {
+            color: #e5e5ff;
+            border-bottom-color: #7877c6;
+            background: rgba(120, 119, 198, 0.1);
+        }
+
+        .tab.active::before {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #7877c6, #ff77c6, #78dbff);
+            box-shadow: 0 0 10px rgba(120, 119, 198, 0.6);
+        }
+
+        /* ====================================== */
+        /* CONTENT AREA - Scrollable */
+        /* ====================================== */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .content::-webkit-scrollbar-thumb {
+            background: rgba(120, 119, 198, 0.3);
+            border-radius: 4px;
+        }
+
+        .content::-webkit-scrollbar-thumb:hover {
+            background: rgba(120, 119, 198, 0.5);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ====================================== */
+        /* GLASS CARD - Primary Container */
+        /* ====================================== */
+        .glass-card {
+            background: rgba(20, 15, 40, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 0 60px rgba(120, 119, 198, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            margin-bottom: 24px;
+        }
+
+        .glass-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .icon-wrapper {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .icon-purple { background: linear-gradient(135deg, rgba(120, 119, 198, 0.3), rgba(120, 119, 198, 0.1)); }
+        .icon-pink { background: linear-gradient(135deg, rgba(255, 119, 198, 0.3), rgba(255, 119, 198, 0.1)); }
+        .icon-blue { background: linear-gradient(135deg, rgba(120, 219, 255, 0.3), rgba(120, 219, 255, 0.1)); }
+        .icon-green { background: linear-gradient(135deg, rgba(0, 255, 136, 0.3), rgba(0, 255, 136, 0.1)); }
+        .icon-orange { background: linear-gradient(135deg, rgba(255, 179, 71, 0.3), rgba(255, 179, 71, 0.1)); }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #e5e5ff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .card-subtitle {
+            font-size: 13px;
+            color: rgba(229, 229, 255, 0.6);
+        }
+
+        /* ====================================== */
+        /* STATS GRID - For Metrics Cards */
+        /* ====================================== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-4px);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .stat-value.score-excellent { color: #00ff88; text-shadow: 0 0 15px rgba(0, 255, 136, 0.5); }
+        .stat-value.score-good { color: #78dbff; text-shadow: 0 0 15px rgba(120, 219, 255, 0.5); }
+        .stat-value.score-fair { color: #ffb347; text-shadow: 0 0 15px rgba(255, 179, 71, 0.5); }
+        .stat-value.score-poor { color: #ff77c6; text-shadow: 0 0 15px rgba(255, 119, 198, 0.5); }
+
+        .stat-label {
+            font-size: 13px;
+            color: rgba(229, 229, 255, 0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ====================================== */
+        /* PROGRESS BAR COMPONENT */
+        /* ====================================== */
+        .progress-bar-container {
+            margin: 16px 0;
+        }
+
+        .progress-bar-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 8px;
+            color: rgba(229, 229, 255, 0.8);
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #7877c6, #ff77c6, #78dbff);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(120, 119, 198, 0.5);
+        }
+
+        /* ====================================== */
+        /* TWO-COLUMN GRID (Overview Tab) */
+        /* From v2 - Side-by-side layout */
+        /* ====================================== */
+        .two-column-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* ====================================== */
+        /* QUESTION LIST (Question Details Tab) */
+        /* ====================================== */
+        .question-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .question-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .question-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(120, 119, 198, 0.3);
+        }
+
+        .question-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .question-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e5e5ff;
+        }
+
+        .question-score {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .question-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-difficulty { background: rgba(120, 119, 198, 0.2); color: #7877c6; border: 1px solid rgba(120, 119, 198, 0.3); }
+        .badge-type { background: rgba(120, 219, 255, 0.2); color: #78dbff; border: 1px solid rgba(120, 219, 255, 0.3); }
+        .badge-hints { background: rgba(255, 179, 71, 0.2); color: #ffb347; border: 1px solid rgba(255, 179, 71, 0.3); }
+        .badge-attempts { background: rgba(255, 119, 198, 0.2); color: #ff77c6; border: 1px solid rgba(255, 119, 198, 0.3); }
+
+        /* ====================================== */
+        /* HINT JOURNEY VISUALIZATION (Hint Analytics Tab) */
+        /* From v2 - Timeline visualization with colored dots */
+        /* ====================================== */
+        .hint-journey {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .journey-item {
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
+        }
+
+        .journey-number {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.3), rgba(120, 119, 198, 0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            color: #7877c6;
+            flex-shrink: 0;
+            border: 2px solid rgba(120, 119, 198, 0.4);
+        }
+
+        .journey-content {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .journey-content:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(120, 119, 198, 0.3);
+            transform: translateX(4px);
+        }
+
+        .journey-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .journey-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e5e5ff;
+        }
+
+        .journey-hints {
+            display: flex;
+            gap: 8px;
+        }
+
+        .hint-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            border: 2px solid;
+            transition: all 0.3s ease;
+        }
+
+        .hint-dot:hover {
+            transform: scale(1.2);
+        }
+
+        .hint-dot.level-1 {
+            background: rgba(255, 179, 71, 0.2);
+            border-color: rgba(255, 179, 71, 0.5);
+            color: #ffb347;
+        }
+
+        .hint-dot.level-2 {
+            background: rgba(255, 119, 198, 0.2);
+            border-color: rgba(255, 119, 198, 0.5);
+            color: #ff77c6;
+        }
+
+        .hint-dot.level-3 {
+            background: rgba(120, 219, 255, 0.2);
+            border-color: rgba(120, 219, 255, 0.5);
+            color: #78dbff;
+        }
+
+        .hint-dot.unused {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: rgba(229, 229, 255, 0.3);
+        }
+
+        .journey-meta {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: rgba(229, 229, 255, 0.6);
+            margin-bottom: 8px;
+        }
+
+        /* Hint Legend */
+        .hint-legend {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 24px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 2px solid;
+        }
+
+        .legend-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: rgba(229, 229, 255, 0.8);
+        }
+
+        /* ====================================== */
+        /* INTERACTIVE INSIGHTS (Learning Insights Tab) */
+        /* From v3 - Clickable insight items with hover effects */
+        /* ====================================== */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .insight-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid;
+            border-radius: 12px;
+            padding: 20px;
+        }
+
+        .insight-card.strength { border-left-color: #00ff88; }
+        .insight-card.improvement { border-left-color: #ffb347; }
+        .insight-card.strategy { border-left-color: #78dbff; }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .insight-title.strength { color: #00ff88; }
+        .insight-title.improvement { color: #ffb347; }
+        .insight-title.strategy { color: #78dbff; }
+
+        /* Interactive Insight Items */
+        .insight-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .insight-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Shimmer effect on hover */
+        .insight-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .insight-item:hover::before {
+            left: 100%;
+        }
+
+        .insight-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(120, 119, 198, 0.4);
+            transform: translateX(4px);
+        }
+
+        .insight-item.strength:hover {
+            border-color: rgba(0, 255, 136, 0.4);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .insight-item.improvement:hover {
+            border-color: rgba(255, 179, 71, 0.4);
+            box-shadow: 0 0 20px rgba(255, 179, 71, 0.2);
+        }
+
+        .insight-item.strategy:hover {
+            border-color: rgba(120, 219, 255, 0.4);
+            box-shadow: 0 0 20px rgba(120, 219, 255, 0.2);
+        }
+
+        .insight-text {
+            font-size: 13px;
+            color: rgba(229, 229, 255, 0.8);
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .insight-action {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(229, 229, 255, 0.6);
+            padding: 6px 12px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .insight-item.strength .insight-action {
+            color: #00ff88;
+        }
+
+        .insight-item.improvement .insight-action {
+            color: #ffb347;
+        }
+
+        .insight-item.strategy .insight-action {
+            color: #78dbff;
+        }
+
+        .insight-item:hover .insight-action {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: currentColor;
+            transform: scale(1.05);
+        }
+
+        .action-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Helper Text */
+        .helper-text {
+            text-align: center;
+            padding: 16px;
+            background: rgba(120, 119, 198, 0.1);
+            border-radius: 10px;
+            margin-top: 16px;
+        }
+
+        .helper-text-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #7877c6;
+            margin-bottom: 6px;
+        }
+
+        .helper-text-desc {
+            font-size: 12px;
+            color: rgba(229, 229, 255, 0.6);
+            line-height: 1.5;
+        }
+
+        /* ====================================== */
+        /* RECOMMENDATION CARD */
+        /* ====================================== */
+        .recommendation-card {
+            background: linear-gradient(135deg, rgba(120, 119, 198, 0.15), rgba(255, 119, 198, 0.1));
+            border: 1px solid rgba(120, 119, 198, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .recommendation-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #e5e5ff;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-text {
+            font-size: 14px;
+            color: rgba(229, 229, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        /* Recommendation Section */
+        .recommendation-section {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .recommendation-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-left: 4px solid;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .recommendation-item.study { border-left-color: #7877c6; }
+        .recommendation-item.practice { border-left-color: #ff77c6; }
+        .recommendation-item.skill { border-left-color: #78dbff; }
+        .recommendation-item.milestone { border-left-color: #00ff88; }
+
+        .recommendation-header {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .recommendation-item.study .recommendation-header { color: #7877c6; }
+        .recommendation-item.practice .recommendation-header { color: #ff77c6; }
+        .recommendation-item.skill .recommendation-header { color: #78dbff; }
+        .recommendation-item.milestone .recommendation-header { color: #00ff88; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ====================================== -->
+        <!-- HEADER -->
+        <!-- ====================================== -->
+        <div class="header">
+            <div class="header-content">
+                <div class="title-section">
+                    <h1>🎉 Session Complete!</h1>
+                    <p>Practice Session • 5 Questions • Completed Oct 27, 2025 at 2:45 PM</p>
+                </div>
+                <div class="action-buttons">
+                    <button class="btn btn-glass">📥 Export Results</button>
+                    <button class="btn btn-primary">🔄 Practice Again</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ====================================== -->
+        <!-- TABS NAVIGATION -->
+        <!-- ====================================== -->
+        <div class="tabs-container">
+            <div class="tab active" onclick="switchTab('overview')">📊 Overview</div>
+            <div class="tab" onclick="switchTab('questions')">📝 Question Details</div>
+            <div class="tab" onclick="switchTab('hints')">💡 Hint Analytics</div>
+            <div class="tab" onclick="switchTab('insights')">🎯 Learning Insights</div>
+        </div>
+
+        <!-- ====================================== -->
+        <!-- CONTENT AREA -->
+        <!-- ====================================== -->
+        <div class="content">
+            <!-- ====================================== -->
+            <!-- TAB 1: OVERVIEW -->
+            <!-- Features from v2: Two-column grid layout -->
+            <!-- ====================================== -->
+            <div id="overview" class="tab-content active">
+                <!-- Overall Performance Summary -->
+                <div class="glass-card">
+                    <div class="glass-card-header">
+                        <div class="icon-wrapper icon-purple">🏆</div>
+                        <div>
+                            <div class="card-title">Overall Performance</div>
+                            <div class="card-subtitle">Your session summary and key metrics</div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value score-excellent">78<span style="font-size: 24px;">/100</span></div>
+                            <div class="stat-label">Average Score</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value score-good">100<span style="font-size: 24px;">%</span></div>
+                            <div class="stat-label">Completion Rate</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value score-excellent">42<span style="font-size: 20px;">m</span></div>
+                            <div class="stat-label">Total Time</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value score-good">+15<span style="font-size: 24px;">%</span></div>
+                            <div class="stat-label">Avg Improvement</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TWO-COLUMN: Performance by Difficulty + Hint Usage Summary -->
+                <div class="two-column-grid">
+                    <!-- LEFT: Performance by Difficulty -->
+                    <div class="glass-card" style="margin-bottom: 0;">
+                        <div class="glass-card-header">
+                            <div class="icon-wrapper icon-blue">📈</div>
+                            <div>
+                                <div class="card-title">By Difficulty</div>
+                                <div class="card-subtitle">Performance breakdown</div>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">
+                                <span>Easy Questions</span>
+                                <span style="font-weight: 700; color: #00ff88;">92/100</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%; background: linear-gradient(90deg, #00ff88, #00cc6a);"></div>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">
+                                <span>Medium Questions</span>
+                                <span style="font-weight: 700; color: #78dbff;">76/100</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 76%; background: linear-gradient(90deg, #78dbff, #5ab8e5);"></div>
+                            </div>
+                        </div>
+
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-label">
+                                <span>Hard Questions</span>
+                                <span style="font-weight: 700; color: #ffb347;">65/100</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%; background: linear-gradient(90deg, #ffb347, #ff9922);"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT: Hint Usage Summary -->
+                    <div class="glass-card" style="margin-bottom: 0;">
+                        <div class="glass-card-header">
+                            <div class="icon-wrapper icon-orange">💡</div>
+                            <div>
+                                <div class="card-title">Hint Usage</div>
+                                <div class="card-subtitle">How hints helped you</div>
+                            </div>
+                        </div>
+
+                        <div class="stats-grid" style="margin-bottom: 0;">
+                            <div class="stat-card">
+                                <div class="stat-value" style="color: #ffb347; font-size: 48px;">7</div>
+                                <div class="stat-label">Total Hints</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-value score-excellent" style="font-size: 42px;">85<span style="font-size: 24px;">%</span></div>
+                                <div class="stat-label">Effectiveness</div>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin-top: 20px; padding: 16px; background: rgba(0, 255, 136, 0.1); border-radius: 10px; border: 1px solid rgba(0, 255, 136, 0.2);">
+                            <div style="font-size: 32px; font-weight: 700; color: #78dbff; margin-bottom: 4px;">1.4</div>
+                            <div style="font-size: 12px; color: rgba(229, 229, 255, 0.7); text-transform: uppercase; letter-spacing: 0.5px;">Average per Question</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">🎯</div>
+                    <div class="recommendation-title">Ready for the Next Challenge!</div>
+                    <div class="recommendation-text">
+                        Your performance suggests you're ready for medium-difficulty questions. You've shown strong problem-solving skills and effective use of hints. Focus on reducing reliance on Level 3 hints to further improve your independent problem-solving abilities.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====================================== -->
+            <!-- TAB 2: QUESTION DETAILS -->
+            <!-- Comprehensive question-by-question breakdown -->
+            <!-- ====================================== -->
+            <div id="questions" class="tab-content">
+                <div class="glass-card">
+                    <div class="glass-card-header">
+                        <div class="icon-wrapper icon-blue">📝</div>
+                        <div>
+                            <div class="card-title">Question-by-Question Breakdown</div>
+                            <div class="card-subtitle">Detailed performance on each question</div>
+                        </div>
+                    </div>
+
+                    <div class="question-list">
+                        <!-- Question 1 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-title">1. Two Sum Problem</div>
+                                <div class="question-score score-excellent">92</div>
+                            </div>
+                            <div class="question-meta">
+                                <span class="badge badge-difficulty">Easy</span>
+                                <span class="badge badge-type">Coding</span>
+                                <span class="badge badge-hints">💡 1 Hint</span>
+                                <span style="font-size: 12px; color: rgba(229, 229, 255, 0.6);">⏱️ 7m 23s</span>
+                            </div>
+                            <p style="margin-top: 12px; font-size: 13px; color: rgba(229, 229, 255, 0.7); line-height: 1.6;">
+                                ✅ <strong>Strengths:</strong> Efficient O(n) solution using hash map, handled edge cases well<br>
+                                📝 <strong>Improvements:</strong> Could optimize space complexity for very large arrays
+                            </p>
+                        </div>
+
+                        <!-- Question 2 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-title">2. Binary Tree Traversal</div>
+                                <div class="question-score score-good">78</div>
+                            </div>
+                            <div class="question-meta">
+                                <span class="badge badge-difficulty">Medium</span>
+                                <span class="badge badge-type">Coding</span>
+                                <span class="badge badge-hints">💡 2 Hints</span>
+                                <span style="font-size: 12px; color: rgba(229, 229, 229, 0.6);">⏱️ 12m 45s</span>
+                            </div>
+                            <p style="margin-top: 12px; font-size: 13px; color: rgba(229, 229, 255, 0.7); line-height: 1.6;">
+                                ✅ <strong>Strengths:</strong> Correct recursive approach, good understanding of tree structure<br>
+                                📝 <strong>Improvements:</strong> Consider iterative approach using stack for better space complexity
+                            </p>
+                        </div>
+
+                        <!-- Question 3 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-title">3. Design a URL Shortener</div>
+                                <div class="question-score score-good">72</div>
+                            </div>
+                            <div class="question-meta">
+                                <span class="badge badge-difficulty">Medium</span>
+                                <span class="badge badge-type">System Design</span>
+                                <span class="badge badge-hints">💡 2 Hints</span>
+                                <span style="font-size: 12px; color: rgba(229, 229, 255, 0.6);">⏱️ 10m 18s</span>
+                            </div>
+                            <p style="margin-top: 12px; font-size: 13px; color: rgba(229, 229, 255, 0.7); line-height: 1.6;">
+                                ✅ <strong>Strengths:</strong> Good database schema design, considered scalability<br>
+                                📝 <strong>Improvements:</strong> Discuss caching strategy and collision handling in more detail
+                            </p>
+                        </div>
+
+                        <!-- Question 4 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-title">4. Merge Sorted Arrays</div>
+                                <div class="question-score score-excellent">88</div>
+                            </div>
+                            <div class="question-meta">
+                                <span class="badge badge-difficulty">Easy</span>
+                                <span class="badge badge-type">Coding</span>
+                                <span class="badge badge-hints">💡 0 Hints</span>
+                                <span style="font-size: 12px; color: rgba(229, 229, 255, 0.6);">⏱️ 5m 42s</span>
+                            </div>
+                            <p style="margin-top: 12px; font-size: 13px; color: rgba(229, 229, 255, 0.7); line-height: 1.6;">
+                                ✅ <strong>Strengths:</strong> Clean two-pointer approach, excellent code quality, no hints needed<br>
+                                📝 <strong>Improvements:</strong> Minor - could add more descriptive variable names
+                            </p>
+                        </div>
+
+                        <!-- Question 5 -->
+                        <div class="question-item">
+                            <div class="question-header">
+                                <div class="question-title">5. LRU Cache Implementation</div>
+                                <div class="question-score score-fair">60</div>
+                            </div>
+                            <div class="question-meta">
+                                <span class="badge badge-difficulty">Hard</span>
+                                <span class="badge badge-type">Coding</span>
+                                <span class="badge badge-hints">💡 2 Hints</span>
+                                <span style="font-size: 12px; color: rgba(229, 229, 255, 0.6);">⏱️ 15m 52s</span>
+                            </div>
+                            <p style="margin-top: 12px; font-size: 13px; color: rgba(229, 229, 255, 0.7); line-height: 1.6;">
+                                ✅ <strong>Strengths:</strong> Understood the doubly-linked list concept after hints<br>
+                                📝 <strong>Improvements:</strong> Review hash map + linked list pattern, practice more data structure problems
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====================================== -->
+            <!-- TAB 3: HINT ANALYTICS -->
+            <!-- Features from v2: Hint Journey visualization with timeline -->
+            <!-- ====================================== -->
+            <div id="hints" class="tab-content">
+                <div class="glass-card">
+                    <div class="glass-card-header">
+                        <div class="icon-wrapper icon-orange">💡</div>
+                        <div>
+                            <div class="card-title">Hint Journey</div>
+                            <div class="card-subtitle">Your path through each question with hint support</div>
+                        </div>
+                    </div>
+
+                    <!-- Hint Legend -->
+                    <div class="hint-legend">
+                        <div class="legend-item">
+                            <div class="legend-dot level-1" style="background: rgba(255, 179, 71, 0.2); border-color: rgba(255, 179, 71, 0.5);"></div>
+                            <span class="legend-label">Level 1: General Approach</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot level-2" style="background: rgba(255, 119, 198, 0.2); border-color: rgba(255, 119, 198, 0.5);"></div>
+                            <span class="legend-label">Level 2: Specific Technique</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot level-3" style="background: rgba(120, 219, 255, 0.2); border-color: rgba(120, 219, 255, 0.5);"></div>
+                            <span class="legend-label">Level 3: Code Skeleton</span>
+                        </div>
+                    </div>
+
+                    <!-- Hint Journey Visualization -->
+                    <div class="hint-journey">
+                        <!-- Question 1: 1 Hint -->
+                        <div class="journey-item">
+                            <div class="journey-number">1</div>
+                            <div class="journey-content">
+                                <div class="journey-header">
+                                    <div>
+                                        <div class="journey-title">Two Sum Problem</div>
+                                        <div class="journey-meta">
+                                            <span>Easy</span>
+                                            <span>•</span>
+                                            <span>7m 23s</span>
+                                            <span>•</span>
+                                            <span style="color: #00ff88;">Score: 92</span>
+                                        </div>
+                                    </div>
+                                    <div class="journey-hints">
+                                        <div class="hint-dot level-1" title="Level 1: General Approach">1</div>
+                                        <div class="hint-dot unused" title="Not used">2</div>
+                                        <div class="hint-dot unused" title="Not used">3</div>
+                                    </div>
+                                </div>
+                                <p style="font-size: 13px; color: rgba(229, 229, 255, 0.7);">
+                                    Started strong with a general approach hint. Quickly applied hash map pattern and solved efficiently.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Question 2: 2 Hints -->
+                        <div class="journey-item">
+                            <div class="journey-number">2</div>
+                            <div class="journey-content">
+                                <div class="journey-header">
+                                    <div>
+                                        <div class="journey-title">Binary Tree Traversal</div>
+                                        <div class="journey-meta">
+                                            <span>Medium</span>
+                                            <span>•</span>
+                                            <span>12m 45s</span>
+                                            <span>•</span>
+                                            <span style="color: #78dbff;">Score: 78</span>
+                                        </div>
+                                    </div>
+                                    <div class="journey-hints">
+                                        <div class="hint-dot level-1" title="Level 1: General Approach">1</div>
+                                        <div class="hint-dot level-2" title="Level 2: Specific Technique">2</div>
+                                        <div class="hint-dot unused" title="Not used">3</div>
+                                    </div>
+                                </div>
+                                <p style="font-size: 13px; color: rgba(229, 229, 255, 0.7);">
+                                    Needed both approach and technique hints. Successfully implemented recursive solution after understanding pattern.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Question 3: 2 Hints -->
+                        <div class="journey-item">
+                            <div class="journey-number">3</div>
+                            <div class="journey-content">
+                                <div class="journey-header">
+                                    <div>
+                                        <div class="journey-title">Design a URL Shortener</div>
+                                        <div class="journey-meta">
+                                            <span>Medium</span>
+                                            <span>•</span>
+                                            <span>10m 18s</span>
+                                            <span>•</span>
+                                            <span style="color: #78dbff;">Score: 72</span>
+                                        </div>
+                                    </div>
+                                    <div class="journey-hints">
+                                        <div class="hint-dot level-1" title="Level 1: General Approach">1</div>
+                                        <div class="hint-dot level-2" title="Level 2: Specific Technique">2</div>
+                                        <div class="hint-dot unused" title="Not used">3</div>
+                                    </div>
+                                </div>
+                                <p style="font-size: 13px; color: rgba(229, 229, 255, 0.7);">
+                                    System design required guidance on architecture and scalability. Applied hints to create solid design.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Question 4: 0 Hints -->
+                        <div class="journey-item">
+                            <div class="journey-number">4</div>
+                            <div class="journey-content">
+                                <div class="journey-header">
+                                    <div>
+                                        <div class="journey-title">Merge Sorted Arrays</div>
+                                        <div class="journey-meta">
+                                            <span>Easy</span>
+                                            <span>•</span>
+                                            <span>5m 42s</span>
+                                            <span>•</span>
+                                            <span style="color: #00ff88;">Score: 88</span>
+                                        </div>
+                                    </div>
+                                    <div class="journey-hints">
+                                        <div class="hint-dot unused" title="Not used">1</div>
+                                        <div class="hint-dot unused" title="Not used">2</div>
+                                        <div class="hint-dot unused" title="Not used">3</div>
+                                    </div>
+                                </div>
+                                <p style="font-size: 13px; color: rgba(229, 229, 255, 0.7);">
+                                    💪 <strong>Solved independently!</strong> No hints needed. Clean two-pointer implementation from the start.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Question 5: 2 Hints -->
+                        <div class="journey-item">
+                            <div class="journey-number">5</div>
+                            <div class="journey-content">
+                                <div class="journey-header">
+                                    <div>
+                                        <div class="journey-title">LRU Cache Implementation</div>
+                                        <div class="journey-meta">
+                                            <span>Hard</span>
+                                            <span>•</span>
+                                            <span>15m 52s</span>
+                                            <span>•</span>
+                                            <span style="color: #ffb347;">Score: 60</span>
+                                        </div>
+                                    </div>
+                                    <div class="journey-hints">
+                                        <div class="hint-dot level-2" title="Level 2: Specific Technique">2</div>
+                                        <div class="hint-dot level-3" title="Level 3: Code Skeleton">3</div>
+                                        <div class="hint-dot unused" title="Not used">1</div>
+                                    </div>
+                                </div>
+                                <p style="font-size: 13px; color: rgba(229, 229, 255, 0.7);">
+                                    Challenging problem required technique and skeleton hints. Good learning opportunity for advanced data structures.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hint Insights -->
+                <div class="recommendation-card">
+                    <div class="recommendation-icon">✨</div>
+                    <div class="recommendation-title">Hint Usage Insight</div>
+                    <div class="recommendation-text">
+                        Excellent strategic hint usage! You solved Question 4 independently, showing strong problem-solving skills for familiar patterns. When facing new concepts (like LRU cache), you effectively used hints to learn. This balanced approach demonstrates mature learning habits.
+                    </div>
+                </div>
+            </div>
+
+            <!-- ====================================== -->
+            <!-- TAB 4: LEARNING INSIGHTS -->
+            <!-- Features from v3: Interactive insights with clickable items -->
+            <!-- ====================================== -->
+            <div id="insights" class="tab-content">
+                <!-- Interactive Learning Insights -->
+                <div class="glass-card">
+                    <div class="glass-card-header">
+                        <div class="icon-wrapper icon-green">🌟</div>
+                        <div style="flex: 1;">
+                            <div class="card-title">AI-Powered Learning Insights</div>
+                            <div class="card-subtitle">Click any insight to start a personalized learning path</div>
+                        </div>
+                    </div>
+
+                    <div class="insights-grid">
+                        <!-- Strengths - Interactive -->
+                        <div class="insight-card strength">
+                            <div class="insight-title strength">
+                                <span>✅ Your Strengths</span>
+                                <span style="font-size: 11px; font-weight: 500; opacity: 0.7;">Click to practice</span>
+                            </div>
+                            <div class="insight-list">
+                                <div class="insight-item strength" onclick="selectInsight('strength', 'hash-maps')">
+                                    <div class="insight-text">Strong understanding of array manipulation and hash maps</div>
+                                    <div class="insight-action">
+                                        <span>Practice</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item strength" onclick="selectInsight('strength', 'code-quality')">
+                                    <div class="insight-text">Excellent code quality and readability</div>
+                                    <div class="insight-action">
+                                        <span>Practice</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item strength" onclick="selectInsight('strength', 'problem-solving')">
+                                    <div class="insight-text">Good at solving problems independently when confident</div>
+                                    <div class="insight-action">
+                                        <span>Practice</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item strength" onclick="selectInsight('strength', 'hint-usage')">
+                                    <div class="insight-text">Effective use of hints when stuck</div>
+                                    <div class="insight-action">
+                                        <span>Practice</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Growth Opportunities - Interactive -->
+                        <div class="insight-card improvement">
+                            <div class="insight-title improvement">
+                                <span>📈 Growth Opportunities</span>
+                                <span style="font-size: 11px; font-weight: 500; opacity: 0.7;">Click to learn</span>
+                            </div>
+                            <div class="insight-list">
+                                <div class="insight-item improvement" onclick="selectInsight('improvement', 'data-structures')">
+                                    <div class="insight-text">Review advanced data structures (LRU cache, trees)</div>
+                                    <div class="insight-action">
+                                        <span>Learn</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item improvement" onclick="selectInsight('improvement', 'system-design')">
+                                    <div class="insight-text">Practice more system design scalability concepts</div>
+                                    <div class="insight-action">
+                                        <span>Learn</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item improvement" onclick="selectInsight('improvement', 'time-management')">
+                                    <div class="insight-text">Work on reducing time on medium-difficulty problems</div>
+                                    <div class="insight-action">
+                                        <span>Learn</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item improvement" onclick="selectInsight('improvement', 'space-complexity')">
+                                    <div class="insight-text">Strengthen knowledge of space complexity optimization</div>
+                                    <div class="insight-action">
+                                        <span>Learn</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Effective Strategies - Interactive -->
+                        <div class="insight-card strategy">
+                            <div class="insight-title strategy">
+                                <span>💡 Effective Strategies</span>
+                                <span style="font-size: 11px; font-weight: 500; opacity: 0.7;">Click to deepen</span>
+                            </div>
+                            <div class="insight-list">
+                                <div class="insight-item strategy" onclick="selectInsight('strategy', 'level-1-hints')">
+                                    <div class="insight-text">Using Level 1 hints to clarify approach before coding</div>
+                                    <div class="insight-action">
+                                        <span>Deepen</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item strategy" onclick="selectInsight('strategy', 'breakdown')">
+                                    <div class="insight-text">Breaking down complex problems into smaller steps</div>
+                                    <div class="insight-action">
+                                        <span>Deepen</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item strategy" onclick="selectInsight('strategy', 'edge-cases')">
+                                    <div class="insight-text">Testing edge cases and validating solutions</div>
+                                    <div class="insight-action">
+                                        <span>Deepen</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                                <div class="insight-item strategy" onclick="selectInsight('strategy', 'pattern-matching')">
+                                    <div class="insight-text">Applying learned patterns to similar problems</div>
+                                    <div class="insight-action">
+                                        <span>Deepen</span>
+                                        <div class="action-icon">→</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Helper Text -->
+                    <div class="helper-text">
+                        <div class="helper-text-title">🤖 AI-Powered Learning Paths (Coming Soon)</div>
+                        <div class="helper-text-desc">
+                            Click any insight above to generate a personalized learning plan. Our AI will create custom exercises, explanations, and practice problems tailored to your specific needs.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Style -->
+                <div class="glass-card">
+                    <div class="glass-card-header">
+                        <div class="icon-wrapper icon-pink">🎨</div>
+                        <div>
+                            <div class="card-title">Your Learning Style</div>
+                            <div class="card-subtitle">Based on hint usage and performance patterns</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 20px; align-items: center;">
+                        <div style="flex: 1;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">🎯</div>
+                            <div style="font-size: 20px; font-weight: 700; color: #78dbff; margin-bottom: 8px;">Strategic Learner</div>
+                            <p style="font-size: 14px; color: rgba(229, 229, 255, 0.7); line-height: 1.6;">
+                                You balance independent problem-solving with strategic hint usage. You're confident tackling familiar patterns but know when to ask for guidance on new concepts. This approach shows maturity and effective learning habits.
+                            </p>
+                        </div>
+                        <div style="flex: 1;">
+                            <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px; padding: 20px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                                    <span style="font-size: 13px; color: rgba(229, 229, 255, 0.7);">Hint Utilization</span>
+                                    <span style="font-size: 13px; font-weight: 700; color: #00ff88;">Optimal</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 70%; background: linear-gradient(90deg, #00ff88, #00cc6a);"></div>
+                                </div>
+                                <p style="font-size: 12px; color: rgba(229, 229, 255, 0.6); margin-top: 8px;">
+                                    1.4 hints per question is ideal for your skill level
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="glass-card">
+                    <div class="glass-card-header">
+                        <div class="icon-wrapper icon-purple">🚀</div>
+                        <div>
+                            <div class="card-title">Personalized Recommendations</div>
+                            <div class="card-subtitle">Next steps to accelerate your progress</div>
+                        </div>
+                    </div>
+
+                    <div class="recommendation-section">
+                        <div class="recommendation-item study">
+                            <div class="recommendation-header">📚 Study Focus</div>
+                            <p class="recommendation-text">
+                                Spend time reviewing advanced data structures, particularly linked lists and hash maps for caching patterns. This will help you tackle hard problems with more confidence.
+                            </p>
+                        </div>
+
+                        <div class="recommendation-item practice">
+                            <div class="recommendation-header">💪 Practice Plan</div>
+                            <p class="recommendation-text">
+                                Focus on 3-4 medium difficulty problems per session. Your performance suggests you're ready to move beyond easy questions and build consistency with medium complexity.
+                            </p>
+                        </div>
+
+                        <div class="recommendation-item skill">
+                            <div class="recommendation-header">🎯 Skill Development</div>
+                            <p class="recommendation-text">
+                                Work on time management for medium problems. Aim to reduce average solve time from 12 minutes to under 10 minutes through pattern recognition and practice.
+                            </p>
+                        </div>
+
+                        <div class="recommendation-item milestone">
+                            <div class="recommendation-header">🌟 Next Milestone</div>
+                            <p class="recommendation-text">
+                                You're ready to attempt a mock interview with 4-5 medium questions. Your current skill level indicates 75-80% success rate. This will help identify remaining gaps before real interviews.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================================== -->
+    <!-- JAVASCRIPT -->
+    <!-- ====================================== -->
+    <script>
+        /**
+         * Switch between tabs
+         * @param {string} tabName - The ID of the tab content to display
+         */
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        /**
+         * Handle insight selection for future AI learning tool integration
+         * @param {string} category - The insight category (strength/improvement/strategy)
+         * @param {string} topic - The specific topic selected
+         */
+        function selectInsight(category, topic) {
+            // Log selection for analytics
+            console.log('Selected insight:', {
+                category: category,
+                topic: topic,
+                timestamp: new Date().toISOString()
+            });
+
+            // Visual feedback
+            alert(`🤖 AI Learning Path Selected!\n\nCategory: ${category}\nTopic: ${topic}\n\n(This will connect to your AI learning tool in the future)`);
+
+            // Future implementation:
+            // Navigate to learning tool with context
+            // window.location.href = `/learn?category=${category}&topic=${topic}&context=results`;
+
+            // Or: Send data to AI agent via API
+            // fetch('/api/learning-path', {
+            //     method: 'POST',
+            //     body: JSON.stringify({ category, topic, sessionData: {...} })
+            // });
+        }
+    </script>
+</body>
+</html>

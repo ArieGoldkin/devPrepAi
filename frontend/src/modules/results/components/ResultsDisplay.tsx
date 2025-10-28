@@ -5,6 +5,7 @@ import { Button } from "@shared/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@shared/ui/tabs";
 
 import { HintAnalyticsTab } from "./hint-analytics";
+import { LearningInsightsTab } from "./learning-insights";
 import { OverviewTab } from "./overview";
 import { QuestionDetailsTab } from "./question-details";
 
@@ -70,11 +71,7 @@ export function ResultsDisplay({
           <TabsTrigger value="hints" className="results-tab rounded-none">
             💡 Hint Analytics
           </TabsTrigger>
-          <TabsTrigger
-            value="insights"
-            className="results-tab rounded-none"
-            disabled
-          >
+          <TabsTrigger value="insights" className="results-tab rounded-none">
             🧠 Learning Insights
           </TabsTrigger>
         </TabsList>
@@ -94,16 +91,9 @@ export function ResultsDisplay({
           <HintAnalyticsTab />
         </TabsContent>
 
-        {/* Tab 4: Learning Insights (Coming Soon) */}
+        {/* Tab 4: Learning Insights */}
         <TabsContent value="insights" className="mt-6">
-          <div className="glass-card-static p-12 text-center rounded-lg">
-            <p className="text-gray-400 text-lg">
-              🧠 Learning Insights Coming Soon
-            </p>
-            <p className="text-gray-500 text-sm mt-2">
-              AI-powered recommendations for your learning path
-            </p>
-          </div>
+          <LearningInsightsTab />
         </TabsContent>
       </Tabs>
     </div>

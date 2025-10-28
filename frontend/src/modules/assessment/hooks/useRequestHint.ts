@@ -60,7 +60,6 @@ export const useRequestHint = (questionId: string): IUseRequestHintReturn => {
     (question: IQuestion, currentAnswer?: string) => {
       // Don't request if limit reached
       if (!canRequestMore) {
-        console.warn("Maximum hints (3) already used for this question");
         return;
       }
 

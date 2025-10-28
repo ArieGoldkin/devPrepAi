@@ -10,3 +10,6 @@ export * from "./question-details";
 
 // Tab 3: Hint Analytics components
 export * from "./hint-analytics";
+
+// Tab 4: Learning Insights components
+export * from "./learning-insights";
