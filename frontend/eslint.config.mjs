@@ -265,6 +265,16 @@ const eslintConfig = [
     },
   },
   {
+    files: ["**/shared/ui/**/*.{ts,tsx}"],
+    rules: {
+      "max-lines": "off",
+      "max-lines-per-function": "off",
+      "max-statements": "off",
+      complexity: "off",
+      "@typescript-eslint/explicit-function-return-type": "off",
+    },
+  },
+  {
     ignores: [
       "node_modules/**",
       ".next/**",

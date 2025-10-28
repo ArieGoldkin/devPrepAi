@@ -14,8 +14,13 @@ if [ ! -d "$FRONTEND_SRC" ]; then
   exit 1
 fi
 
-# Find all TypeScript files
+# Find all TypeScript files (excluding test files and UI library components)
 while IFS= read -r file; do
+  # Skip shadcn/ui library components (third-party generated code)
+  if [[ "$file" == *"/shared/ui/"* ]]; then
+    continue
+  fi
+
   # Count non-blank, non-comment lines (excludes blank lines, //, /*, */, and * inside block comments)
   lines=$(grep -cv "^[[:space:]]*$\|^[[:space:]]*//\|^[[:space:]]*\*\|^[[:space:]]*/\*\|^[[:space:]]*\*/" "$file" 2>/dev/null || echo 0)
 

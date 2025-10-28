@@ -6,7 +6,7 @@
 
 import * as React from "react";
 
-import type { IQuestionHintData } from "../../hooks/useHintAnalytics";
+import type { IQuestionHintData } from "@/modules/results/hooks/useHintAnalytics";
 
 import { HintDots } from "./HintDots";
 

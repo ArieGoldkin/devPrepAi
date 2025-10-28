@@ -6,7 +6,7 @@
 
 import * as React from "react";
 
-import { useHintAnalytics } from "../../hooks/useHintAnalytics";
+import { useHintAnalytics } from "@/modules/results/hooks/useHintAnalytics";
 
 import { HintInsightCard } from "./HintInsightCard";
 import { HintJourney } from "./HintJourney";

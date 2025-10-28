@@ -6,7 +6,7 @@
 
 import * as React from "react";
 
-import type { IInsight } from "../../utils/hint-narratives";
+import type { IInsight } from "@/modules/results/utils/hint-narratives";
 
 /**
  * Props for HintInsightCard component

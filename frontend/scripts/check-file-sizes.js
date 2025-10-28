@@ -21,6 +21,7 @@ const SKIP_PATTERNS = [
   'dist',
   '.test.',
   '.spec.',
+  'shared/ui', // Skip shadcn/ui library components (third-party code)
 ];
 
 function shouldSkip(filePath) {
