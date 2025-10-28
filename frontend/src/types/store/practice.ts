@@ -57,6 +57,9 @@ export interface IPracticeState {
   currentDraft: string;
   savedAnswers: Map<string, IPracticeAnswer>;
 
+  // Editor Preferences (read-only, set during practice configuration)
+  currentLanguage: "javascript" | "typescript" | "python";
+
   // Session State
   startedAt: string | null;
   completedAt: string | null;

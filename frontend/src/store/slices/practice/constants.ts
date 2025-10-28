@@ -44,6 +44,9 @@ export const initialPracticeState: IPracticeState = {
   currentDraft: "",
   savedAnswers: new Map(),
 
+  // Editor Preferences (read-only, set during practice configuration)
+  currentLanguage: "javascript",
+
   // Status
   isActive: false,
   isComplete: false,

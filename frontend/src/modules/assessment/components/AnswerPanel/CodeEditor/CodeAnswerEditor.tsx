@@ -1,44 +1,28 @@
 "use client";
 
-import { useState } from "react";
-
+import type { ICodeEditorProps } from "@modules/assessment/components/AnswerPanel/types";
 import { CodeMirrorEditor } from "@shared/ui/CodeMirrorEditor";
 import { cn } from "@shared/utils/cn";
-
-import type { ICodeEditorProps, TCodeLanguage } from "../types";
-
-/**
- * Get short language label for badge display
- */
-function getLanguageLabel(language: TCodeLanguage): string {
-  const labels = {
-    typescript: "TS",
-    javascript: "JS",
-    python: "PY",
-  };
-  return labels[language];
-}
+import { useAppStore } from "@store/hooks";
 
 /**
- * CodeAnswerEditor - Enhanced CodeMirror wrapper for coding questions
+ * CodeAnswerEditor - Simple CodeMirror wrapper for coding questions
  *
- * Features (Phase A):
+ * Features:
  * - Dark theme by default matching design system
  * - Multi-language support (JavaScript, TypeScript, Python)
+ * - Syntax highlighting
  * - Keyboard shortcuts (Ctrl+Enter to submit, Ctrl+S to save)
  * - Responsive min/max heights
  * - Character and line count display
  *
- * Future (Phase B/C):
- * - Language switching toolbar
- * - Autocomplete with custom suggestions
- * - Code formatting (Prettier integration)
- * - Auto-save with debouncing
+ * Language is determined by practice configuration (selected technologies).
+ * Users cannot switch languages mid-practice to simulate real interview conditions.
  */
 export function CodeAnswerEditor({
   value,
   onChange,
-  language = "javascript",
+  language: languageProp,
   theme = "dark",
   placeholder = "// Write your solution here...\n// Use Ctrl+Enter to submit, Ctrl+S to save",
   readOnly = false,
@@ -49,7 +33,9 @@ export function CodeAnswerEditor({
   onSave,
   onToggleHints,
 }: ICodeEditorProps): React.JSX.Element {
-  const [isFocused, setIsFocused] = useState(false);
+  // Get language from store (determined by practice configuration)
+  const storeLanguage = useAppStore((state) => state.currentLanguage);
+  const language = languageProp || storeLanguage;
 
   // Calculate editor stats
   const totalLines = value.split("\n").length;
@@ -61,26 +47,7 @@ export function CodeAnswerEditor({
         "code-answer-editor relative flex flex-col",
         "transition-all duration-300 ease-in-out",
       )}
-      onFocus={() => setIsFocused(true)}
-      onBlur={() => setIsFocused(false)}
     >
-      {/* Language badge (top-right overlay) */}
-      <div
-        className={cn(
-          "absolute top-4 right-4 z-20",
-          "px-3 py-1 rounded-lg",
-          "bg-[rgba(120,119,198,0.15)] backdrop-blur-[10px]",
-          "border border-[rgba(120,119,198,0.3)]",
-          "text-xs font-semibold uppercase tracking-wider",
-          "text-purple-200 transition-all duration-200",
-          isFocused &&
-            "bg-[rgba(120,119,198,0.25)] border-[rgba(120,119,198,0.5)]",
-        )}
-        aria-label={`Programming language: ${language}`}
-      >
-        {getLanguageLabel(language)}
-      </div>
-
       {/* CodeMirror Editor */}
       <div className="flex-1">
         <CodeMirrorEditor
@@ -103,7 +70,7 @@ export function CodeAnswerEditor({
         />
       </div>
 
-      {/* Editor footer - Stats and hints */}
+      {/* Editor footer - Stats and keyboard shortcuts */}
       <footer
         className={cn(
           "mt-4 flex items-center justify-between",
